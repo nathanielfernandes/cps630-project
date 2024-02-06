@@ -102,6 +102,7 @@ cps630-project
 - Make sure you are working on the latest version of `master`
 - Create an issue for each feature you are working on
 - Create a new branch for each feature you are working on
+- Branch format should be `t<issue#>_firstname` or `<feature>_firstname`
 - Commit often and with descriptive commit messages
 - Create a pull request when you are ready to merge your branch into `master`
 - Assign atleast 2 reviewers to your pull request
