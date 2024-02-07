@@ -4,6 +4,7 @@
 
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import Alerts from '$lib/Alerts/Alerts.svelte';
 
 	export let data;
 
@@ -23,4 +24,5 @@
 	});
 </script>
 
+<Alerts />
 <slot />
