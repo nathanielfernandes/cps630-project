@@ -4,7 +4,7 @@
 	import TMULogo from '$lib/images/TMU-rgb.png';
 
 	import { page } from '$app/stores';
-	import { invalidate } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import Alerts from '$lib/Alerts/Alerts.svelte';
 
@@ -28,6 +28,11 @@
 	let showHamburgerMenu = false;
 	let showCategoriesDropdown = false;
   let showUserDropdown = false;
+
+  const handleSignOut = async (e: MouseEvent) => {
+    e.preventDefault();
+		await supabase.auth.signOut();
+	};
 </script>
 
 <Alerts />
@@ -40,11 +45,11 @@
 				>Marketplace</span
 			>
 		</a>
-		<div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+		<div class="relative flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
 			{#if session}
 				<button
 					type="button"
-					class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+					class="flex items-center text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
 					id="user-menu-button"
 					aria-expanded={showUserDropdown}
 					data-dropdown-toggle="user-dropdown"
@@ -53,21 +58,22 @@
 				>
 					<span class="sr-only">Open user menu</span>
 					<img
-						class="w-8 h-8 rounded-full"
+						class="w-10 h-10 rounded-full"
 						src="/docs/images/people/profile-picture-3.jpg"
 						alt="user photo"
 					/>
 				</button>
 				<!-- User dropdown menu -->
 				<div
-					class="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+					class="z-50 my-4 top-3/4 right-0 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+          class:absolute={showUserDropdown}
           class:hidden={!showUserDropdown}
           id="user-dropdown"
 				>
 					<div class="px-4 py-3">
 						<span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
 						<span class="block text-sm text-gray-500 truncate dark:text-gray-400"
-							>name@flowbite.com</span
+							>{session.user.email}</span
 						>
 					</div>
 					<ul class="py-2" aria-labelledby="user-menu-button">
@@ -75,7 +81,7 @@
 							<a
 								href="#"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-								>Admin Dashboard</a
+								>Profile</a
 							>
 						</li>
 						<li>
@@ -85,8 +91,16 @@
 								>Order History</a
 							>
 						</li>
-						<li>
+            <li>
 							<a
+								href="#"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+								>Admin Dashboard</a
+							>
+						</li>
+						<li>
+							<a 
+                on:click={handleSignOut}
 								href="#"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
 								>Sign out</a
@@ -96,6 +110,7 @@
 				</div>
 			{:else}
 				<button
+          on:click={() => goto("/auth")}
 					type="button"
 					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 					>Sign in / Register</button
