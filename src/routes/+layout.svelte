@@ -179,18 +179,18 @@
 		<div class="flex items-center">
 			<ul class="mt-0 flex flex-row space-x-8 text-sm font-medium rtl:space-x-reverse text-center">
 				<li>
-					<a href="#" class="text-gray-900 hover:underline dark:text-white" aria-current="page"
+					<a href="/" aria-current={$page.url.pathname === '/' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Home</a
 					>
 				</li>
 				<li>
-					<a href="#" class="text-gray-900 hover:underline dark:text-white">Items Wanted</a>
+					<a href="/wanted" aria-current={$page.url.pathname === '/wanted' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Items Wanted</a>
 				</li>
 				<li>
-					<a href="#" class="text-gray-900 hover:underline dark:text-white">Items For Sale</a>
+					<a href="/sale" aria-current={$page.url.pathname === '/sale' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Items For Sale</a>
 				</li>
 				<li>
-					<a href="#" class="text-gray-900 hover:underline dark:text-white">Academic Services</a>
+					<a href="/service" aria-current={$page.url.pathname === '/service' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Academic Services</a>
 				</li>
 			</ul>
 		</div>
@@ -198,7 +198,7 @@
 			<input
 				type="text"
 				id="search-navbar"
-				class="border-box block w-full rounded-lg border-2 bg-gray-50 p-3 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+				class="border-box block w-full rounded-lg border-2 bg-white p-3 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 				placeholder="Search..."
 			/>
 			<button
