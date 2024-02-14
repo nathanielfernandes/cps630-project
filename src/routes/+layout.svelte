@@ -26,18 +26,22 @@
 		return () => subscription.unsubscribe();
 	});
 
-	let showHamburgerMenu = false;
-
 	const handleSignOut = async (e: MouseEvent) => {
 		e.preventDefault();
 		await supabase.auth.signOut();
 	};
 
+  const replaceBadImageWithDefault = (image: HTMLImageElement, defaultImageSrc: string) => {
+    if (image.naturalWidth === 0 && image.naturalHeight === 0) {
+      image.src = defaultImageSrc;
+    }
+  };
+
 	const handleProfileImageError = (e: Event) => {
 		if (!e.target) {
 			return;
 		}
-		(e.target as HTMLImageElement).src = DefaultUserImage;
+		replaceBadImageWithDefault(e.target as HTMLImageElement, DefaultUserImage);
 	};
 
 	const dropdownTriggers: { [key: string]: string } = {
@@ -112,10 +116,11 @@
 				>
 					<span class="sr-only">Open user menu</span>
 					<img
+            use:replaceBadImageWithDefault={DefaultUserImage}
+            on:error={handleProfileImageError}
 						class="pointer-events-none h-10 w-10 rounded-full"
 						src="/docs/images/people/profile-picture-3.jpg"
 						alt="user"
-						on:error={handleProfileImageError}
 					/>
 				</button>
 				<!-- User dropdown menu -->
