@@ -184,10 +184,10 @@
 					>
 				</li>
 				<li>
-					<a href="/wanted" aria-current={$page.url.pathname === '/wanted' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Items Wanted</a>
+					<a href="/wanted" aria-current={$page.url.pathname === '/wanted' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Wanted Listings</a>
 				</li>
 				<li>
-					<a href="/sale" aria-current={$page.url.pathname === '/sale' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Items For Sale</a>
+					<a href="/sale" aria-current={$page.url.pathname === '/sale' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Buy & Sell</a>
 				</li>
 				<li>
 					<a href="/service" aria-current={$page.url.pathname === '/service' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Academic Services</a>
