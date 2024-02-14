@@ -2,6 +2,7 @@
 <script lang="ts">
 	import '../app.css';
 	import TMULogo from '$lib/images/TMU-rgb.png';
+	import DefaultUserImage from '$lib/images/user.png';
 
 	import { page } from '$app/stores';
 	import { goto, invalidate } from '$app/navigation';
@@ -32,30 +33,42 @@
 		await supabase.auth.signOut();
 	};
 
-  const dropdownTriggers: { [key: string] : string } = { "user-dropdown" : "user-menu-button", "dropdownNavbar" : "dropdownNavbarLink" };
+	const handleProfileImageError = (e: Event) => {
+		if (!e.target) {
+			return;
+		}
+		(e.target as HTMLImageElement).src = DefaultUserImage;
+	};
+
+	const dropdownTriggers: { [key: string]: string } = {
+		'user-dropdown': 'user-menu-button',
+		dropdownNavbar: 'dropdownNavbarLink'
+	};
 	function handleWindowClick(e: MouseEvent) {
-    e.stopPropagation();
+		e.stopPropagation();
 
-		if (!e.target){ return; }
-    const element = e.target as HTMLElement;
+		if (!e.target) {
+			return;
+		}
+		const element = e.target as HTMLElement;
 
-    for (const [dropdownId, dropdownTriggerId] of Object.entries(dropdownTriggers)) {
-      const dropdownElement = document.getElementById(dropdownId);
-      const dropdownTriggerElement = document.getElementById(dropdownTriggerId);  
-      
-      if (element.id !== dropdownId && element.id !== dropdownTriggerId) {
-        dropdownElement?.classList.add("hidden");
-        dropdownTriggerElement?.setAttribute("aria-expanded", "false");
-      } else{
-        const hidden = dropdownElement && dropdownElement.classList.contains("hidden");
-        if (hidden) {
-          dropdownElement?.classList.remove("hidden");
-        } else {
-          dropdownElement?.classList.add("hidden");
-        }
-        dropdownTriggerElement?.setAttribute("aria-expanded", String(!hidden));
-      }
-    }
+		for (const [dropdownId, dropdownTriggerId] of Object.entries(dropdownTriggers)) {
+			const dropdownElement = document.getElementById(dropdownId);
+			const dropdownTriggerElement = document.getElementById(dropdownTriggerId);
+
+			if (element.id !== dropdownId && element.id !== dropdownTriggerId) {
+				dropdownElement?.classList.add('hidden');
+				dropdownTriggerElement?.setAttribute('aria-expanded', 'false');
+			} else {
+				const hidden = dropdownElement && dropdownElement.classList.contains('hidden');
+				if (hidden) {
+					dropdownElement?.classList.remove('hidden');
+				} else {
+					dropdownElement?.classList.add('hidden');
+				}
+				dropdownTriggerElement?.setAttribute('aria-expanded', String(!hidden));
+			}
+		}
 	}
 </script>
 
@@ -85,6 +98,7 @@
 						class="w-10 h-10 rounded-full pointer-events-none"
 						src="/docs/images/people/profile-picture-3.jpg"
 						alt="user photo"
+						on:error={handleProfileImageError}
 					/>
 				</button>
 				<!-- User dropdown menu -->
