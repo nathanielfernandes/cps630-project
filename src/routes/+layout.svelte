@@ -26,14 +26,40 @@
 	});
 
 	let showHamburgerMenu = false;
-	let showCategoriesDropdown = false;
-  let showUserDropdown = false;
 
-  const handleSignOut = async (e: MouseEvent) => {
-    e.preventDefault();
+	const handleSignOut = async (e: MouseEvent) => {
+		e.preventDefault();
 		await supabase.auth.signOut();
 	};
+
+  const dropdownTriggers: { [key: string] : string } = { "user-dropdown" : "user-menu-button", "dropdownNavbar" : "dropdownNavbarLink" };
+	function handleWindowClick(e: MouseEvent) {
+    e.stopPropagation();
+
+		if (!e.target){ return; }
+    const element = e.target as HTMLElement;
+
+    for (const [dropdownId, dropdownTriggerId] of Object.entries(dropdownTriggers)) {
+      const dropdownElement = document.getElementById(dropdownId);
+      const dropdownTriggerElement = document.getElementById(dropdownTriggerId);  
+      
+      if (element.id !== dropdownId && element.id !== dropdownTriggerId) {
+        dropdownElement?.classList.add("hidden");
+        dropdownTriggerElement?.setAttribute("aria-expanded", "false");
+      } else{
+        const hidden = dropdownElement && dropdownElement.classList.contains("hidden");
+        if (hidden) {
+          dropdownElement?.classList.remove("hidden");
+        } else {
+          dropdownElement?.classList.add("hidden");
+        }
+        dropdownTriggerElement?.setAttribute("aria-expanded", String(!hidden));
+      }
+    }
+	}
 </script>
+
+<svelte:window on:click={handleWindowClick} />
 
 <Alerts />
 
@@ -51,24 +77,20 @@
 					type="button"
 					class="flex items-center text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
 					id="user-menu-button"
-					aria-expanded={showUserDropdown}
 					data-dropdown-toggle="user-dropdown"
 					data-dropdown-placement="bottom"
-          on:click={() => showUserDropdown = !showUserDropdown}
 				>
 					<span class="sr-only">Open user menu</span>
 					<img
-						class="w-10 h-10 rounded-full"
+						class="w-10 h-10 rounded-full pointer-events-none"
 						src="/docs/images/people/profile-picture-3.jpg"
 						alt="user photo"
 					/>
 				</button>
 				<!-- User dropdown menu -->
 				<div
-					class="z-50 my-4 top-3/4 right-0 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-          class:absolute={showUserDropdown}
-          class:hidden={!showUserDropdown}
-          id="user-dropdown"
+					class="absolute hidden z-50 my-4 top-3/4 right-0 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+					id="user-dropdown"
 				>
 					<div class="px-4 py-3">
 						<span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
@@ -91,7 +113,7 @@
 								>Order History</a
 							>
 						</li>
-            <li>
+						<li>
 							<a
 								href="#"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
@@ -99,8 +121,8 @@
 							>
 						</li>
 						<li>
-							<a 
-                on:click={handleSignOut}
+							<a
+								on:click={handleSignOut}
 								href="#"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
 								>Sign out</a
@@ -110,7 +132,7 @@
 				</div>
 			{:else}
 				<button
-          on:click={() => goto("/auth")}
+					on:click={() => goto('/auth')}
 					type="button"
 					class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 					>Sign in / Register</button
@@ -164,7 +186,6 @@
 						id="dropdownNavbarLink"
 						data-dropdown-toggle="dropdownNavbar"
 						class="flex items-center justify-between w-full py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-white md:dark:hover:text-blue-500 dark:focus:text-white dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
-						on:click={() => (showCategoriesDropdown = !showCategoriesDropdown)}
 						>Categories<svg
 							class="w-2.5 h-2.5 ms-2.5"
 							aria-hidden="true"
@@ -184,9 +205,7 @@
 					<!-- Dropdown menu -->
 					<div
 						id="dropdownNavbar"
-						class:hidden={!showCategoriesDropdown}
-						class:absolute={showCategoriesDropdown}
-						class="z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+						class="absolute hidden z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
 					>
 						<ul
 							class="py-2 text-sm text-gray-700 dark:text-gray-200"
