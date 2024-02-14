@@ -1,8 +1,6 @@
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
 	import '../app.css';
-	import TMULogo from '$lib/images/TMU-rgb.png';
-	import DefaultUserImage from '$lib/images/user.png';
 
 	import { page } from '$app/stores';
 	import { goto, invalidate } from '$app/navigation';
@@ -25,6 +23,8 @@
 
 		return () => subscription.unsubscribe();
 	});
+
+	const DefaultUserImage = '/user.png';
 
 	const handleSignOut = async (e: MouseEvent) => {
 		e.preventDefault();
@@ -84,7 +84,7 @@
 		class="mx-auto flex max-w-screen-xl flex-col flex-wrap items-center justify-between gap-y-5 p-4 sm:flex-row"
 	>
 		<a href="/" class="flex shrink-0 items-center space-x-3 rtl:space-x-reverse">
-			<img src={TMULogo} class="h-10" alt="TMU Logo" />
+			<img src="/TMU-rgb.png" class="h-10" alt="TMU Logo" />
 			<span class="self-center whitespace-nowrap text-2xl font-semibold text-black dark:text-white"
 				>Marketplace</span
 			>
