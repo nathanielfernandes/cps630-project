@@ -6,6 +6,7 @@
 		warningAlert,
 		darkAlert
 	} from '$lib/Alerts/stores.js';
+	import Modal from '$lib/Modal/Modal.svelte';
 
 	export let data;
 
@@ -13,6 +14,9 @@
 	$: if (data.session) {
 		console.log('session', data.session);
 	}
+
+	let show_modal = false;
+	let text = '';
 </script>
 
 <h1>testing</h1>
@@ -53,3 +57,18 @@
 >
 	Dark
 </button>
+
+<button class="bg-gray-500 text-white px-4 py-2 rounded-lg" on:click={() => (show_modal = true)}
+	>Show modal</button
+>
+
+<Modal bind:show={show_modal} class="w-96" let:close>
+	<h1 class="text-white text-2xl font-bold">Example Modal</h1>
+
+	<p class="text-white">This is a modal</p>
+
+	<input type="text" bind:value={text} class="w-full rounded-lg p-2" />
+	<p class="text-white">This is some input: {text}</p>
+
+	<button class="bg-red-500 text-white px-4 py-2 rounded-lg" on:click={close}> Finish </button>
+</Modal>
