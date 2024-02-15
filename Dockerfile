@@ -9,6 +9,10 @@ COPY . .
 # run command to install dependencies
 RUN npm install
 
+# pass in build-time env variables 
+ARG PUBLIC_SUPABASE_URL
+ARG PUBLIC_SUPABASE_ANON_KEY
+
 # run command to build project and output to ./build
 RUN npm run build
 
