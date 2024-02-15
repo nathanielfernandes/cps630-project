@@ -3,11 +3,14 @@ FROM node:21-alpine3.18
 # sets the working directory of all following instructions
 WORKDIR /app
 
-# copy all the files in our project directory to /app
-COPY . .
+# copy the package.json and package-lock.json files to /app
+COPY package*.json .
 
 # run command to install dependencies
-RUN npm install
+RUN npm install 
+
+# copy all the files in our project directory to /app
+COPY . .
 
 # pass in build-time env variables 
 ARG PUBLIC_SUPABASE_URL
