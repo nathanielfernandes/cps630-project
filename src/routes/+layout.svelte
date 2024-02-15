@@ -5,7 +5,9 @@
 	import { page } from '$app/stores';
 	import { goto, invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
+
 	import Alerts from '$lib/Alerts/Alerts.svelte';
+	import { clickOutside } from '$lib/clickOutside';
 
 	export let data;
 
@@ -30,11 +32,11 @@
 		await supabase.auth.signOut();
 	};
 
-  const replaceBadImageWithDefault = (image: HTMLImageElement, defaultImageSrc: string) => {
-    if (image.naturalWidth === 0 && image.naturalHeight === 0) {
-      image.src = defaultImageSrc;
-    }
-  };
+	const replaceBadImageWithDefault = (image: HTMLImageElement, defaultImageSrc: string) => {
+		if (image.naturalWidth === 0 && image.naturalHeight === 0) {
+			image.src = defaultImageSrc;
+		}
+	};
 
 	const handleProfileImageError = (e: Event) => {
 		if (!e.target) {
@@ -43,38 +45,21 @@
 		replaceBadImageWithDefault(e.target as HTMLImageElement, DefaultUserImage);
 	};
 
-	const dropdownTriggers: { [key: string]: string } = {
+	const dropdownTrigger: { [key: string]: string } = {
 		'user-dropdown': 'user-menu-button'
 	};
-	function handleWindowClick(e: MouseEvent) {
-		e.stopPropagation();
-
-		if (!e.target) {
-			return;
+	const dropdownVisibility: { [key: string]: boolean } = {
+		'user-dropdown': false
+	};
+	const handleDropdownClickOutside = ({
+		detail: { node, clickedElement }
+	}: CustomEvent<ClickOutsideEvent>) => {
+		// If user clicked outside of dropdown and it was not the dropdown trigger element
+		if (clickedElement.id !== dropdownTrigger[node.id]) {
+			dropdownVisibility[node.id] = false;
 		}
-		const element = e.target as HTMLElement;
-
-		for (const [dropdownId, dropdownTriggerId] of Object.entries(dropdownTriggers)) {
-			const dropdownElement = document.getElementById(dropdownId);
-			const dropdownTriggerElement = document.getElementById(dropdownTriggerId);
-
-			if (element.id !== dropdownId && element.id !== dropdownTriggerId) {
-				dropdownElement?.classList.add('hidden');
-				dropdownTriggerElement?.setAttribute('aria-expanded', 'false');
-			} else {
-				const hidden = dropdownElement && dropdownElement.classList.contains('hidden');
-				if (hidden) {
-					dropdownElement?.classList.remove('hidden');
-				} else {
-					dropdownElement?.classList.add('hidden');
-				}
-				dropdownTriggerElement?.setAttribute('aria-expanded', String(!hidden));
-			}
-		}
-	}
+	};
 </script>
-
-<svelte:window on:click={handleWindowClick} />
 
 <Alerts />
 
@@ -104,7 +89,16 @@
 					aria-expanded="false"
 				>
 					<span class="sr-only">Open chat</span>
-          <svg class="w-8" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2.5 24 24" width="28" fill="currentColor"><path d="M9.378 12H17a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1 1 1 0 0 1 1 1v3.013L9.378 12zM3 0h14a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-6.958l-6.444 4.808A1 1 0 0 1 2 18.006V14a2 2 0 0 1-2-2V3a3 3 0 0 1 3-3z"></path></svg>
+					<svg
+						class="w-8"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="-2 -2.5 24 24"
+						width="28"
+						fill="currentColor"
+						><path
+							d="M9.378 12H17a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1 1 1 0 0 1 1 1v3.013L9.378 12zM3 0h14a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-6.958l-6.444 4.808A1 1 0 0 1 2 18.006V14a2 2 0 0 1-2-2V3a3 3 0 0 1 3-3z"
+						></path></svg
+					>
 				</button>
 				<button
 					type="button"
@@ -112,11 +106,14 @@
 					id="user-menu-button"
 					data-dropdown-toggle="user-dropdown"
 					data-dropdown-placement="bottom"
+					on:click={() =>
+						(dropdownVisibility['user-dropdown'] = !dropdownVisibility['user-dropdown'])}
+					aria-expanded={dropdownVisibility['user-dropdown']}
 				>
 					<span class="sr-only">Open user menu</span>
 					<img
-            use:replaceBadImageWithDefault={DefaultUserImage}
-            on:error={handleProfileImageError}
+						use:replaceBadImageWithDefault={DefaultUserImage}
+						on:error={handleProfileImageError}
 						class="pointer-events-none h-10 w-10 rounded-full"
 						src="/docs/images/people/profile-picture-3.jpg"
 						alt="user"
@@ -124,8 +121,11 @@
 				</button>
 				<!-- User dropdown menu -->
 				<div
-					class="absolute right-0 top-3/4 z-50 my-4 hidden list-none divide-y divide-gray-100 rounded-lg bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700"
 					id="user-dropdown"
+					class="absolute right-0 top-3/4 z-50 my-4 list-none divide-y divide-gray-100 rounded-lg bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700"
+					class:hidden={!dropdownVisibility['user-dropdown']}
+					use:clickOutside
+					on:click_outside={handleDropdownClickOutside}
 				>
 					<div class="px-4 py-3">
 						<span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
@@ -158,11 +158,11 @@
 					</ul>
 					<div class="py-1">
 						<a
-              href=""
-              role="button"
-              tabIndex="0"
+							href=""
+							role="button"
+							tabIndex="0"
 							on:click={handleSignOut}
-              on:keypress={(e) => e.key === "Enter" && handleSignOut()}
+							on:keypress={(e) => e.key === 'Enter' && handleSignOut()}
 							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
 							>Sign out</a
 						>
@@ -182,23 +182,41 @@
 
 <nav class="bg-gray-50 dark:bg-gray-700">
 	<div
-		class="mx-auto flex max-w-screen-xl flex-col-reverse md:justify-between items-stretch gap-x-10 md:gap-x-24 lg:gap-x-44 gap-y-5 px-4 py-3 md:flex-row md:items-center"
+		class="mx-auto flex max-w-screen-xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
 	>
 		<div class="flex items-center">
-			<ul class="mt-0 flex flex-row space-x-8 text-sm font-medium rtl:space-x-reverse text-center">
+			<ul class="mt-0 flex flex-row space-x-8 text-center text-sm font-medium rtl:space-x-reverse">
 				<li>
-					<a href="/" aria-current={$page.url.pathname === '/' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
+					<a
+						href="/"
+						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
+						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Home</a
 					>
 				</li>
 				<li>
-					<a href="/wanted" aria-current={$page.url.pathname === '/wanted' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Wanted Listings</a>
+					<a
+						href="/wanted"
+						aria-current={$page.url.pathname === '/wanted' ? 'page' : undefined}
+						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
+						>Wanted Listings</a
+					>
 				</li>
 				<li>
-					<a href="/sale" aria-current={$page.url.pathname === '/sale' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Buy & Sell</a>
+					<a
+						href="/sale"
+						aria-current={$page.url.pathname === '/sale' ? 'page' : undefined}
+						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
+						>Buy & Sell</a
+					>
 				</li>
 				<li>
-					<a href="/service" aria-current={$page.url.pathname === '/service' ? 'page' : undefined} class="block py-2 px-3 aria-[current=page]:text-blue-500 text-gray-900 hover:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500">Academic Services</a>
+					<a
+						href="/service"
+						aria-current={$page.url.pathname === '/service' ? 'page' : undefined}
+						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
+						>Academic Services</a
+					>
 				</li>
 			</ul>
 		</div>
