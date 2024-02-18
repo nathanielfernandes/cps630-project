@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 
 	export let show = false;
+	export let persist = false;
+
 	let clazz = '';
 	export { clazz as class };
 
@@ -19,7 +21,7 @@
 <dialog
 	bind:this={dialog}
 	on:close={() => (show = false)}
-	on:click|self={close}
+	on:click|self={persist ? undefined : close}
 	class="relative bg-slate-800 rounded-lg p-4 {clazz} "
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
