@@ -3,6 +3,7 @@
 
 	export let show = false;
 	export let persist = false;
+	export let cancelable = true;
 
 	let clazz = '';
 	export { clazz as class };
@@ -27,6 +28,9 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
 		<button
+			aria-label="Close modal"
+			disabled={!cancelable}
+			class:hidden={!cancelable}
 			type="button"
 			on:click={close}
 			class="absolute text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center hover:text-white right-1 top-1"
