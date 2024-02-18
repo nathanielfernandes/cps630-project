@@ -8,6 +8,7 @@
 
 	import Alerts from '$lib/Alerts/Alerts.svelte';
 	import { clickOutside } from '$lib/clickOutside';
+	import LoginSignup from '$lib/components/LoginSignup.svelte';
 
 	export let data;
 
@@ -59,6 +60,8 @@
 			dropdownVisibility[node.id] = false;
 		}
 	};
+
+	let show_login_modal = false;
 </script>
 
 <Alerts />
@@ -170,7 +173,7 @@
 				</div>
 			{:else}
 				<button
-					on:click={() => goto('/auth')}
+					on:click={() => (show_login_modal = true)}
 					type="button"
 					class="shrink-0 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 					>Sign in / Register</button
@@ -253,3 +256,5 @@
 </nav>
 
 <slot />
+
+<LoginSignup {supabase} bind:show={show_login_modal} />
