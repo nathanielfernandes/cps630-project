@@ -81,13 +81,16 @@
 			>
 				{si}
 			</button>
-			<p class="text-slate-300 text-sm">
+			<p class="text-slate-300 text-sm select-none">
 				{#if signup}
 					Already have an account?
 				{:else}
 					Don't have an account?
 				{/if}
-				<button class="text-blue-500 hover:underline" on:click={() => (signup = !signup)}>
+				<button
+					class="text-blue-500 hover:underline"
+					on:click|preventDefault={() => (signup = !signup)}
+				>
 					{signup ? 'Login' : 'Sign Up'}
 				</button>
 			</p>
