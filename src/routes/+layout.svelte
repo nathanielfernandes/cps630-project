@@ -8,11 +8,15 @@
 
 	import Alerts from '$lib/Alerts/Alerts.svelte';
 	import { clickOutside } from '$lib/clickOutside';
+	import { PROTECTED_PAGES } from '$lib/protectedPages';
 
 	export let data;
 
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
+
+  let authorized = true;
+  $: !authorized && goto('/auth');
 
 	onMount(() => {
 		const {
@@ -20,6 +24,9 @@
 		} = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth');
+			}
+			if (event === 'SIGNED_OUT' && PROTECTED_PAGES.includes(window.location.pathname)) {
+        authorized = false;
 			}
 		});
 
