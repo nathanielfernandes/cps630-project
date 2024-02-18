@@ -21,7 +21,6 @@
 </script>
 
 <h1>testing</h1>
-<a href="/login">login</a>
 
 <hr class="my-8" />
 <button
