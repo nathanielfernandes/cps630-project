@@ -8,6 +8,7 @@
 
 	import Alerts from '$lib/Alerts/Alerts.svelte';
 	import { clickOutside } from '$lib/clickOutside';
+	import LoginSignup from '$lib/components/LoginSignup.svelte';
 
 	export let data;
 
@@ -59,6 +60,8 @@
 			dropdownVisibility[node.id] = false;
 		}
 	};
+
+	let show_login_modal = false;
 </script>
 
 <Alerts />
@@ -115,7 +118,7 @@
 						use:replaceBadImageWithDefault={DefaultUserImage}
 						on:error={handleProfileImageError}
 						class="pointer-events-none h-10 w-10 rounded-full"
-						src="/docs/images/people/profile-picture-3.jpg"
+						src="/user.png"
 						alt="user"
 					/>
 				</button>
@@ -128,7 +131,7 @@
 					on:click_outside={handleDropdownClickOutside}
 				>
 					<div class="px-4 py-3">
-						<span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
+						<!-- <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span> -->
 						<span class="block truncate text-sm text-gray-500 dark:text-gray-400"
 							>{session.user.email}</span
 						>
@@ -136,21 +139,21 @@
 					<ul class="py-2" aria-labelledby="user-menu-button">
 						<li>
 							<a
-								href="#"
+								href="/"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
 								>Profile</a
 							>
 						</li>
 						<li>
 							<a
-								href="#"
+								href="/"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
 								>Order History</a
 							>
 						</li>
 						<li>
 							<a
-								href="#"
+								href="/admin"
 								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
 								>Admin Dashboard</a
 							>
@@ -158,7 +161,7 @@
 					</ul>
 					<div class="py-1">
 						<a
-							href=""
+							href="/"
 							role="button"
 							tabIndex="0"
 							on:click={handleSignOut}
@@ -170,7 +173,7 @@
 				</div>
 			{:else}
 				<button
-					on:click={() => goto('/auth')}
+					on:click={() => (show_login_modal = true)}
 					type="button"
 					class="shrink-0 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 					>Sign in / Register</button
@@ -253,3 +256,5 @@
 </nav>
 
 <slot />
+
+<LoginSignup {supabase} bind:show={show_login_modal} />
