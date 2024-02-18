@@ -10,9 +10,10 @@
 
 	export let data;
 
-	console.log('data', data);
+	// console.log('data', data);
 	$: if (data.session) {
-		console.log('session', data.session);
+		console.log('logged in as:', data.session.user.email);
+		// console.log('session', data.session);
 	}
 
 	let show_modal = false;
@@ -20,7 +21,6 @@
 </script>
 
 <h1>testing</h1>
-<a href="/login">login</a>
 
 <hr class="my-8" />
 <button
