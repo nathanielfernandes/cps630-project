@@ -10,9 +10,10 @@
 
 	export let data;
 
-	console.log('data', data);
+	// console.log('data', data);
 	$: if (data.session) {
-		console.log('session', data.session);
+		console.log('logged in as:', data.session.user.email);
+		// console.log('session', data.session);
 	}
 
 	let show_modal = false;
