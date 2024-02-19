@@ -7,8 +7,12 @@
 	import { onMount } from 'svelte';
 
 	import Alerts from '$lib/Alerts/Alerts.svelte';
+  import {
+    successAlert,
+    warningAlert,
+		errorAlert
+	} from '$lib/Alerts/stores.js';
 	import { clickOutside } from '$lib/clickOutside';
-	import { PROTECTED_PAGES } from '$lib/protectedPages';
 	import LoginSignup from '$lib/components/LoginSignup.svelte';
 
 	export let data;
@@ -22,6 +26,7 @@
 	onMount(() => {
     if ($page.url.searchParams.get("askLogin") === "true") {
       show_login_modal = true;
+      errorAlert("Not authorized to view page");
 
       // Remove the 'askLogin' search param and update the url
       const params = new URLSearchParams($page.url.searchParams);
@@ -33,11 +38,14 @@
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
+        if (event === "SIGNED_IN") {
+          successAlert("Sign in successful");
+        }
 				invalidate('supabase:auth');
 			}
       // If the previous page before signing out was a protected page, show login modal
-			if (event === 'SIGNED_OUT' && PROTECTED_PAGES.includes(prev_pathname)) {
-        show_login_modal = true;
+      if (event === 'SIGNED_OUT') {
+        warningAlert("You have been signed out");
 			}
 		});
 
@@ -50,6 +58,7 @@
     // Keep track of previous page before signing out which will redirect to homepage
     prev_pathname = window.location.pathname;
 		await supabase.auth.signOut();
+    dropdownVisibility["user-dropdown"] = false;
 	};
 
 	const replaceBadImageWithDefault = (image: HTMLImageElement, defaultImageSrc: string) => {
