@@ -16,18 +16,28 @@
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
 
-  let authorized = true;
-  $: !authorized && goto('/auth');
+  let show_login_modal = false;
+  let prev_pathname = "";
 
 	onMount(() => {
+    if ($page.url.searchParams.get("askLogin") === "true") {
+      show_login_modal = true;
+
+      // Remove the 'askLogin' search param and update the url
+      const params = new URLSearchParams($page.url.searchParams);
+      params.delete("askLogin");
+      goto(params.size === 0 ? '/' : `/?${params.toString()}`);
+    }
+
 		const {
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth');
 			}
-			if (event === 'SIGNED_OUT' && PROTECTED_PAGES.includes(window.location.pathname)) {
-        authorized = false;
+      // If the previous page before signing out was a protected page, show login modal
+			if (event === 'SIGNED_OUT' && PROTECTED_PAGES.includes(prev_pathname)) {
+        show_login_modal = true;
 			}
 		});
 
@@ -37,6 +47,8 @@
 	const DefaultUserImage = '/user.png';
 
 	const handleSignOut = async () => {
+    // Keep track of previous page before signing out which will redirect to homepage
+    prev_pathname = window.location.pathname;
 		await supabase.auth.signOut();
 	};
 
@@ -67,8 +79,6 @@
 			dropdownVisibility[node.id] = false;
 		}
 	};
-
-	let show_login_modal = false;
 </script>
 
 <Alerts />
