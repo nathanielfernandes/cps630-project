@@ -90,6 +90,10 @@
 	};
 </script>
 
+<svelte:head>
+	<script src="https://kit.fontawesome.com/3403ec00eb.js" crossorigin="anonymous"></script>
+</svelte:head>
+
 <Alerts />
 
 <nav class="border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
