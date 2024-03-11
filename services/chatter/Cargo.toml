@@ -1,0 +1,19 @@
+[package]
+name = "chatter"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+futures = "0.3.30"
+futures-util = "0.3.30"
+axum = { version = "0.7.4", features = ["ws"] }
+uuid = { version = "1.7.0", features = ["serde", "v4"] }
+tokio = { version = "1.36.0", features = ["rt-multi-thread"] }
+moka = { version = "0.12.5", features = ["future"] }
+fastrand = "2.0.0"
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.114"
+specta = { version = "1.0.5", features = ["typescript"] }
+reqwest = "0.11.25"
