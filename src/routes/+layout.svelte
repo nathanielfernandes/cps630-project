@@ -106,7 +106,7 @@
 			<button
 				on:click={() => goto('/auth')}
 				type="button"
-				class="rounded-lg bg-yellow-500 px-4 py-2 text-center text-sm font-medium text-white hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-yellow-300/70 dark:focus:ring-yellow-800/70"
+				class="rounded-lg bg-yellow-300 px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300/70 dark:focus:ring-yellow-800/70"
 				>Place an Ad</button
 			>
 			{#if session}
@@ -118,16 +118,7 @@
 					aria-expanded="false"
 				>
 					<span class="sr-only">Open chat</span>
-					<svg
-						class="w-8"
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="-2 -2.5 24 24"
-						width="28"
-						fill="currentColor"
-						><path
-							d="M9.378 12H17a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1 1 1 0 0 1 1 1v3.013L9.378 12zM3 0h14a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-6.958l-6.444 4.808A1 1 0 0 1 2 18.006V14a2 2 0 0 1-2-2V3a3 3 0 0 1 3-3z"
-						></path></svg
-					>
+					<i class="fa-regular fa-message text-2xl"></i>
 				</button>
 				<button
 					type="button"
@@ -209,7 +200,7 @@
 	</div>
 </nav>
 
-<nav class="bg-gray-50 dark:bg-gray-700">
+<nav class="bg-slate-200 dark:bg-gray-700">
 	<div
 		class="mx-auto flex max-w-screen-xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
 	>
@@ -225,24 +216,24 @@
 				</li>
 				<li>
 					<a
-						href="/wanted"
-						aria-current={$page.url.pathname === '/wanted' ? 'page' : undefined}
+						href="/dashboard/wanted"
+						aria-current={$page.url.pathname === '/dashboard/wanted' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Wanted Listings</a
 					>
 				</li>
 				<li>
 					<a
-						href="/sale"
-						aria-current={$page.url.pathname === '/sale' ? 'page' : undefined}
+						href="/dashboard/sale"
+						aria-current={$page.url.pathname === '/dashboard/sale' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Buy & Sell</a
 					>
 				</li>
 				<li>
 					<a
-						href="/service"
-						aria-current={$page.url.pathname === '/service' ? 'page' : undefined}
+						href="/dashboard/service"
+						aria-current={$page.url.pathname === '/dashboard/service' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Academic Services</a
 					>
