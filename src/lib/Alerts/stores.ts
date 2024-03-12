@@ -64,3 +64,7 @@ export function infoAlert(title: string = "", message: string = "", timeout: num
 export function darkAlert(title: string = "", message: string = "", timeout: number = 2000): () => void {
     return newAlert(title, message, "dark", timeout);
 }
+
+export function todo(title: string) {
+    return newAlert(title, "", "yellow", 5000);
+}

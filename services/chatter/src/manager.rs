@@ -55,8 +55,8 @@ pub struct ChatManager {
     pub history: HistoryManager,
 
     client: Client,
-    auth_endpoint: &'static str,
-    token: &'static str,
+    auth_endpoint: String,
+    token: String,
 }
 
 impl ChatManager {
@@ -66,8 +66,8 @@ impl ChatManager {
             wspool: wsroom,
             history,
             client: Client::new(),
-            token: leak(std::env::var("TOKEN").expect("TOKEN not set")),
-            auth_endpoint: leak(std::env::var("AUTH_ENDPOINT").expect("AUTH_ENDPOINT not set")),
+            token: std::env::var("TOKEN").expect("TOKEN not set"),
+            auth_endpoint: std::env::var("AUTH_ENDPOINT").expect("AUTH_ENDPOINT not set"),
         })
     }
 
@@ -91,14 +91,14 @@ impl ChatManager {
         tokio::spawn(async move {
             while let Some(TaggedMessage {
                 socket_id,
-                user_id: from,
+                user_id,
                 message,
             }) = rx.next().await
             {
                 match message {
                     ClientMessage::SendMessage { to, message } => {
                         // If the user is not logged in, we can't do anything
-                        let Some(from) = from else {
+                        let Some(from) = user_id else {
                             self.send_error(socket_id, ServerErrors::Unauthorized).await;
                             continue;
                         };
@@ -112,7 +112,7 @@ impl ChatManager {
                     }
                     ClientMessage::SyncChat { with } => {
                         // If the user is not logged in, we can't do anything
-                        let Some(from) = from else {
+                        let Some(from) = user_id else {
                             self.send_error(socket_id, ServerErrors::Unauthorized).await;
                             continue;
                         };
@@ -123,7 +123,10 @@ impl ChatManager {
                         };
 
                         let messages = self.history.get_messages(&from, &with).await;
-                        let message = ServerMessage::BulkMessages { messages };
+                        let message = ServerMessage::BulkMessages {
+                            from: with.to_string(),
+                            messages,
+                        };
 
                         if let Err(e) = self.wspool.send_to_user(from, message).await {
                             println!("Failed to send chat history: {}", e);
@@ -137,7 +140,8 @@ impl ChatManager {
                     }
 
                     ClientMessage::Authenticate { id, secret } => {
-                        if let Some(_) = from {
+                        println!("Authentication Attempt: {}", id);
+                        if let Some(_) = user_id {
                             self.send_error(socket_id, ServerErrors::AlreadyAuthenticated)
                                 .await;
                             continue;
@@ -157,6 +161,7 @@ impl ChatManager {
                         self.wspool.authenticate(id, socket_id).await;
 
                         let message = ServerMessage::Authenticated;
+                        println!("Authenticated: {}", id);
                         if let Err(e) = self.wspool.send_to_socket(socket_id, message).await {
                             println!("Failed to send authenticated: {}", e);
                         }
@@ -178,7 +183,7 @@ impl ChatManager {
             .client
             .get(&format!("{}/{}", self.auth_endpoint, uuid))
             .header("Secret", secret)
-            .header("Token", self.token)
+            .header("Token", &self.token)
             .send()
             .await;
 

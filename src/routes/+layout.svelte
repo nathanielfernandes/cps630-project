@@ -7,9 +7,10 @@
 	import { onMount } from 'svelte';
 
 	import Alerts from '$lib/Alerts/Alerts.svelte';
-	import { successAlert, warningAlert, errorAlert } from '$lib/Alerts/stores.js';
+	import { successAlert, warningAlert, errorAlert, todo } from '$lib/Alerts/stores.js';
 	import { clickOutside } from '$lib/clickOutside';
 	import LoginSignup from '$lib/components/LoginSignup.svelte';
+	import { connect_websocket, disconnect_websocket, uuid, ssecret } from '$lib/chatter/stores';
 
 	export let data;
 
@@ -20,6 +21,8 @@
 	let prev_pathname = '';
 
 	onMount(() => {
+		connect_websocket();
+
 		if ($page.url.searchParams.get('askLogin') === 'true') {
 			show_login_modal = true;
 			errorAlert('Not authorized to view page');
@@ -30,12 +33,36 @@
 			goto(params.size === 0 ? '/' : `/?${params.toString()}`);
 		}
 
+		if ($page.data.session) {
+			successAlert('Signed in successful');
+
+			//TODO we can currently read any user's secret (this is a security issue)
+			todo("We can currently read any user's secret (this is a security issue)");
+			const id = $page.data.session.user.id;
+			uuid.set(id);
+			supabase
+				.from('users')
+				.select('secret')
+				.eq('id', id)
+				.single()
+				.then(({ data, error }) => {
+					if (error) {
+						console.error('Error fetching user secret:', error);
+						return;
+					}
+					if (data) {
+						const { secret } = data;
+						ssecret.set(secret);
+					}
+				});
+		}
+
 		const {
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
 				if (event === 'SIGNED_IN') {
-					successAlert('Sign in successful');
+					successAlert('Signed in successful');
 				}
 				invalidate('supabase:auth');
 			}
@@ -45,7 +72,10 @@
 			}
 		});
 
-		return () => subscription.unsubscribe();
+		return () => {
+			disconnect_websocket();
+			subscription.unsubscribe();
+		};
 	});
 
 	const DefaultUserImage = '/user.png';
