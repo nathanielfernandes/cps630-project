@@ -112,6 +112,7 @@ impl<T: for<'a> Deserialize<'a> + Send + Sync> WsPool<T> {
         self.add_socket(socket.clone()).await;
 
         tokio::task::spawn(async move {
+            println!("Socket connected: {}", socket_id);
             let mut subscriber = self.subscriber.clone();
             while let Some(message) = stream.next().await {
                 let result: Result<(), Error> = try {
@@ -148,7 +149,7 @@ impl<T: for<'a> Deserialize<'a> + Send + Sync> WsPool<T> {
                 }
             }
 
-            println!("Socket disconnected");
+            println!("Socket disconnected: {}", socket_id);
             self.remove_socket(socket_id).await;
         });
     }

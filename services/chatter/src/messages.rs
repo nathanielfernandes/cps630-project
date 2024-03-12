@@ -11,12 +11,18 @@ pub enum ServerMessage {
 
     Error(ServerErrors),
 
-    BulkMessages { messages: Vec<ChatMessage> }, // Send a bulk of messages to the client (chat history)
-    Message { message: ChatMessage },            // Send a single message to the client
+    BulkMessages {
+        from: String,
+        messages: Vec<ChatMessage>,
+    }, // Send a bulk of messages to the client (chat history)
+    Message {
+        message: ChatMessage,
+    }, // Send a single message to the client
 }
 
 #[derive(Type, Clone, Debug, Serialize)]
 pub enum ServerErrors {
+    Internal,
     Unauthorized,
     AlreadyAuthenticated,
     InvalidUuid,
@@ -68,6 +74,8 @@ pub fn export_types() {
 export type ClientMessageTypes = ClientMessage["type"];
 export type ServerMessageTypes = ServerMessage["type"];
 export type ChatMessageTypes = ChatMessage["type"];
+export type ServerMessageMap<T extends ServerMessageTypes> = Omit<Extract<ServerMessage, { type: T }>, 'type'>;
+export type ClientMessageMap<T extends ClientMessageTypes> = Omit<Extract<ClientMessage, { type: T }>, 'type'>;
 "#
     };
 
