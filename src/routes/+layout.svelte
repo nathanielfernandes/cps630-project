@@ -18,7 +18,7 @@
 
     $: {
         // Redirect and ask user to login, if user tries to visit a protected page and is not logged in
-        if (isProtectedPage($page.url.pathname)) {
+        if (isProtectedPage($page.url.pathname) && !session) {
             window.location.replace('/?askLogin=true');
         }
     }
