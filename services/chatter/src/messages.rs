@@ -15,7 +15,7 @@ pub enum ServerMessage {
         from: String,
         messages: Vec<ChatMessage>,
     }, // Send a bulk of messages to the client (chat history)
-    Message {
+    DirectMessage {
         message: ChatMessage,
     }, // Send a single message to the client
 }
@@ -37,9 +37,10 @@ pub enum ServerErrors {
 pub enum ClientMessage {
     Ping,
 
-    Authenticate { id: String, secret: String }, // Authenticate the user
-    SyncChat { with: String },                   // Sync chat with a user (ask for chat history)
-    SendMessage { to: String, message: String }, // Send a message to a user
+    Disconnect,                                    // Disconnect from the server
+    Authenticate { id: String, secret: String },   // Authenticate the user
+    SyncChat { with: String },                     // Sync chat with a user (ask for chat history)
+    DirectMessage { to: String, message: String }, // Send a message to a user
 }
 
 #[derive(Type, Clone, Debug, Serialize)]
