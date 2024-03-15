@@ -8,7 +8,7 @@
 	export let user: string;
 </script>
 
-<div class="ad-card w-[300px] place-self-center rounded-lg bg-white shadow-lg">
+<div class="w-[300px] place-self-center rounded-lg bg-white shadow-lg">
 	<div class="relative h-[250px] w-[300px] rounded-t-lg">
 		<img src={images[0]} alt={title} class="h-[250px] w-[300px] rounded-t-lg object-cover" />
 		<div
