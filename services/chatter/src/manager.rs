@@ -1,6 +1,7 @@
 use futures::{channel::mpsc::UnboundedReceiver, StreamExt};
+use moka::future::Cache;
 use reqwest::Client;
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
 use tokio::sync::RwLock;
 
 use uuid::Uuid;
@@ -11,9 +12,15 @@ use crate::{
     ws::{leak, SocketId, TaggedMessage, WsPool},
 };
 
-pub struct HistoryManager(RwLock<HashMap<String, Arc<RwLock<History<ChatMessage>>>>>);
+pub struct HistoryManager(Cache<String, Arc<RwLock<History<ChatMessage>>>>);
 
 impl HistoryManager {
+    const HISTORY_SIZE: usize = 100;
+
+    pub fn new() -> Self {
+        Self(Cache::builder().build())
+    }
+
     pub fn history_id(a: &Uuid, b: &Uuid) -> String {
         if a < b {
             format!("{}-{}", a, b)
@@ -23,16 +30,11 @@ impl HistoryManager {
     }
 
     pub async fn get_history(&self, history_id: &str) -> Arc<RwLock<History<ChatMessage>>> {
-        if let Some(history) = self.0.read().await.get(history_id).cloned() {
-            return history;
-        }
-
-        let history = Arc::new(RwLock::new(History::new(100)));
         self.0
-            .write()
+            .get_with_by_ref(history_id, async {
+                Arc::new(RwLock::new(History::new(Self::HISTORY_SIZE)))
+            })
             .await
-            .insert(history_id.to_string(), history.clone());
-        history
     }
 
     pub async fn push_message(&self, from: &Uuid, to: &Uuid, message: ChatMessage) {
@@ -61,10 +63,9 @@ pub struct ChatManager {
 
 impl ChatManager {
     pub fn new(wsroom: &'static WsPool<ClientMessage>) -> &'static Self {
-        let history = HistoryManager(RwLock::new(HashMap::new()));
         leak(Self {
             wspool: wsroom,
-            history,
+            history: HistoryManager::new(),
             client: Client::new(),
             token: std::env::var("TOKEN").expect("TOKEN not set"),
             auth_endpoint: std::env::var("AUTH_ENDPOINT").expect("AUTH_ENDPOINT not set"),
@@ -77,7 +78,7 @@ impl ChatManager {
             message,
         };
 
-        let message = ServerMessage::Message {
+        let message = ServerMessage::DirectMessage {
             message: cm.clone(),
         };
 
@@ -96,7 +97,7 @@ impl ChatManager {
             }) = rx.next().await
             {
                 match message {
-                    ClientMessage::SendMessage { to, message } => {
+                    ClientMessage::DirectMessage { to, message } => {
                         // If the user is not logged in, we can't do anything
                         let Some(from) = user_id else {
                             self.send_error(socket_id, ServerErrors::Unauthorized).await;
@@ -165,6 +166,9 @@ impl ChatManager {
                         if let Err(e) = self.wspool.send_to_socket(socket_id, message).await {
                             println!("Failed to send authenticated: {}", e);
                         }
+                    }
+                    ClientMessage::Disconnect => {
+                        self.wspool.remove_socket(socket_id).await;
                     }
                 }
             }

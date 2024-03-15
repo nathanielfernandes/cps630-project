@@ -2,7 +2,7 @@
 
 export type ServerMessage = { type: "Pong" } | { type: "Authenticated" } | ({ type: "Error" } & ServerErrors) | { type: "BulkMessages"; from: string; messages: ChatMessage[] } | { type: "Message"; message: ChatMessage };
 export type ServerErrors = "Internal" | "Unauthorized" | "AlreadyAuthenticated" | "InvalidUuid" | "InvalidSecret" | "InvalidMessage" | "InvalidUser" | "RateLimited";
-export type ClientMessage = { type: "Ping" } | { type: "Authenticate"; id: string; secret: string } | { type: "SyncChat"; with: string } | { type: "SendMessage"; to: string; message: string };
+export type ClientMessage = { type: "Ping" } | { type: "Disconnect" } | { type: "Authenticate"; id: string; secret: string } | { type: "SyncChat"; with: string } | { type: "SendMessage"; to: string; message: string };
 export type ChatMessage = { type: "User"; from: string; message: string } | { type: "Topic"; topic: string } | { type: "Server"; message: string };
 
 export type ClientMessageTypes = ClientMessage["type"];

@@ -158,7 +158,7 @@ impl<T: for<'a> Deserialize<'a> + Send + Sync> WsPool<T> {
         self.sockets.insert(socket.id, socket).await;
     }
 
-    async fn remove_socket(&'static self, socket_id: SocketId) {
+    pub async fn remove_socket(&'static self, socket_id: SocketId) {
         let Some(socket) = self.sockets.remove(&socket_id).await else {
             return;
         };
