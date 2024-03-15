@@ -10,14 +10,21 @@
 	import { successAlert, warningAlert, errorAlert } from '$lib/Alerts/stores.js';
 	import { clickOutside } from '$lib/clickOutside';
 	import LoginSignup from '$lib/components/LoginSignup.svelte';
+	import { isProtectedPage } from '$lib/protectedPages';
 
 	export let data;
-
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
 
+    $: {
+        // Redirect and ask user to login, if user tries to visit a protected page and is not logged in
+        if (isProtectedPage($page.url.pathname) && !session) {
+            window.location.replace('/?askLogin=true');
+        }
+    }
+
 	let show_login_modal = false;
-	let prev_pathname = '';
+	let pathBeforeSignOut = '';
 
 	onMount(() => {
 		if ($page.url.searchParams.get('askLogin') === 'true') {
@@ -39,9 +46,12 @@
 				}
 				invalidate('supabase:auth');
 			}
-			// If the previous page before signing out was a protected page, show login modal
 			if (event === 'SIGNED_OUT') {
 				warningAlert('You have been signed out');
+                // If the previous page before signing out was a protected page, show login modal
+                if (isProtectedPage(pathBeforeSignOut)) {
+                    show_login_modal = true;
+                }
 			}
 		});
 
@@ -52,7 +62,7 @@
 
 	const handleSignOut = async () => {
 		// Keep track of previous page before signing out which will redirect to homepage
-		prev_pathname = window.location.pathname;
+		pathBeforeSignOut = window.location.pathname;
 		await supabase.auth.signOut();
 		dropdownVisibility['user-dropdown'] = false;
 	};
@@ -205,7 +215,7 @@
 		class="mx-auto flex max-w-screen-xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
 	>
 		<div class="flex items-center">
-			<ul class="mt-0 flex flex-row space-x-8 text-center text-sm font-medium rtl:space-x-reverse">
+			<ul class="mt-0 flex flex-row space-x-5 sm:space-x-8 text-center text-sm font-medium rtl:space-x-reverse">
 				<li>
 					<a
 						href="/"
