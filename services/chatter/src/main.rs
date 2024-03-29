@@ -26,7 +26,7 @@ async fn main() {
     export_types();
 
     let (room, rx) = ws::WsPool::new();
-    manager::ChatManager::new(room).start(rx);
+    manager::ChatManager::new(room).await.start(rx);
 
     let aps = AppState { room };
     let app = Router::new()
