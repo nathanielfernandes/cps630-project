@@ -1,29 +1,23 @@
 import { infoAlert } from "$lib/Alerts/stores";
 import { on_message } from "./msg";
+import { addMessages } from "./stores";
 
 
 export function startListeners() {
     on_message("Authenticated", (_) => {
-        infoAlert("Websocket Authenticated!");
+        // infoAlert("Websocket Authenticated!");
+        console.log("Websocket Authenticated!");
     });
 
     on_message("Error", (message) => {
         infoAlert(`Error: ${message}`);
     });
 
-    on_message("BulkMessages", ({ messages, from }) => {
-
+    on_message("BulkMessages", ({ participants, messages }) => { 
+        addMessages(participants, messages);
     });
 
-
-    // on_message("Message", ({ message }) => {
-    //     switch (message.type) {
-    //         case "User":
-    //             break;
-    //         case "Topic":
-    //             break;
-    //         case "Server":
-    //             break;
-    //     }
-    // });
+    on_message("DirectMessage", ({ participants, message }) => {
+        addMessages(participants, [message]);
+    });
 }

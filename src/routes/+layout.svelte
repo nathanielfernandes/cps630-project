@@ -20,6 +20,27 @@
 	let show_login_modal = false;
 	let prev_pathname = '';
 
+	function wsAuthAttempt() {
+		if ($page.data.session) {
+			// select user id and secret
+			supabase
+				.from('verify')
+				.select('id, secret')
+				.single()
+				.then(({ data, error }) => {
+					if (error) {
+						console.error('Error fetching user secret:', error);
+						return;
+					}
+					if (data) {
+						const { id, secret } = data;
+						uuid.set(id);
+						ssecret.set(secret);
+					}
+				});
+		}
+	}
+
 	onMount(() => {
 		connect_websocket();
 
@@ -33,28 +54,8 @@
 			goto(params.size === 0 ? '/' : `/?${params.toString()}`);
 		}
 
-		if ($page.data.session) {
-			// successAlert('Signed in successful');
+		wsAuthAttempt();
 
-
-			uuid.set($page.data.session.user.id);
-			supabase
-				.from('verify')
-				.select('secret')
-				.single()
-				.then(({ data, error }) => {
-					if (error) {
-						console.error('Error fetching user secret:', error);
-						return;
-					}
-					if (data) {
-						const { secret } = data;
-						ssecret.set(secret);
-
-						console.log('User secret:', secret);
-					}
-				});
-		}
 
 		const {
 			data: { subscription }
@@ -63,15 +64,20 @@
 				if (event === 'SIGNED_IN') {
 					successAlert('Signed in successful');
 				}
-				invalidate('supabase:auth');
+				invalidate('supabase:auth').then(wsAuthAttempt);
 			}
 			// If the previous page before signing out was a protected page, show login modal
 			if (event === 'SIGNED_OUT') {
+				uuid.set("");
+				ssecret.set("");
+				disconnect_websocket();
 				warningAlert('You have been signed out');
 			}
 		});
 
 		return () => {
+			uuid.set("");
+			ssecret.set("");
 			disconnect_websocket();
 			subscription.unsubscribe();
 		};
