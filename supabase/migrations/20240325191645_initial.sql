@@ -28,7 +28,6 @@ CREATE TABLE images (
 
 CREATE TABLE verify (
     id UUID NOT NULL REFERENCES auth.users(id),
-    email VARCHAR(255) NOT NULL,
     secret UUID NOT NULL DEFAULT gen_random_uuid()
 );
 
@@ -42,9 +41,9 @@ SELECT
 -- triger whenever a new user is created, a new verify row is created
 CREATE FUNCTION create_verify_row() RETURNS TRIGGER AS $$ BEGIN
     INSERT INTO
-        verify (id, email)
+        verify (id)
     VALUES
-        (NEW .id, NEW .email);
+        (NEW .id);
 
 RETURN NEW;
 
