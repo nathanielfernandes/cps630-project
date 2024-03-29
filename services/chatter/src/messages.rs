@@ -12,10 +12,11 @@ pub enum ServerMessage {
     Error(ServerErrors),
 
     BulkMessages {
-        from: String,
+        participants: [String; 2],
         messages: Vec<ChatMessage>,
     }, // Send a bulk of messages to the client (chat history)
     DirectMessage {
+        participants: [String; 2],
         message: ChatMessage,
     }, // Send a single message to the client
 }

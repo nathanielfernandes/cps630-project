@@ -73,12 +73,16 @@ impl ChatManager {
     }
 
     async fn send_message(&self, from: Uuid, to: Uuid, message: String) {
+        let from_str = from.to_string();
+        let to_str = to.to_string();
+
         let cm = ChatMessage::User {
-            from: from.to_string(),
+            from: from_str.clone(),
             message,
         };
 
         let message = ServerMessage::DirectMessage {
+            participants: [from_str, to_str],
             message: cm.clone(),
         };
 
@@ -125,7 +129,7 @@ impl ChatManager {
 
                         let messages = self.history.get_messages(&from, &with).await;
                         let message = ServerMessage::BulkMessages {
-                            from: with.to_string(),
+                            participants: [from.to_string(), with.to_string()],
                             messages,
                         };
 

@@ -1,9 +1,9 @@
 import { PUBLIC_CHATTER_WS_URL } from "$env/static/public";
 import { get, writable } from "svelte/store";
 import { handle_message, send_message } from "./msg";
-import { infoAlert, successAlert } from "$lib/Alerts/stores";
+import { successAlert } from "$lib/Alerts/stores";
 import { startListeners } from "./listeners";
-
+import type { ChatMessage } from "$lib/messages";
 
 export let socket: WebSocket | null;
 export type SocketState =  "connecting" | "connected" | "authenticated" | "disconnected";
@@ -13,7 +13,33 @@ export const socket_state = writable<SocketState>("connecting");
 export const uuid = writable("");
 export const ssecret = writable("");
 
+export const messages = writable<{ [from: string]: ChatMessage[] }>({});
+
+export function addMessages(participants: string[], bulk_msgs: ChatMessage[]) {
+    const [from, to] = participants;
+    const key = from === get(uuid) ? to : from;
+
+    messages.update((msgs) => {
+        if (!msgs[key]) {
+            msgs[key] = [];
+        }
+
+        for (const msg of bulk_msgs) {
+            msgs[key].push(msg);
+        }
+
+        return msgs;
+    });
+}
+
+
+let started = false;
 export function connect_websocket() {
+    if (!started) {
+        startListeners();
+        started = true;
+    }
+
     if (socket) {
         socket.close();
         socket = null;
@@ -25,8 +51,7 @@ export function connect_websocket() {
 
     socket.onopen = (_) => {
         socket_state.set("connected");
-
-        successAlert("Connected to Websocket");
+        // successAlert("Connected to Websocket");
         send_message("Ping", {})
     }
 
@@ -111,12 +136,9 @@ export function tryAuthenticating({ id, secret }: { id?: string, secret?: string
                 id,
                 secret
             }
-        ).then((value) => {
-            console.log("Authentication response: ", value);
-        });
+        )
     }
 }
 
 
-startListeners();
 

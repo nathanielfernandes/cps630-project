@@ -6,7 +6,9 @@ const promises = new Map<string, (value: any) => void>();
 const callbacks = new Map<string, ((value: any) => void)[]>();
 
 export function handle_message(message: ServerMessage) {
-    console.log("message from server", message);
+    // console.log("message from server", message);
+    // console.log(callbacks);
+
     const cbs = callbacks.get(message.type) ?? [];
     for (const cb of cbs) {
         cb(message);

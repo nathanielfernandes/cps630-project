@@ -7,6 +7,7 @@
 		darkAlert
 	} from '$lib/Alerts/stores.js';
 	import Modal from '$lib/Modal/Modal.svelte';
+	import Chat from '$lib/chatter/Chat.svelte';
 
 	export let data;
 
@@ -72,3 +73,6 @@
 
 	<button class="bg-red-500 text-white px-4 py-2 rounded-lg" on:click={close}> Finish </button>
 </Modal>
+
+
+<Chat />
