@@ -8,10 +8,11 @@
 
 	import Alerts from '$lib/Alerts/Alerts.svelte';
 
-	import { successAlert, warningAlert, errorAlert, todo } from '$lib/Alerts/stores.js';
+	import { successAlert, warningAlert, errorAlert } from '$lib/Alerts/stores.js';
 	import { clickOutside } from '$lib/clickOutside';
 	import LoginSignup from '$lib/components/LoginSignup.svelte';
-	import { connect_websocket, disconnect_websocket, uuid, ssecret } from '$lib/chatter/stores';
+	import { disconnect_websocket, uuid, ssecret, connect_websocket } from '$lib/chatter/stores';
+	import { isProtectedPage } from '$lib/protectedPages';
 
 
 	export let data;
@@ -53,6 +54,8 @@
 
 
 	onMount(() => {
+		connect_websocket();
+
 		if ($page.url.searchParams.get('askLogin') === 'true') {
 			show_login_modal = true;
 			errorAlert('Not authorized to view page');
@@ -63,13 +66,13 @@
 			goto(params.size === 0 ? '/' : `/?${params.toString()}`);
 		}
 
+		wsAuthAttempt();
 
 		const {
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
 				if (event === 'SIGNED_IN') {
-
 					successAlert('Signed in successful');
 				}
 				invalidate('supabase:auth').then(wsAuthAttempt);
@@ -80,10 +83,10 @@
 				ssecret.set("");
 				disconnect_websocket();
 				warningAlert('You have been signed out');
-        // If the previous page before signing out was a protected page, show login modal
-        if (isProtectedPage(pathBeforeSignOut)) {
-            show_login_modal = true;
-        }
+				// If the previous page before signing out was a protected page, show login modal
+				if (isProtectedPage(pathBeforeSignOut)) {
+					show_login_modal = true;
+				}
 
 			}
 		});
