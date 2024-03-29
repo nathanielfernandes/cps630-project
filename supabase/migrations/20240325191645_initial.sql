@@ -28,6 +28,7 @@ CREATE TABLE images (
 
 CREATE TABLE verify (
     id UUID NOT NULL REFERENCES auth.users(id),
+    email VARCHAR(255) NOT NULL,
     secret UUID NOT NULL DEFAULT gen_random_uuid()
 );
 
@@ -39,25 +40,27 @@ SELECT
     USING (auth.uid() = id);
 
 -- triger whenever a new user is created, a new verify row is created
-CREATE FUNCTION create_verify_row() RETURNS TRIGGER AS $$ BEGIN
-    INSERT INTO
-        verify (id)
-    VALUES
-        (NEW .id);
+CREATE FUNCTION public .create_verify_row() RETURNS TRIGGER LANGUAGE PLPGSQL SECURITY DEFINER
+set
+    search_path = public AS $$ BEGIN
+        INSERT INTO
+            public .verify (id, email)
+        VALUES
+            (NEW .id, NEW .email);
 
 RETURN NEW;
 
 END;
 
-$$ LANGUAGE PLPGSQL;
+$$;
 
 CREATE TRIGGER create_verify_row_trigger AFTER
 INSERT
-    ON auth.users FOR EACH ROW EXECUTE FUNCTION create_verify_row();
+    ON auth.users FOR EACH ROW EXECUTE PROCEDURE public .create_verify_row();
 
 -- read the auth.users and generate a new verify row
 INSERT INTO
-    verify (id, email)
+    public .verify (id, email)
 SELECT
     id,
     email
