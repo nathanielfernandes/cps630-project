@@ -1,6 +1,6 @@
 use futures::{channel::mpsc::UnboundedReceiver, StreamExt};
 use moka::future::Cache;
-use reqwest::Client;
+use sqlx::Row;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -53,22 +53,22 @@ impl HistoryManager {
 }
 
 pub struct ChatManager {
+    pub dbpool: sqlx::PgPool,
     pub wspool: &'static WsPool<ClientMessage>,
     pub history: HistoryManager,
-
-    client: Client,
-    auth_endpoint: String,
-    token: String,
 }
 
 impl ChatManager {
-    pub fn new(wsroom: &'static WsPool<ClientMessage>) -> &'static Self {
+    pub async fn new(wsroom: &'static WsPool<ClientMessage>) -> &'static Self {
+        let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+        let pool = sqlx::PgPool::connect(&database_url)
+            .await
+            .expect("Failed to connect to database");
+
         leak(Self {
+            dbpool: pool,
             wspool: wsroom,
             history: HistoryManager::new(),
-            client: Client::new(),
-            token: std::env::var("TOKEN").expect("TOKEN not set"),
-            auth_endpoint: std::env::var("AUTH_ENDPOINT").expect("AUTH_ENDPOINT not set"),
         })
     }
 
@@ -153,7 +153,13 @@ impl ChatManager {
                             continue;
                         };
 
-                        if !self.verify_secret(&id.to_string(), &secret).await {
+                        let Ok(secret) = Uuid::parse_str(&secret) else {
+                            self.send_error(socket_id, ServerErrors::InvalidSecret)
+                                .await;
+                            continue;
+                        };
+
+                        if !self.verify_secret(&id, &secret).await {
                             self.send_error(socket_id, ServerErrors::InvalidSecret)
                                 .await;
                             continue;
@@ -182,18 +188,20 @@ impl ChatManager {
         }
     }
 
-    async fn verify_secret(&self, uuid: &str, secret: &str) -> bool {
-        let resp = self
-            .client
-            .get(&format!("{}/{}", self.auth_endpoint, uuid))
-            .header("Secret", secret)
-            .header("Token", &self.token)
-            .send()
+    async fn verify_secret(&self, uuid: &Uuid, secret: &Uuid) -> bool {
+        let row = sqlx::query("SELECT secret FROM verify WHERE id = $1")
+            .bind(uuid)
+            .fetch_one(&self.dbpool)
             .await;
 
-        match resp {
-            Ok(resp) => resp.status().is_success(),
-            Err(_) => false,
-        }
+        let Ok(row) = row else {
+            return false;
+        };
+
+        let Ok(found_secret) = row.try_get::<Uuid, _>("secret") else {
+            return false;
+        };
+
+        found_secret == *secret
     }
 }

@@ -34,16 +34,13 @@
 		}
 
 		if ($page.data.session) {
-			successAlert('Signed in successful');
+			// successAlert('Signed in successful');
 
-			//TODO we can currently read any user's secret (this is a security issue)
-			todo("We can currently read any user's secret (this is a security issue)");
-			const id = $page.data.session.user.id;
-			uuid.set(id);
+
+			uuid.set($page.data.session.user.id);
 			supabase
-				.from('users')
+				.from('verify')
 				.select('secret')
-				.eq('id', id)
 				.single()
 				.then(({ data, error }) => {
 					if (error) {
@@ -53,6 +50,8 @@
 					if (data) {
 						const { secret } = data;
 						ssecret.set(secret);
+
+						console.log('User secret:', secret);
 					}
 				});
 		}

@@ -15,14 +15,15 @@ export function startListeners() {
 
     });
 
-    on_message("Message", ({ message }) => {
-        switch (message.type) {
-            case "User":
-                break;
-            case "Topic":
-                break;
-            case "Server":
-                break;
-        }
-    });
+
+    // on_message("Message", ({ message }) => {
+    //     switch (message.type) {
+    //         case "User":
+    //             break;
+    //         case "Topic":
+    //             break;
+    //         case "Server":
+    //             break;
+    //     }
+    // });
 }
