@@ -4,30 +4,36 @@
 	let { supabase } = data;
 	$: ({ supabase } = data);
 
-	let title: string;
-	let content: string;
-	let price: number;
-	let type: string;
-	let location: string;
-	let user_id: string;
+	let email: string;
+	let password: string;
 
-
-	const newPost = async () => {
-		const { data, error } = await supabase.from('posts').insert([
-			{
-				title: 'New Post',
-				price: 0
+	const handleSignUp = async () => {
+		await supabase.auth.signUp({
+			email,
+			password,
+			options: {
+				emailRedirectTo: `${location.origin}/auth/callback`
 			}
-		]);
-		console.log(data);
+		});
+	};
+
+	const handleSignIn = async () => {
+		await supabase.auth.signInWithPassword({
+			email,
+			password
+		});
+	};
+
+	const handleSignOut = async () => {
+		await supabase.auth.signOut();
 	};
 </script>
 
-<!-- <form on:submit={handleSignUp}>
+<form on:submit={handleSignUp}>
 	<input name="email" bind:value={email} />
 	<input type="password" name="password" bind:value={password} />
 	<button>Sign up</button>
-</form> -->
+</form>
 
-<!-- <button on:click={handleSignIn}>Add Post</button>
-<button on:click={handleSignOut}>Sign out</button> -->
+<button on:click={handleSignIn}>Sign in</button>
+<button on:click={handleSignOut}>Sign out</button>
