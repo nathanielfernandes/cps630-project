@@ -1,22 +1,11 @@
-<script context="module">
-    //@ts-ignore
-    export async function load({ params }) {
-      const { type } = params;
-      return {
-        props: {
-          type
-        }
-      };
-    }
-  </script>
-
 <script lang="ts">
     import Card from '$lib/components/Card.svelte';
+    import { page } from '$app/stores';
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
 
     export let data;
-    export let type: string;
+    let type = $page.params.type;
     let { supabase } = data;
     $: ({ supabase } = data);
 
