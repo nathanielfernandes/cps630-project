@@ -1,10 +1,10 @@
 <script context="module">
     //@ts-ignore
-    export async function load({ page }) {
-      const { category } = page.query;
+    export async function load({ params }) {
+      const { type } = params;
       return {
         props: {
-          category
+          type
         }
       };
     }
@@ -16,7 +16,7 @@
     import { writable } from 'svelte/store';
 
     export let data;
-    export let category: string;
+    export let type: string;
     let { supabase } = data;
     $: ({ supabase } = data);
 
@@ -35,14 +35,14 @@
             images:images!post_id (link, alt_text),
             user_id
         `)
-        .eq('type', category)
+        .eq('type', type)
         console.log(data);
         posts.set(data || []);
     };
 
     onMount(() => {
         fetchPosts();
-        console.log(category)
+        console.log(type)
     });
 </script>
 
