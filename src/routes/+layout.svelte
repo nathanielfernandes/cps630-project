@@ -226,6 +226,7 @@
 				</li>
 				<li>
 					<a
+						rel="external"
 						href="/dashboard/items_wanted"
 						aria-current={$page.url.pathname === '/dashboard/wanted' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
@@ -234,6 +235,7 @@
 				</li>
 				<li>
 					<a
+						rel="external"
 						href="/dashboard/items_for_sale"
 						aria-current={$page.url.pathname === '/dashboard/sale' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
@@ -242,6 +244,7 @@
 				</li>
 				<li>
 					<a
+						rel="external"
 						href="/dashboard/academic_services"
 						aria-current={$page.url.pathname === '/dashboard/service' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
