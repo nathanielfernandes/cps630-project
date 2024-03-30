@@ -7,14 +7,42 @@
 	import { onMount } from 'svelte';
 
 	import Alerts from '$lib/Alerts/Alerts.svelte';
+
 	import { successAlert, warningAlert, errorAlert } from '$lib/Alerts/stores.js';
 	import { clickOutside } from '$lib/clickOutside';
 	import LoginSignup from '$lib/components/LoginSignup.svelte';
+	import { disconnect_websocket, uuid, ssecret, connect_websocket } from '$lib/chatter/stores';
 	import { isProtectedPage } from '$lib/protectedPages';
+
 
 	export let data;
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
+
+  
+ 	function wsAuthAttempt() {
+		if ($page.data.session) {
+			// select user id and secret
+			supabase
+				.from('verify')
+				.select('id, secret')
+				.single()
+				.then(({ data, error }) => {
+					if (error) {
+						console.error('Error fetching user secret:', error);
+						return;
+					}
+					if (data) {
+						const { id, secret } = data;
+						uuid.set(id);
+						ssecret.set(secret);
+					}
+				});
+		}
+	}
+  
+	let show_login_modal = false;
+	let pathBeforeSignOut = '';
 
     $: {
         // Redirect and ask user to login, if user tries to visit a protected page and is not logged in
@@ -23,10 +51,11 @@
         }
     }
 
-	let show_login_modal = false;
-	let pathBeforeSignOut = '';
+
 
 	onMount(() => {
+		connect_websocket();
+
 		if ($page.url.searchParams.get('askLogin') === 'true') {
 			show_login_modal = true;
 			errorAlert('Not authorized to view page');
@@ -37,32 +66,46 @@
 			goto(params.size === 0 ? '/' : `/?${params.toString()}`);
 		}
 
+		wsAuthAttempt();
+
 		const {
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
 				if (event === 'SIGNED_IN') {
-					successAlert('Sign in successful');
+					successAlert('Signed in successful');
 				}
-				invalidate('supabase:auth');
+				invalidate('supabase:auth').then(wsAuthAttempt);
 			}
+			// If the previous page before signing out was a protected page, show login modal
 			if (event === 'SIGNED_OUT') {
+				uuid.set("");
+				ssecret.set("");
+				disconnect_websocket();
 				warningAlert('You have been signed out');
-                // If the previous page before signing out was a protected page, show login modal
-                if (isProtectedPage(pathBeforeSignOut)) {
-                    show_login_modal = true;
-                }
+				// If the previous page before signing out was a protected page, show login modal
+				if (isProtectedPage(pathBeforeSignOut)) {
+					show_login_modal = true;
+				}
+
 			}
 		});
 
-		return () => subscription.unsubscribe();
+		return () => {
+			uuid.set("");
+			ssecret.set("");
+			disconnect_websocket();
+			subscription.unsubscribe();
+		};
 	});
 
 	const DefaultUserImage = '/user.png';
 
 	const handleSignOut = async () => {
 		// Keep track of previous page before signing out which will redirect to homepage
+
 		pathBeforeSignOut = window.location.pathname;
+
 		await supabase.auth.signOut();
 		dropdownVisibility['user-dropdown'] = false;
 	};
