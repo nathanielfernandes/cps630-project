@@ -55,17 +55,17 @@
 <form on:submit|preventDefault={handleSubmit} class="space-y-4 bg-blue-100 p-4 rounded-md">
     <div class="flex flex-col">
         <label for="title" class="mb-2 text-sm font-bold text-blue-700 text-black">Title</label>
-        <input type="text" id="title" bind:value={title} class="form-input px-4 py-2 rounded-md" placeholder="Post title" required>
+        <input type="text" id="title" bind:value={title} class="form-input px-4 py-2 rounded-md text-black" placeholder="Post title" required>
     </div>
 
     <div class="flex flex-col">
         <label for="content" class="mb-2 text-sm font-bold text-blue-700 text-black">Content</label>
-        <textarea id="content" bind:value={content} rows="4" class="form-textarea px-4 py-2 rounded-md" placeholder="Content" required></textarea>
+        <textarea id="content" bind:value={content} rows="4" class="form-textarea px-4 py-2 rounded-md text-black" placeholder="Content" required></textarea>
     </div>
 
     <div class="flex flex-col">
         <label for="price" class="mb-2 text-sm font-bold text-blue-700 text-black">Price</label>
-        <input type="number" id="price" bind:value={price} class="form-input px-4 py-2 rounded-md" placeholder="0" required>
+        <input type="number" id="price" bind:value={price} class="form-input px-4 py-2 rounded-md text-black" placeholder="0" required>
     </div>
 
     <div class="flex flex-col">
@@ -81,7 +81,7 @@
     <div class="flex flex-col">
         <label for="image-upload" class="mb-2 text-sm font-bold text-blue-700 text-black">Image Upload</label>
         
-        <input type="file" id="image-upload" on:change="{e => image = e.target.files[0]}" class="form-file px-4 py-2 rounded-md" required>
+        <input type="file" id="image-upload" on:change="{e => image = e.target.files[0]}" class="form-file px-4 py-2 rounded-md">
     </div>
 
     <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
