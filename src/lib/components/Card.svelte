@@ -10,11 +10,13 @@
 	export let profile_image: string;
 	export let images: Image[];
 	export let user: string;
+
+	let image_link = images.length !== 0 ? images[0].link : 'https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg';
 </script>
 
 <div class="w-[300px] place-self-center rounded-lg bg-white shadow-lg">
 	<div class="relative h-[250px] w-[300px] rounded-t-lg">
-		<img src={images[0].link} alt={title} class="h-[250px] w-[300px] rounded-t-lg object-cover" />
+		<img src={image_link} alt={title} class="h-[250px] w-[300px] rounded-t-lg object-cover" />
 		<div
 			class="absolute bottom-3 left-3 flex items-center space-x-2 rounded-lg bg-white bg-opacity-70 p-2"
 		>
