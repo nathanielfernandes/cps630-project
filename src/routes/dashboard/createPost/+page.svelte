@@ -5,6 +5,8 @@
     let { supabase, session } = data;
     $: ({ supabase } = data);
 
+    let default_image_link = "https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"
+    let image_prefix = "https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/"
     let title = '';
     let content = '';
     let price = '';
@@ -14,7 +16,7 @@
     //@ts-ignore
     let image: any;
 
-    const handleSubmit = async() => {
+    const insertPost = async() => {
         let { data: postData } = await supabase
         .from('posts')
         .insert([
@@ -28,21 +30,48 @@
         ])
         .select()
         .single();
+        return postData;
+    }
+
+    const uploadImage = async() => {
+        const random_value = Math.floor(Math.random() * 1000000);
+        const { data, error } = await supabase.storage
+        .from('images')
         //@ts-ignore
-        console.log(postData)
-        //@ts-ignore
-        let post_id = postData.id;
-        let { data: imageData } = await supabase
+        .upload(`uploads/${session.user.id}/${random_value}_${image.name}`, image);
+
+        if (error) {
+            console.error(error);
+            return default_image_link;
+        }
+        const link_to_image = image_prefix + encodeURIComponent(data.path);
+        return link_to_image;
+    }
+
+    const insertImage = async(post_id: string, imageLink: string = default_image_link) => {
+        let { data: imageData, error } = await supabase
         .from('images')
         .insert([
             {
                 post_id,
-                //placeholder image until cdn or something
-                link: 'https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg',
+                link: imageLink,
                 alt_text: 'placeholder'
             }
         ])
         .single();
+
+        if (error) {
+            console.error(error);
+            throw error;
+        }
+        
+        return imageData;
+    }
+
+    const handleSubmit = async() => {
+        const postData = await insertPost();
+        const imageLink = await uploadImage();
+        await insertImage(postData.id, imageLink);
     };
 
     // reset file input
@@ -81,7 +110,7 @@
     <div class="flex flex-col">
         <label for="image-upload" class="mb-2 text-sm font-bold text-blue-700 text-black">Image Upload</label>
         
-        <input type="file" id="image-upload" on:change="{e => image = e.target.files[0]}" class="form-file px-4 py-2 rounded-md">
+        <input type="file" id="image-upload" on:change="{e => image = e.target.files[0]}" class="form-file px-4 py-2 rounded-md" required>
     </div>
 
     <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
