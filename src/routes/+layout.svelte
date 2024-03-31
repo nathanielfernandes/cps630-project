@@ -157,7 +157,7 @@
 		</a>
 		<div class="relative flex shrink-0 gap-5 md:order-2 md:space-x-0 rtl:space-x-reverse">
 			<button
-				on:click={() => goto('/auth')}
+				on:click={() => goto('/dashboard/createPost')}
 				type="button"
 				class="rounded-lg bg-yellow-300 px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300/70 dark:focus:ring-yellow-800/70"
 				>Place an Ad</button
@@ -269,7 +269,8 @@
 				</li>
 				<li>
 					<a
-						href="/dashboard/wanted"
+						rel="external"
+						href="/dashboard/items_wanted"
 						aria-current={$page.url.pathname === '/dashboard/wanted' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Wanted Listings</a
@@ -277,7 +278,8 @@
 				</li>
 				<li>
 					<a
-						href="/dashboard/sale"
+						rel="external"
+						href="/dashboard/items_for_sale"
 						aria-current={$page.url.pathname === '/dashboard/sale' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Buy & Sell</a
@@ -285,7 +287,8 @@
 				</li>
 				<li>
 					<a
-						href="/dashboard/service"
+						rel="external"
+						href="/dashboard/academic_services"
 						aria-current={$page.url.pathname === '/dashboard/service' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Academic Services</a
