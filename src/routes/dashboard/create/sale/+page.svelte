@@ -1,29 +1,90 @@
 <script lang="ts">
-	import { base } from './../../../../../.svelte-kit/adapter-node/manifest.js';
+    import {
+		successAlert
+	} from '$lib/Alerts/stores.js';
 	import Card from '$lib/components/Card.svelte';
 	import ImageUpload from '$lib/components/ImageUpload.svelte';
-	import { atRule } from 'postcss';
 
 	export let data;
 	let { supabase, session } = data;
 	$: ({ supabase } = data);
 
+	const DEFAULT_IMAGE_URL =
+		'https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg';
+	const IMAGE_URL_PREFIX =
+		'https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/';
+
 	let title = '';
 	let content = '';
 	let price = '';
-	let userId = session ? session.user.id : '';
-
+	let user_id = session ? session.user.id : '';
 	let images: ImageFile[] = [];
 
-	const ad = {
-		id: 1,
-		title: 'MTH 140 Textbook',
-		description: 'I am looking for Calculus: Early Transcendentals by James Stewart.',
-		date: '2024-01-02',
-		price: 0,
-		profile_image: '',
-		images: ['https://source.unsplash.com/random/350x250?textbook&cb=1'],
-		user: 'David Smith'
+	const insertPost = async () => {
+		let { data: postData } = await supabase
+			.from('posts')
+			.insert([
+				{
+					title,
+					content,
+					price,
+					type: 'items_for_sale',
+					user_id
+				}
+			])
+			.select()
+			.single();
+
+		return postData;
+	};
+
+	const uploadImage = async (imageFile: File) => {
+		const random_value = Math.floor(Math.random() * 1000000);
+		const { data, error } = await supabase.storage
+			.from('images')
+			.upload(`uploads/${user_id}/${random_value}_${imageFile.name}`, imageFile);
+
+		if (error) {
+			return null;
+		}
+		const imageUrl = IMAGE_URL_PREFIX + encodeURIComponent(data.path);
+		return imageUrl;
+	};
+
+	const insertImages = async (post_id: string, imageUrls: string[]) => {
+		let { error } = await supabase.from('images').insert(
+			imageUrls.map((imageUrl) => {
+				return {
+					post_id,
+					link: imageUrl,
+					alt_text: 'placeholder'
+				};
+			})
+		);
+
+		if (error) {
+			console.error(error);
+			throw error;
+		}
+	};
+
+	const handleSubmit = async () => {
+		const postData = await insertPost();
+
+		const promises = images.map((image) => {
+			if (image.file) {
+				return uploadImage(image.file);
+			}
+		});
+		let imageUrls = await Promise.all(promises);
+		imageUrls = imageUrls.filter((url) => url !== null && url !== undefined);
+
+		await insertImages(
+			postData.id,
+			imageUrls.length === 0 ? [DEFAULT_IMAGE_URL] : (imageUrls as string[])
+		);
+
+        successAlert('Your "Item for Sale" Ad has been posted!');
 	};
 </script>
 
@@ -32,7 +93,7 @@
 		<div
 			class="w-full overflow-y-auto bg-white p-3 text-black shadow-lg md:max-w-[40%] lg:max-w-[30%]"
 		>
-			<form>
+			<form on:submit|preventDefault={handleSubmit}>
 				<div class="mb-6 grid gap-6 md:grid-cols-1">
 					<div>
 						<label
@@ -46,7 +107,7 @@
 							>Title*</label
 						>
 						<input
-                            bind:value={title}
+							bind:value={title}
 							type="text"
 							id="title"
 							class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -63,7 +124,7 @@
 							id="content"
 							bind:value={content}
 							rows="4"
-							class="block w-full min-h-10 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+							class="block min-h-10 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 							placeholder="Post Content"
 							required
 						></textarea>
@@ -107,15 +168,15 @@
 		</div>
 		<div class="hidden flex-1 items-center justify-center md:flex">
 			<Card
-				title={title || "Post Title"}
-				description={content || "Post Content"}
+				title={title || 'Post Title'}
+				description={content || 'Post Content'}
 				date={Date.now().toLocaleString()}
 				price={parseFloat(price) || 5}
-				profile_image={ad.profile_image}
+				profile_image={'/user.png'}
 				images={images.length > 0 && images[0].url
-					? [images[0].url]
-					: ['https://source.unsplash.com/random/350x250?textbook&cb=1']}
-				user={userId}
+					? [{ link: images[0].url, alt_text: title }]
+					: []}
+				user={user_id}
 			/>
 		</div>
 	</div>
