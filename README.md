@@ -27,6 +27,12 @@ npm install
 npm run dev
 ```
 
+4. Run the Websocket server
+
+```
+npm run chatter
+```
+
 ### Project Structure (High Level Overview)
 
 ```
