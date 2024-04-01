@@ -44,7 +44,7 @@
 			description={ad.content}
 			date={ad.created_at}
 			price={ad.price}
-			profile_image={""}
+			profile_image={"/user.png"}
 			images={ad.images}
 			user={ad.user_id}
 		/>

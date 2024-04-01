@@ -11,7 +11,7 @@
 	export let images: Image[];
 	export let user: string;
 
-	let image_link = images.length !== 0 ? images[0].link : 'https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg';
+    $: image_link = images.length !== 0 ? images[0].link : 'https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg';
 </script>
 
 <div class="w-[300px] place-self-center rounded-lg bg-white shadow-lg">
