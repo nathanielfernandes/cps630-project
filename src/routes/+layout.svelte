@@ -147,7 +147,7 @@
 
 <nav class="border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
 	<div
-		class="mx-auto flex max-w-screen-xl flex-col flex-wrap items-center justify-between gap-y-5 p-4 sm:flex-row"
+		class="mx-auto flex max-w-screen-2xl flex-col flex-wrap items-center justify-between gap-y-5 p-4 sm:flex-row"
 	>
 		<a href="/" class="flex shrink-0 items-center space-x-3 rtl:space-x-reverse">
 			<img src="/TMU-rgb.png" class="h-10" alt="TMU Logo" />
@@ -157,7 +157,7 @@
 		</a>
 		<div class="relative flex shrink-0 gap-5 md:order-2 md:space-x-0 rtl:space-x-reverse">
 			<button
-				on:click={() => goto('/dashboard/createPost')}
+				on:click={() => goto('/dashboard/create')}
 				type="button"
 				class="rounded-lg bg-yellow-300 px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300/70 dark:focus:ring-yellow-800/70"
 				>Place an Ad</button
@@ -255,7 +255,7 @@
 
 <nav class="bg-slate-200 dark:bg-gray-700">
 	<div
-		class="mx-auto flex max-w-screen-xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
+		class="mx-auto flex max-w-screen-2xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
 	>
 		<div class="flex items-center">
 			<ul class="mt-0 flex flex-row space-x-5 sm:space-x-8 text-center text-sm font-medium rtl:space-x-reverse">
