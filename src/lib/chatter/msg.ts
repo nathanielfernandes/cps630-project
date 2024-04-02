@@ -24,6 +24,11 @@ export function resolve_message_promise(id: string, value: any) {
 }
 
 export function on_message<T extends ServerMessageTypes>(type: T, cb: (message: ServerMessageMap<T>) => void) {
+    // if the callback is already in the list, don't add it again
+    if (callbacks.get(type)?.includes(cb)) {
+        return;
+    }
+    
     const cbs = callbacks.get(type) ?? [];
     cbs.push(cb);
     callbacks.set(type, cbs);
