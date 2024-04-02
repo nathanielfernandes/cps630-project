@@ -1,19 +1,19 @@
 <script lang="ts">
-    import {
-		successAlert
-	} from '$lib/Alerts/stores.js';
+	import { successAlert } from '$lib/Alerts/stores.js';
 	import Card from '$lib/components/Card.svelte';
 	import ImageUpload from '$lib/components/ImageUpload.svelte';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	export let data;
 	let { supabase, session } = data;
 	$: ({ supabase } = data);
 
-	const DEFAULT_IMAGE_URL =
-		'https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg';
 	const IMAGE_URL_PREFIX =
 		'https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/';
 
+	let type = $page.params.type;
 	let title = '';
 	let content = '';
 	let price = '';
@@ -29,7 +29,7 @@
 					title,
 					content,
 					price,
-					type: 'items_wanted',
+					type,
 					user_id
 				}
 			])
@@ -41,11 +41,13 @@
 
 	const uploadImage = async (imageFile: File) => {
 		const random_value = Math.floor(Math.random() * 1000000);
+        console.log("uploading", `uploads/${user_id}/${random_value}_${imageFile.name}`);
 		const { data, error } = await supabase.storage
 			.from('images')
 			.upload(`uploads/${user_id}/${random_value}_${imageFile.name}`, imageFile);
 
 		if (error) {
+			console.error(error);
 			return null;
 		}
 		const imageUrl = IMAGE_URL_PREFIX + encodeURIComponent(data.path);
@@ -72,21 +74,26 @@
 	const handleSubmit = async () => {
 		const postData = await insertPost();
 
-		const promises = images.map((image) => {
-			if (image.file) {
-				return uploadImage(image.file);
-			}
-		});
-		let imageUrls = await Promise.all(promises);
-		imageUrls = imageUrls.filter((url) => url !== null && url !== undefined);
+		if (images.length > 0) {
+			const promises = images.map((image) => {
+				if (image.file) {
+					return uploadImage(image.file);
+				}
+			});
+			let imageUrls = await Promise.all(promises);
+			imageUrls = imageUrls.filter((url) => url !== null && url !== undefined);
 
-		await insertImages(
-			postData.id,
-			imageUrls.length === 0 ? [DEFAULT_IMAGE_URL] : (imageUrls as string[])
-		);
+			await insertImages(postData.id, imageUrls as string[]);
+		}
 
-        successAlert('Your "Wanted Item" Ad has been posted!');
+        successAlert('Your Ad has been posted!');
 	};
+
+	onMount(() => {
+		if (type !== 'items_wanted' && type !== 'items_for_sale' && type !== 'academic_services') {
+			goto('/dashboard/create');
+		}
+	});
 </script>
 
 <div class="flex flex-1 justify-center overflow-hidden">
@@ -177,7 +184,7 @@
 					? [{ link: images[0].url, alt_text: title }]
 					: []}
 				user={user_id}
-				email={email}
+				{email}
 			/>
 		</div>
 	</div>
