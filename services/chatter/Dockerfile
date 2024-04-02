@@ -8,8 +8,8 @@ RUN mkdir chatter
 WORKDIR /chatter
 
 # copy over your manifests
-COPY ./services/chatter/Cargo.lock ./Cargo.lock
-COPY ./services/chatter/Cargo.toml ./Cargo.toml
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
 
 RUN mkdir src && echo "fn main() {}" > src/main.rs && echo "\n" > src/lib.rs
 
@@ -18,7 +18,7 @@ RUN cargo build --release
 RUN rm src/*.rs
 
 # copy your source tree
-COPY ./services/chatter/ ./
+COPY ./ ./
 
 # build for release
 RUN cargo build --release
