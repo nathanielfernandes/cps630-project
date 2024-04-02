@@ -19,6 +19,26 @@ CREATE TABLE posts (
 ALTER TABLE
     posts ENABLE ROW LEVEL SECURITY;
 
+-- allow anyone to read all posts
+CREATE POLICY "Read All Posts" ON posts FOR
+SELECT
+    USING (true);
+
+-- allow users to create posts
+CREATE POLICY "Create Post" ON posts FOR
+INSERT
+    to authenticated WITH CHECK (auth.uid() = user_id);
+
+-- allow users to update their own posts
+CREATE POLICY "Update Own Post" ON posts FOR
+UPDATE
+    USING (auth.uid() = user_id);
+
+-- allow users to delete their own posts
+CREATE POLICY "Delete Own Post" ON posts FOR
+DELETE
+    USING (auth.uid() = user_id);
+
 CREATE TABLE images (
     id BIGSERIAL PRIMARY KEY NOT NULL,
     link VARCHAR(255) NOT NULL,
