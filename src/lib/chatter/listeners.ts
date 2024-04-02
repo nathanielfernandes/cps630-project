@@ -28,7 +28,7 @@ export function startListeners() {
     });
 
     on_message("BulkMessages", ({ participants, messages }) => { 
-        addMessages(participants, messages);
+        addMessages(participants, messages, true);
     });
 
     on_message("DirectMessage", ({ participants, message }) => {

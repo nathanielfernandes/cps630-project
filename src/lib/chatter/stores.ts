@@ -48,12 +48,16 @@ export function resetChatState() {
     retry_connect();
 }
 
-export function addMessages(participants: string[], bulk_msgs: ChatMessage[]) {
+export function addMessages(participants: string[], bulk_msgs: ChatMessage[], clear: boolean = false) {
     const [from, to] = participants;
     const key = from === get(uuid) ? to : from;
 
     messages.update((msgs) => {
         if (!msgs[key]) {
+            msgs[key] = [];
+        }
+
+        if (clear) {
             msgs[key] = [];
         }
 
@@ -89,6 +93,7 @@ export function connect_websocket() {
 
     socket_state.set("connecting");
 
+    console.log("Connecting to Websocket", PUBLIC_CHATTER_WS_URL);
     socket = new WebSocket(PUBLIC_CHATTER_WS_URL);
 
     socket.onopen = (_) => {

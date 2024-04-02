@@ -89,13 +89,13 @@
                             {#if msg.type === "User"}
                                 {#if msg.from === uid}
                                     <div class="flex justify-end" in:fly|local>
-                                        <div class="bg-slate-300 p-2 rounded-lg mx-1 my-0.5 w-80">
+                                        <div class="bg-slate-300 p-2 rounded-lg mx-1 my-0.5 max-w-80">
                                             {msg.message}
                                         </div>
                                     </div>
                                 {:else}
                                     <div class="flex justify-start" in:fly|local>
-                                        <div class="bg-blue-300 p-2 rounded-lg mx-1 my-0.5 w-80">
+                                        <div class="bg-blue-300 p-2 rounded-lg mx-1 my-0.5 max-w-80">
                                             {msg.message}
                                         </div>
                                     </div>
