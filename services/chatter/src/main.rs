@@ -13,7 +13,7 @@ pub mod manager;
 pub mod messages;
 pub mod ws;
 
-const PORT: u16 = 3000;
+const PORT: u16 = 3001;
 
 #[derive(Clone)]
 pub struct AppState {

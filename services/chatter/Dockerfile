@@ -23,6 +23,6 @@ COPY ./ ./
 # build for release
 RUN cargo build --release
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD ["./target/release/chatter"]
