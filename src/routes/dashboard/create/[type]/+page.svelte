@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { successAlert } from '$lib/Alerts/stores.js';
+	import { successAlert, errorAlert } from '$lib/Alerts/stores.js';
 	import Card from '$lib/components/Card.svelte';
 	import ImageUpload from '$lib/components/ImageUpload.svelte';
 	import { page } from '$app/stores';
@@ -22,7 +22,7 @@
 	let images: ImageFile[] = [];
 
 	const insertPost = async () => {
-		let { data: postData } = await supabase
+		let { data: postData, error } = await supabase
 			.from('posts')
 			.insert([
 				{
@@ -35,6 +35,11 @@
 			])
 			.select()
 			.single();
+        
+        if (error) {
+            console.error(error);
+            return;
+        }
 
 		return postData;
 	};
@@ -48,7 +53,7 @@
 
 		if (error) {
 			console.error(error);
-			return null;
+			return;
 		}
 		const imageUrl = IMAGE_URL_PREFIX + encodeURIComponent(data.path);
 		return imageUrl;
@@ -67,24 +72,30 @@
 
 		if (error) {
 			console.error(error);
-			throw error;
 		}
 	};
 
 	const handleSubmit = async () => {
-		const postData = await insertPost();
-
-		if (images.length > 0) {
+        let imageUrls: string[] = [];
+        if (images.length > 0) {
 			const promises = images.map((image) => {
 				if (image.file) {
 					return uploadImage(image.file);
 				}
 			});
-			let imageUrls = await Promise.all(promises);
-			imageUrls = imageUrls.filter((url) => url !== null && url !== undefined);
-
-			await insertImages(postData.id, imageUrls as string[]);
+            
+			const result = await Promise.all(promises);
+            if (result.findIndex((url) => url === null || url === undefined) != -1) {
+                errorAlert('Image upload failed, please try again later.');
+                return;
+            }
+            imageUrls = result as string[];
 		}
+
+		const postData = await insertPost();
+        if (imageUrls.length > 0) {
+            await insertImages(postData.id, imageUrls);
+        }
 
         successAlert('Your Ad has been posted!');
 	};
