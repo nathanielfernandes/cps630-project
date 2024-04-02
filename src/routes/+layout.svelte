@@ -11,8 +11,9 @@
 	import { successAlert, warningAlert, errorAlert } from '$lib/Alerts/stores.js';
 	import { clickOutside } from '$lib/clickOutside';
 	import LoginSignup from '$lib/components/LoginSignup.svelte';
-	import { disconnect_websocket, uuid, ssecret, connect_websocket } from '$lib/chatter/stores';
+	import { disconnect_websocket, uuid, ssecret, connect_websocket, resetChatState, open, ping } from '$lib/chatter/stores';
 	import { isProtectedPage } from '$lib/protectedPages';
+	import Chat from '$lib/chatter/Chat.svelte';
 
 
 	export let data;
@@ -82,6 +83,7 @@
 				uuid.set("");
 				ssecret.set("");
 				disconnect_websocket();
+				resetChatState();
 				warningAlert('You have been signed out');
 				// If the previous page before signing out was a protected page, show login modal
 				if (isProtectedPage(pathBeforeSignOut)) {
@@ -95,6 +97,7 @@
 			uuid.set("");
 			ssecret.set("");
 			disconnect_websocket();
+			resetChatState();
 			subscription.unsubscribe();
 		};
 	});
@@ -166,12 +169,24 @@
 				<button
 					data-collapse-toggle="navbar-solid-bg"
 					type="button"
-					class="inline-flex h-10 w-10 items-center justify-center rounded-lg p-1 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+					class="relative inline-flex h-10 w-10 items-center justify-center rounded-lg p-1 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 					aria-controls="navbar-solid-bg"
 					aria-expanded="false"
+					on:click={() => open.update((v) => !v)}
 				>
 					<span class="sr-only">Open chat</span>
 					<i class="fa-regular fa-message text-2xl"></i>
+
+					{#if $ping}
+						<span
+							class="absolute top-1 right-1 inline-flex items-center justify-center w-2 h-2 text-xs font-bold leading-none text-white  bg-red-500 rounded-full"
+							></span
+						>
+						<span
+							class="absolute top-1 right-1 inline-flex items-center justify-center w-2 h-2 text-xs font-bold leading-none text-white  bg-red-500 rounded-full animate-ping"
+							></span
+						>
+					{/if}
 				</button>
 				<button
 					type="button"
@@ -327,4 +342,7 @@
 
 <slot />
 
+<Chat />
+
 <LoginSignup {supabase} bind:show={show_login_modal} />
+

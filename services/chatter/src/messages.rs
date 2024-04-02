@@ -11,6 +11,13 @@ pub enum ServerMessage {
 
     Error(ServerErrors),
 
+    UserMeta {
+        user: ChatUser,
+    }, // Send the user's metadata to the client
+    BulkUsers {
+        users: Vec<ChatUser>,
+    }, // Send a bulk of users to the client
+
     BulkMessages {
         participants: [String; 2],
         messages: Vec<ChatMessage>,
@@ -42,6 +49,10 @@ pub enum ClientMessage {
     Authenticate { id: String, secret: String },   // Authenticate the user
     SyncChat { with: String },                     // Sync chat with a user (ask for chat history)
     DirectMessage { to: String, message: String }, // Send a message to a user
+    SetTopic { to: String, topic: String },        // Set the topic of the chat
+
+    UserMeta { with: String }, // Sync chat user (ask for user metadata)
+    SyncChatUsers,             // Sync chat users (ask for all open chat users)
 }
 
 #[derive(Type, Clone, Debug, Serialize)]
@@ -50,6 +61,12 @@ pub enum ChatMessage {
     User { from: String, message: String }, // A message from a user
     Topic { topic: String },                // What the topic of the chat is
     Server { message: String },             // A message from the server
+}
+
+#[derive(Type, Clone, Debug, Serialize, PartialEq, Eq, Hash)]
+pub struct ChatUser {
+    pub id: String,
+    pub email: String,
 }
 
 macro_rules! specta_buffer {
@@ -71,7 +88,7 @@ pub fn export_types() {
     }
 
     let definitions = specta_buffer! {
-        ServerMessage | ServerErrors | ClientMessage | ChatMessage,
+        ChatUser | ServerMessage | ServerErrors | ClientMessage | ChatMessage,
         r#"
 export type ClientMessageTypes = ClientMessage["type"];
 export type ServerMessageTypes = ServerMessage["type"];
