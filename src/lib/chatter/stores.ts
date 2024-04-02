@@ -45,8 +45,6 @@ export function resetChatState() {
     authenicated.set(false);
     users.set({});
     messages.set({});
-
-    retry_connect();
 }
 
 export function addMessages(participants: string[], bulk_msgs: ChatMessage[], clear: boolean = false) {
@@ -88,8 +86,7 @@ export function connect_websocket() {
     }
 
     if (socket) {
-        socket.close();
-        socket = null;
+        return;
     }
 
     socket_state.set("connecting");
@@ -117,7 +114,6 @@ export function connect_websocket() {
         console.error("WebSocket error", event);
         socket = null;
         socket_state.set("disconnected");
-        retry_connect();
     }
 }
 
@@ -125,6 +121,7 @@ export function disconnect_websocket() {
     if (socket) {
         socket.close();
         socket = null;
+        socket_state.set("disconnected");
     }
 }
 
