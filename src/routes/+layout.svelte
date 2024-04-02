@@ -14,11 +14,14 @@
 	import { disconnect_websocket, uuid, ssecret, connect_websocket, resetChatState, open, ping } from '$lib/chatter/stores';
 	import { isProtectedPage } from '$lib/protectedPages';
 	import Chat from '$lib/chatter/Chat.svelte';
+	import Pfp from '$lib/components/Pfp.svelte';
 
 
 	export let data;
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
+
+	$: email = (session ? session.user.email : '') as string;
 
   
  	function wsAuthAttempt() {
@@ -190,7 +193,7 @@
 				</button>
 				<button
 					type="button"
-					class="order-1 flex items-center rounded-full bg-gray-800 text-sm focus:ring-4 focus:ring-gray-300 md:me-0 dark:focus:ring-gray-600"
+					class="order-1 flex items-center rounded-full text-sm focus:ring-4 focus:ring-gray-300 md:me-0 dark:focus:ring-gray-600"
 					id="user-menu-button"
 					data-dropdown-toggle="user-dropdown"
 					data-dropdown-placement="bottom"
@@ -199,13 +202,14 @@
 					aria-expanded={dropdownVisibility['user-dropdown']}
 				>
 					<span class="sr-only">Open user menu</span>
-					<img
+					<Pfp email={email} class="h-10 w-10 rounded-full" />
+					<!-- <img
 						use:replaceBadImageWithDefault={DefaultUserImage}
 						on:error={handleProfileImageError}
 						class="pointer-events-none h-10 w-10 rounded-full"
 						src="/user.png"
 						alt="user"
-					/>
+					/> -->
 				</button>
 				<!-- User dropdown menu -->
 				<div
