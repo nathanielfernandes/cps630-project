@@ -123,6 +123,38 @@ SELECT
 FROM
     auth.users;
 
+CREATE POLICY "Give users access to own folder READ" ON storage.objects FOR
+SELECT
+    TO authenticated USING (
+        bucket_id = 'images'
+        AND (storage.foldername(name)) [ 1 ] = 'uploads'
+        AND auth.uid() :: text = (storage.foldername(name)) [ 2 ]
+    );
+
+CREATE POLICY "Give users access to own folder WRITE" ON storage.objects FOR
+INSERT
+    TO authenticated WITH CHECK (
+        bucket_id = 'images'
+        AND (storage.foldername(name)) [ 1 ] = 'uploads'
+        AND auth.uid() :: text = (storage.foldername(name)) [ 2 ]
+    );
+
+CREATE POLICY "Give users access to own folder EDIT" ON storage.objects FOR
+UPDATE
+    TO authenticated USING (
+        bucket_id = 'images'
+        AND (storage.foldername(name)) [ 1 ] = 'uploads'
+        AND auth.uid() :: text = (storage.foldername(name)) [ 2 ]
+    );
+
+CREATE POLICY "Give users access to own folder DELETE" ON storage.objects FOR
+DELETE
+    TO authenticated USING (
+        bucket_id = 'images'
+        AND (storage.foldername(name)) [ 1 ] = 'uploads'
+        AND auth.uid() :: text = (storage.foldername(name)) [ 2 ]
+    );
+
 -- TEST DATA POSTS TABLE
 INSERT INTO
     public .posts (
