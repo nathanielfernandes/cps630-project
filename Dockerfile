@@ -15,6 +15,7 @@ COPY . .
 # pass in build-time env variables 
 ARG PUBLIC_SUPABASE_URL
 ARG PUBLIC_SUPABASE_ANON_KEY
+ARG PUBLIC__CHATTER_WS_URL
 
 # run command to build project and output to ./build
 RUN npm run build
