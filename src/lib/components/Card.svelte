@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Pfp from "./Pfp.svelte";
+
 	interface Image {
 		link: string;
 		alt_text: string;
@@ -7,9 +9,12 @@
 	export let description: string;
 	export let date: string;
 	export let price: number;
-	export let profile_image: string;
 	export let images: Image[];
 	export let user: string;
+	export let email : string;
+
+	let _ = date;
+	let __ = user;
 
     $: image_link = images.length !== 0 ? images[0].link : 'https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg';
 </script>
@@ -20,8 +25,8 @@
 		<div
 			class="absolute bottom-3 left-3 flex items-center space-x-2 rounded-lg bg-white bg-opacity-70 p-2"
 		>
-			<img src={profile_image} alt={user} class="h-6 w-6" />
-			<p class="pr-1 text-xs font-medium text-gray-900">{user}</p>
+			<Pfp email={email} class="h-6 w-6 rounded-full" />
+			<p class="pr-1 text-xs font-medium text-gray-900 truncate">{email}</p>
 		</div>
 	</div>
 

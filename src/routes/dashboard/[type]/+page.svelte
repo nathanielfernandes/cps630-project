@@ -22,10 +22,11 @@
             created_at,
             type,
             images:images!post_id (link, alt_text),
-            user_id
+            user_id,
+            email
         `)
         .eq('type', type)
-        console.log(data);
+        console.log("fetched", data);
         posts.set(data || []);
     };
 
@@ -44,9 +45,9 @@
 			description={ad.content}
 			date={ad.created_at}
 			price={ad.price}
-			profile_image={"/user.png"}
 			images={ad.images}
 			user={ad.user_id}
+            email={ad.email}
 		/>
 	{/each}
 </div>
