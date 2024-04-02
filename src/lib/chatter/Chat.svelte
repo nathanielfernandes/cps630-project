@@ -9,7 +9,7 @@
     $: uid = $page.data.session ? $page.data.session.user.id : "NA";
     $: email = ($page.data.session ? $page.data.session.user.email : "NA") as string;
 
-    $: if (uid) console.log("uid", uid);
+    // $: if (uid) console.log("uid", uid);
 
     let message = "";
     function send() {
