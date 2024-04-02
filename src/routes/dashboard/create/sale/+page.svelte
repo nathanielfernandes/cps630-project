@@ -18,6 +18,7 @@
 	let content = '';
 	let price = '';
 	let user_id = session ? session.user.id : '';
+	let email = (session ? session.user.email : '') as string;
 	let images: ImageFile[] = [];
 
 	const insertPost = async () => {
@@ -172,11 +173,11 @@
 				description={content || 'Post Content'}
 				date={Date.now().toLocaleString()}
 				price={parseFloat(price) || 5}
-				profile_image={'/user.png'}
 				images={images.length > 0 && images[0].url
 					? [{ link: images[0].url, alt_text: title }]
 					: []}
 				user={user_id}
+				email={email}
 			/>
 		</div>
 	</div>
