@@ -1,19 +1,52 @@
 import { PUBLIC_CHATTER_WS_URL } from "$env/static/public";
 import { get, writable } from "svelte/store";
 import { handle_message, send_message } from "./msg";
-import { successAlert } from "$lib/Alerts/stores";
 import { startListeners } from "./listeners";
-import type { ChatMessage } from "$lib/messages";
+import type { ChatMessage, ChatUser } from "$lib/messages";
 
 export let socket: WebSocket | null;
 export type SocketState =  "connecting" | "connected" | "authenticated" | "disconnected";
 
 export const socket_state = writable<SocketState>("connecting");
 
+export const authenicated = writable(false);
+
 export const uuid = writable("");
 export const ssecret = writable("");
 
+export const open = writable(false);
+export const talking_to = writable("");
+export const ping = writable(false);
+
+open.subscribe((o) => {
+    if (o) {
+        ping.set(false);
+    }
+});
+
 export const messages = writable<{ [from: string]: ChatMessage[] }>({});
+export const users = writable<{ [id: string]: string }>({});
+
+export function startChat(user_id: string, topic: string = "") {
+    talking_to.set(user_id);
+    open.set(true);
+
+    send_message("UserMeta", { with: user_id });
+
+    if (topic.length > 0) {
+        send_message("SetTopic", { to: user_id, topic });
+    }
+
+    console.log("Starting chat with", user_id);
+}
+
+export function resetChatState() {
+    authenicated.set(false);
+    users.set({});
+    messages.set({});
+
+    retry_connect();
+}
 
 export function addMessages(participants: string[], bulk_msgs: ChatMessage[]) {
     const [from, to] = participants;
@@ -29,6 +62,15 @@ export function addMessages(participants: string[], bulk_msgs: ChatMessage[]) {
         }
 
         return msgs;
+    });
+}
+
+export function addUsers(usrs: ChatUser[]) {
+    users.update((u) => {
+        for (const user of usrs) {
+            u[user.id] = user.email;
+        }
+        return u;
     });
 }
 
@@ -108,7 +150,7 @@ function debounce<F extends (...args: any[]) => any>(
     };
 }
 
-const retry_time = 6;
+const retry_time = 3;
 const retry_connect = debounce(connect_websocket, retry_time * 1000, () => {});
 
 socket_state.subscribe((state) => {
