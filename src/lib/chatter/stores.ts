@@ -41,6 +41,7 @@ export function startChat(user_id: string, topic: string = "") {
 }
 
 export function resetChatState() {
+    console.log("Resetting Chat State");
     authenicated.set(false);
     users.set({});
     messages.set({});
