@@ -19,7 +19,6 @@
         message = "";
     }
 
-
     let bottom: HTMLDivElement;
     const scroll = async () => {
         await tick();
@@ -30,8 +29,6 @@
     onMount(scroll);
     talking_to.subscribe(scroll);
     messages.subscribe(scroll);
-
-
 </script>
 
 {#if $authenicated}
