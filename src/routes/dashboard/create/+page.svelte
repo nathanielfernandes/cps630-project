@@ -8,7 +8,7 @@
 		</div>
 		<div class="mt-4 flex flex-col items-stretch justify-center gap-5 md:flex-row">
 			<a
-				href="/dashboard/create/wanted"
+				href="/dashboard/create/items_wanted"
 				class="flex flex-col items-center justify-center rounded-md bg-white p-5 py-8 shadow-sm hover:bg-gray-200 md:max-w-[12rem]"
 			>
 				<div
@@ -22,7 +22,7 @@
 				</div>
 			</a>
 			<a
-				href="/dashboard/create/sale"
+				href="/dashboard/create/items_for_sale"
 				class="flex flex-col items-center justify-center rounded-md bg-white p-5 py-8 shadow-sm hover:bg-gray-200 md:max-w-[12rem]"
 			>
 				<div
@@ -36,7 +36,7 @@
 				</div>
 			</a>
 			<a
-				href="/dashboard/create/service"
+				href="/dashboard/create/academic_services"
 				class="flex flex-col items-center justify-center rounded-md bg-white p-5 py-8 shadow-sm hover:bg-gray-200 md:max-w-[12rem]"
 			>
 				<div
