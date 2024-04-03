@@ -191,349 +191,96 @@ DELETE
     );
 
 -- TEST DATA POSTS TABLE
-INSERT INTO
-    public .posts (
-        title,
-        content,
-        price,
-        type,
-        location,
-        created_at,
-        user_id
-    )
-VALUES
-    (
-        'hmm',
-        'hmmmm',
-        0.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-30 15:57:57.350193',
-        '02c55b63-a4f5-4b50-8fba-5dbd61a9f291'
-    ),
-    (
-        'hmm',
-        'hmmmm',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-30 16:59:37.589435',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hmm',
-        'hmmmm',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-30 16:59:49.462681',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hello',
-        'hmm',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-30 17:00:08.622948',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hello',
-        'hmm',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-30 17:00:20.07774',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hmm',
-        'hmmmm',
-        1.0,
-        'academic_services',
-        'M5B2K3',
-        '2024-03-30 17:01:39.296192',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'Hmm',
-        'Hello',
-        10.0,
-        'academic_services',
-        'M5B2K3',
-        '2024-03-30 18:16:10.167332',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hmm',
-        'hmmmm',
-        10.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-30 18:30:02.017138',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'dsnkjsldbnf',
-        'dsfsdf',
-        5.0,
-        'academic_services',
-        'M5B2K3',
-        '2024-03-30 18:30:18.110973',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'yaba',
-        'yabbbababa',
-        10.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-30 18:45:01.359439',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'dfskjfnsdlkjf',
-        'hmm',
-        5.0,
-        'academic_services',
-        'M5B2K3',
-        '2024-03-30 18:45:13.823914',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'uhhh',
-        'ok',
-        3.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-31 16:13:27.458704',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hmmmm',
-        'kdnfksnk',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 16:23:24.840396',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'uhhh',
-        'fkdflsd',
-        100.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 16:35:37.751855',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hmm',
-        'okokok',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 16:40:38.091172',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hmm',
-        'okokok',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 16:41:11.462416',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hmm',
-        'ok yabba',
-        300.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 16:57:35.45285',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'uhhhhh',
-        'hmmmm',
-        10.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-31 17:01:58.568661',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'funny raccoon',
-        'worth a lot',
-        1000.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 17:06:10.307962',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'funny monkey',
-        'not a monkey',
-        1000.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 17:07:59.684974',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'funny monkey',
-        'not a monkey',
-        1000.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 17:08:34.023317',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'fix my code',
-        'please its bad',
-        10.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-31 17:44:10.688446',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'hello',
-        'hmm',
-        10.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-31 17:46:37.088214',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'Funny monkey',
-        'monkey so cute',
-        100000.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 17:55:43.58597',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'monkey',
-        'uhh',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 17:56:48.433654',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'want this monkey',
-        'pleaseee',
-        10000.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-31 18:00:13.705056',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'want the monkey',
-        'uhh',
-        10.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-31 18:00:48.875862',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'need this monkey',
-        'need it now',
-        5.0,
-        'items_wanted',
-        'M5B2K3',
-        '2024-03-31 18:12:19.33443',
-        '652630e9-a92f-4c3e-ae7a-b74a6fef939d'
-    ),
-    (
-        'Test',
-        'Test',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 22:32:17.254343',
-        '19c5bfcb-909e-4796-881c-31bcde94be66'
-    ),
-    (
-        'Hi',
-        'asdasd',
-        10.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 22:33:44.160691',
-        '19c5bfcb-909e-4796-881c-31bcde94be66'
-    ),
-    (
-        'asdasd',
-        'asdasd',
-        1211.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 22:35:37.892555',
-        '19c5bfcb-909e-4796-881c-31bcde94be66'
-    ),
-    (
-        'Test',
-        'test',
-        123.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 22:37:18.811335',
-        '19c5bfcb-909e-4796-881c-31bcde94be66'
-    ),
-    (
-        'asdasdasd',
-        'asdasdasdasd',
-        1231.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 22:41:37.487189',
-        '19c5bfcb-909e-4796-881c-31bcde94be66'
-    ),
-    (
-        'asdasdasd',
-        'sadasdads',
-        1231.0,
-        'items_for_sale',
-        'M5B2K3',
-        '2024-03-31 22:47:02.067131',
-        '19c5bfcb-909e-4796-881c-31bcde94be66'
-    );
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Upcycled metal wall art', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.', 789.51, 'academic_services', '2023-09-24 11:54:24', '652630e9-a92f-4c3e-ae7a-b74a6fef939d');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Vintage brass candlestick holder', 'Sed ante. Vivamus tortor. Duis mattis egestas metus.', 309.58, 'academic_services', '2024-01-25 11:40:41', '652630e9-a92f-4c3e-ae7a-b74a6fef939d');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Handmade beaded necklace', 'In congue. Etiam justo. Etiam pretium iaculis justo.', 311.49, 'items_for_sale', '2024-01-25 16:36:02', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Artisanal scented candle', 'Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.', 630.11, 'academic_services', '2023-09-10 13:16:54', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Hand-dyed silk scarf', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.', 691.97, 'academic_services', '2023-07-19 20:59:06', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Handcrafted wooden cutting board', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.', 163.45, 'items_for_sale', '2023-11-03 06:52:12', '652630e9-a92f-4c3e-ae7a-b74a6fef939d');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Handcrafted wooden cutting board', 'Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', 393.38, 'academic_services', '2023-05-02 01:57:21', '652630e9-a92f-4c3e-ae7a-b74a6fef939d');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Handwoven straw hat', 'Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', 986.68, 'items_for_sale', '2024-03-21 21:51:25', '652630e9-a92f-4c3e-ae7a-b74a6fef939d');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Upcycled metal wall art', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.', 498.11, 'items_for_sale', '2023-08-01 11:05:31', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Hand-stitched leather journal', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', 282.7, 'academic_services', '2024-01-09 19:13:29', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Upcycled denim tote bag', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.', 758.43, 'items_for_sale', '2024-02-18 03:41:22', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Upcycled metal wall art', 'Sed ante. Vivamus tortor. Duis mattis egestas metus.', 368.96, 'items_wanted', '2023-08-22 06:55:56', '652630e9-a92f-4c3e-ae7a-b74a6fef939d');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Vintage leather camera strap', 'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', 645.73, 'items_wanted', '2024-04-01 15:26:01', '652630e9-a92f-4c3e-ae7a-b74a6fef939d');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Hand-painted porcelain teacup', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.', 546.32, 'items_for_sale', '2023-04-09 14:20:28', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Handcrafted wooden cutting board', 'In congue. Etiam justo. Etiam pretium iaculis justo.', 487.91, 'items_for_sale', '2023-11-21 17:26:34', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Antique silver tea set', 'Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.', 747.36, 'items_wanted', '2023-07-10 20:17:14', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Hand-painted ceramic vase', 'Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.', 664.94, 'academic_services', '2023-12-28 10:16:33', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Retro sunglasses', 'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.', 593.77, 'academic_services', '2023-09-04 23:17:31', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Vintage leather camera strap', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', 308.81, 'academic_services', '2023-07-28 19:38:21', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Vintage brass candlestick holder', 'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.', 757.24, 'items_for_sale', '2023-09-13 04:37:38', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Art deco cocktail shaker', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', 474.98, 'items_for_sale', '2024-01-08 01:45:50', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Handwoven basket', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', 269.76, 'academic_services', '2023-11-29 08:49:05', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Handmade soy wax melts', 'Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', 915.29, 'items_for_sale', '2023-06-08 10:30:00', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Vintage leather suitcase', 'Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.', 483.13, 'items_for_sale', '2023-06-28 21:11:38', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Artisanal scented candle', 'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', 662.19, 'academic_services', '2023-11-12 21:30:06', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Art deco cocktail shaker', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', 145.67, 'academic_services', '2023-12-17 18:56:07', '19c5bfcb-909e-4796-881c-31bcde94be66');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Vintage leather suitcase', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.', 568.55, 'items_wanted', '2024-01-14 06:51:35', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Hand-carved wooden figurine', 'In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.', 686.53, 'items_wanted', '2023-06-19 15:36:55', '652630e9-a92f-4c3e-ae7a-b74a6fef939d');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Handwoven basket', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', 312.77, 'items_wanted', '2024-01-13 14:43:23', '652630e9-a92f-4c3e-ae7a-b74a6fef939d');
+insert into public .posts (title, content, price, type, created_at, user_id) values ('Handmade macrame plant hanger', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', 534.82, 'items_wanted', '2023-05-03 05:44:13', '02c55b63-a4f5-4b50-8fba-5dbd61a9f291');
 
 -- TEST DATA IMAGES TABLE
-INSERT INTO
-    public .images (
-        link,
-        alt_text,
-        post_id
-    )
-VALUES
-    (
-        'https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads%2F652630e9-a92f-4c3e-ae7a-b74a6fef939d%2F334438_monke.png',
-        'silly monkey',
-        1
-    ),
-    (
-        'https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads%2F652630e9-a92f-4c3e-ae7a-b74a6fef939d%2F334438_monke.png',
-        'silly monkey',
-        2
-    ),
-    (
-        'https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads%2F652630e9-a92f-4c3e-ae7a-b74a6fef939d%2F334438_monke.png',
-        'silly monkey',
-        11
-    ),
-    (
-        'https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads%2F652630e9-a92f-4c3e-ae7a-b74a6fef939d%2F334438_monke.png',
-        'silly monkey',
-        20
-    );
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/320334_otter.jpg', 'quam pharetra magna', 1);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/415201_Screen%20Shot%202024-02-07%20at%201.53.41%20PM.png', 'dui vel nisl', 2);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/334438_monke.png', 'in quis justo maecenas', 3);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/121476_otter2.jpg', 'integer tincidunt', 4);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/606328911924_cat3.jpg', 'vel nisl', 5);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/278168_otter4.jpg', 'at turpis a pede', 6);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/121476_otter2.jpg', 'orci luctus et ultrices', 7);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/828993018656_cat2.jpg', 'nulla dapibus dolor vel', 8);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/415201_Screen%20Shot%202024-02-07%20at%201.53.41%20PM.png', 'est risus auctor sed', 9);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/121476_otter2.jpg', 'ipsum aliquam', 10);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/606328911924_cat3.jpg', 'non lectus aliquam', 11);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/320334_otter.jpg', 'cubilia curae', 12);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/606328911924_cat3.jpg', 'pede lobortis ligula sit', 13);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/415201_Screen%20Shot%202024-02-07%20at%201.53.41%20PM.png', 'integer tincidunt ante', 14);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/173670_silly_monkey.jpg', 'eros vestibulum', 15);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/320334_otter.jpg', 'metus aenean fermentum', 16);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/606328911924_cat3.jpg', 'lorem quisque ut erat', 17);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/278168_otter4.jpg', 'sapien quis libero nullam', 18);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/682113145606_cat1.jpg', 'hac habitasse platea dictumst', 19);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/828993018656_cat2.jpg', 'amet consectetuer adipiscing', 20);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/828993018656_cat2.jpg', 'montes nascetur ridiculus mus', 21);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/334438_monke.png', 'morbi quis', 22);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/278168_otter4.jpg', 'ac diam', 23);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/415201_Screen%20Shot%202024-02-07%20at%201.53.41%20PM.png', 'nulla neque libero convallis', 24);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/334438_monke.png', 'integer aliquet', 25);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/121476_otter2.jpg', 'magnis dis parturient montes', 26);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/415201_Screen%20Shot%202024-02-07%20at%201.53.41%20PM.png', 'tristique fusce congue diam', 27);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/606328911924_cat3.jpg', 'venenatis non', 28);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/606328911924_cat3.jpg', 'lorem vitae mattis', 29);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/215991272_hat.png', 'scelerisque quam turpis', 30);
+
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/121476_otter2.jpg', 'cras in', 1);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/320334_otter.jpg', 'ultrices enim', 2);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/415201_Screen%20Shot%202024-02-07%20at%201.53.41%20PM.png', 'quis odio consequat', 3);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/320334_otter.jpg', 'nec molestie', 4);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/173670_silly_monkey.jpg', 'proin risus', 5);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/606328911924_cat3.jpg', 'amet consectetuer', 6);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/215991272_hat.png', 'sed nisl nunc', 7);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/137927_otter3.jpg', 'turpis sed ante vivamus', 8);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/173670_silly_monkey.jpg', 'magnis dis', 9);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/173670_silly_monkey.jpg', 'fringilla rhoncus mauris', 10);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/320334_otter.jpg', 'rhoncus aliquet', 11);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/137927_otter3.jpg', 'leo rhoncus sed vestibulum', 12);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/334438_monke.png', 'mauris lacinia sapien', 13);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/215991272_hat.png', 'luctus ultricies eu nibh', 14);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/682113145606_cat1.jpg', 'curae nulla dapibus', 15);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/121476_otter2.jpg', 'enim blandit mi', 16);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/173670_silly_monkey.jpg', 'platea dictumst', 17);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/278168_otter4.jpg', 'nibh in hac habitasse', 18);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/215991272_hat.png', 'justo lacinia', 19);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/415201_Screen%20Shot%202024-02-07%20at%201.53.41%20PM.png', 'nam tristique tortor eu', 20);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/173670_silly_monkey.jpg', 'augue quam sollicitudin', 21);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/137927_otter3.jpg', 'vel dapibus', 22);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/415201_Screen%20Shot%202024-02-07%20at%201.53.41%20PM.png', 'vel augue vestibulum rutrum', 23);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/334438_monke.png', 'volutpat quam', 24);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/173670_silly_monkey.jpg', 'ridiculus mus etiam', 25);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/320334_otter.jpg', 'accumsan tellus nisi', 26);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/278168_otter4.jpg', 'felis eu sapien', 27);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/215991272_hat.png', 'erat quisque erat eros', 28);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/ec82ea34-0100-4bf7-a637-015fbbf50c94/828993018656_cat2.jpg', 'tortor duis', 29);
+insert into public .images (link, alt_text, post_id) values ('https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/uploads/652630e9-a92f-4c3e-ae7a-b74a6fef939d/334438_monke.png', 'luctus cum', 30);
