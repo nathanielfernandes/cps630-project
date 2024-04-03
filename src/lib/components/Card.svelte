@@ -9,6 +9,7 @@
 	}
 	export let id: number;
 	export let title: string;
+	$: formattedTitle = title.length > 25 ? title.substring(0, 25) + '...' : title;
 	export let description: string;
 	export let date: string;
 	export let price: number;
@@ -39,10 +40,55 @@
 			</div>
 		</div>
 
-		<div class="p-5">
-			<h2 class="mb-2 line-clamp-1 text-xl font-medium text-gray-900">
-				{title}
-			</h2>
+	<div class="p-5 relative">
+		<div class="absolute right-2 top-2">
+			<button
+				id="dropdownMenuIconHorizontalButton"
+				data-dropdown-toggle="dropdownDotsHorizontal"
+				class="inline-flex items-center rounded-lg bg-white p-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+				type="button"
+			>
+				<svg
+					class="h-4 w-4"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="currentColor"
+					viewBox="0 0 16 3"
+				>
+					<path
+						d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+					/>
+				</svg>
+			</button>
+
+			<!-- Dropdown menu -->
+			<div
+				id="dropdownDotsHorizontal"
+				class="z-10 w-44 divide-y divide-gray-100 rounded-lg bg-white shadow-lg dark:divide-gray-600 dark:bg-gray-700 absolute -right-5"
+			>
+				<ul
+					class="py-2 text-sm text-gray-700 dark:text-gray-200"
+					aria-labelledby="dropdownMenuIconHorizontalButton"
+				>
+					<li>
+						<button
+							class="block px-4 py-2 text-left w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+							>Edit</button
+						>
+					</li>
+					<li>
+						<button
+							class="block px-4 py-2 text-left w-full text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+							>Delete</button
+						>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<h2 class="mb-2 line-clamp-1 text-xl font-medium text-gray-900">
+			{formattedTitle}
+		</h2>
 
 			<p class="mb-4 line-clamp-2 min-h-10 text-sm font-normal text-gray-700">
 				{description}
