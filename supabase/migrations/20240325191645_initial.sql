@@ -60,6 +60,10 @@ CREATE POLICY "Read All Posts" ON posts FOR
 SELECT
     USING (true);
 
+CREATE POLICY "Read All Posts Anon" ON posts FOR
+SELECT
+    to anon USING (true);
+
 -- allow users to create posts
 CREATE POLICY "Create Post" ON posts FOR
 INSERT
@@ -91,6 +95,11 @@ CREATE TABLE verify (
 ALTER TABLE
     verify ENABLE ROW LEVEL SECURITY;
 
+CREATE TABLE user_info (
+    id UUID NOT NULL PRIMARY KEY REFERENCES auth.users(id),
+    email VARCHAR(255) NOT NULL
+);
+
 CREATE POLICY "Read Own Secret" ON verify FOR
 SELECT
     USING (auth.uid() = id);
@@ -110,13 +119,39 @@ END;
 
 $$;
 
+CREATE FUNCTION public .create_user_info_row() RETURNS TRIGGER LANGUAGE PLPGSQL SECURITY DEFINER
+set
+    search_path = public AS $$ BEGIN
+        INSERT INTO
+            public .user_info (id, email)
+        VALUES
+            (NEW .id, NEW .email);
+
+RETURN NEW;
+
+END;
+
+$$;
+
 CREATE TRIGGER create_verify_row_trigger AFTER
 INSERT
     ON auth.users FOR EACH ROW EXECUTE PROCEDURE public .create_verify_row();
 
+CREATE TRIGGER create_user_info_row_trigger AFTER
+INSERT
+    ON auth.users FOR EACH ROW EXECUTE PROCEDURE public .create_user_info_row();
+
 -- read the auth.users and generate a new verify row
 INSERT INTO
     public .verify (id, email)
+SELECT
+    id,
+    email
+FROM
+    auth.users;
+
+INSERT INTO
+    public .user_info (id, email)
 SELECT
     id,
     email

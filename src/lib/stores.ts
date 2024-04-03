@@ -19,4 +19,9 @@ export type Post = {
 }
 
 export const posts = writable<{[post_id:string]:Post}>({});
-
+export const waiting = writable(true);
+posts.subscribe((p) => {
+  if (Object.keys(p).length > 0) {
+    waiting.set(false);
+  }
+});

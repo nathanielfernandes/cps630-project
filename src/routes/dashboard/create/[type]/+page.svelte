@@ -17,6 +17,7 @@
 	let title = '';
 	let content = '';
 	let price = '';
+    let location = '';
 	let user_id = session ? session.user.id : '';
 	let email = (session ? session.user.email : '') as string;
 	let images: ImageFile[] = [];
@@ -29,6 +30,7 @@
 					title,
 					content,
 					price,
+                    location,
 					type,
 					user_id
 				}
@@ -45,7 +47,7 @@
 	};
 
 	const uploadImage = async (imageFile: File) => {
-		const random_value = Math.floor(Math.random() * 1000000);
+		const random_value = Math.floor(Math.random() * 1000000000);
         console.log("uploading", `uploads/${user_id}/${random_value}_${imageFile.name}`);
 		const { data, error } = await supabase.storage
 			.from('images')
@@ -76,6 +78,7 @@
 	};
 
 	const handleSubmit = async () => {
+        // Upload images
         let imageUrls: string[] = [];
         if (images.length > 0) {
 			const promises = images.map((image) => {
@@ -92,12 +95,20 @@
             imageUrls = result as string[];
 		}
 
+        // Create post
 		const postData = await insertPost();
+        if (!postData) {
+            errorAlert('Failed to create Ad post.');
+            return;
+        }
+
+        // Insert uploaded images into post
         if (imageUrls.length > 0) {
             await insertImages(postData.id, imageUrls);
         }
 
         successAlert('Your Ad has been posted!');
+        goto(`/dashboard/listings/posts/${postData.id}`);
 	};
 
 	onMount(() => {
@@ -131,6 +142,7 @@
 							id="title"
 							class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 							placeholder="Post title"
+                            maxlength="255"
 							required
 						/>
 					</div>
@@ -145,6 +157,7 @@
 							rows="4"
 							class="block min-h-10 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 							placeholder="Post Content"
+                            maxlength="255"
 							required
 						></textarea>
 					</div>
@@ -161,6 +174,21 @@
 							required
 						/>
 					</div>
+                    <div>
+                        <label
+                            for="location"
+                            class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Location*</label
+                        >
+                        <input
+                            bind:value={location}
+                            type="text"
+                            id="location"
+                            class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                            placeholder="Postal Code"
+                            maxlength="255"
+                            required
+                        />
+                    </div>
 					<div class="mb-5 flex items-start">
 						<div class="flex h-5 items-center">
 							<input
@@ -187,7 +215,7 @@
 		</div>
 		<div class="hidden flex-1 items-center justify-center md:flex">
 			<Card
-				id={0}
+				id={-1}
 				title={title || 'Post Title'}
 				description={content || 'Post Content'}
 				date={Date.now().toLocaleString()}
@@ -197,6 +225,7 @@
 					: []}
 				user={user_id}
 				{email}
+                showContactButton={false}
 			/>
 		</div>
 	</div>

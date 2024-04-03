@@ -15,7 +15,7 @@
 	import { isProtectedPage } from '$lib/protectedPages';
 	import Chat from '$lib/chatter/Chat.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
-
+	import { posts } from '$lib/stores';
 
 	export let data;
 	let { supabase, session } = data;
@@ -23,7 +23,39 @@
 
 	$: email = (session ? session.user.email : '') as string;
 
-  
+
+	const fetchPosts = async () => {
+		const { data, error } = await supabase.from('posts').select(`
+            id,
+            title,
+            content,
+            price,
+            created_at,
+            type,
+            location,
+            images:images!post_id (link, alt_text),
+            user_id,
+            email
+        `);
+
+        if (error) {
+            console.log(error);
+            throw error;
+        }
+
+		const fetched = data || [];
+		posts.update((p) => {
+			for (const post of fetched) {
+				// @ts-ignore
+				p[post.id.toString()] = post;
+			}
+			return p;
+		});
+	};
+
+	fetchPosts();
+
+
  	function wsAuthAttempt() {
 		if ($page.data.session) {
 			// select user id and secret
@@ -44,6 +76,14 @@
 				});
 		}
 	}
+
+    let searchValue = "";
+    const handleSearch = (e: Event) => {
+        e.preventDefault();
+        const url = new URL($page.url);
+        url.searchParams.set("q", searchValue);
+        goto(url);
+    }
   
 	let show_login_modal = false;
 	let pathBeforeSignOut = '';
@@ -55,9 +95,60 @@
         }
     }
 
-
-
 	onMount(() => {
+		// subscribe to new posts
+		const postChannel = supabase
+			.channel('posts_listener')
+			.on("postgres_changes", 
+				{
+					event: "*",
+					schema: "public",
+					table: "posts"
+				},
+				async ({ eventType, new: npost, old }) => {
+					switch (eventType) {
+						case "INSERT":
+							// get images for the new post
+							const { data: images } = await supabase
+								.from('images')
+								.select('link, alt_text')
+								.eq('post_id', npost.id);
+
+							posts.update((p) => {
+								// @ts-ignore
+								p[npost.id.toString()] =  {
+									images: images || [],
+									...npost,
+								}
+								return p;
+							});
+							break;
+						case "UPDATE":
+							// get images for the new post
+							const { data: images2 } = await supabase
+								.from('images')
+								.select('link, alt_text')
+								.eq('post_id', npost.id);
+
+							posts.update((p) => {
+								// @ts-ignore
+								p[npost.id.toString()] = {
+									images: images2 || [],
+									...npost,
+								}
+								return p;
+							});
+							break;
+						case "DELETE":
+							posts.update((p) => {
+								delete p[old.id.toString()];
+								return p;
+							});
+							break;
+					}
+				})
+			.subscribe();
+
 		connect_websocket();
 
 		if ($page.url.searchParams.get('askLogin') === 'true') {
@@ -102,6 +193,7 @@
 			disconnect_websocket();
 			resetChatState();
 			subscription.unsubscribe();
+			postChannel.unsubscribe();
 		};
 	});
 
@@ -314,13 +406,15 @@
 		</div>
 		<form class="relative flex flex-1 items-center">
 			<input
-				type="text"
+				type="search"
 				id="search-navbar"
 				class="border-box block w-full rounded-lg border-2 bg-white p-3 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
 				placeholder="Search..."
+                bind:value={searchValue}
 			/>
 			<button
 				type="submit"
+                on:click={handleSearch}
 				class="absolute right-0 box-border flex h-full items-center justify-center rounded-r-lg border-2 border-white/0 bg-blue-600 p-3 text-white hover:bg-blue-700 focus:border-blue-800 focus:ring focus:ring-blue-800"
 			>
 				<svg
@@ -345,8 +439,6 @@
 </nav>
 
 <slot />
-
-<div class="h-56 opacity-0">""</div>
 
 <Chat />
 

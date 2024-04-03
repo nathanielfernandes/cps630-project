@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { authenicated, messages, open, ping, talking_to, users } from "./stores";
+    import { authenicated, chat_order, messages, open, ping, talking_to, users } from "./stores";
 	import { send_message } from "./msg";
 	import Pfp from "$lib/components/Pfp.svelte";
 	import { page } from '$app/stores';
 	import { fly, slide } from "svelte/transition";
 	import { onMount, tick } from "svelte";
+	import { posts } from "$lib/stores";
 
     $: uid = $page.data.session ? $page.data.session.user.id : "NA";
     $: email = ($page.data.session ? $page.data.session.user.email : "NA") as string;
@@ -98,11 +99,16 @@
                                     </div>
                                 {/if}
                             {:else if msg.type === "Topic"}
+                                {@const post = $posts[msg.topic]}
                                 <div class="flex justify-center" in:fly|local>
                                     <div class="p-2 rounded-lg mx-1 my-0.5 w-80 text-center ">
                                         <span class="text-sm font-bold text-slate-400">Talking about</span>
                                         <br />
-                                        <span class="truncate font-bold">{msg.topic}</span>
+                                        {#if post}
+                                            <a class="truncate font-bold hover:underline" href="/dashboard/listings/posts/{msg.topic}">{post.title}</a>
+                                        {:else}
+                                            <span class="truncate font-bold">{msg.topic}</span>
+                                        {/if}
                                     </div>
                                 </div>
                             {/if}
@@ -124,7 +130,8 @@
                     </form>
                 </div>
             {:else}
-                {#each Object.entries($users) as [id, email]}
+                {#each $chat_order as id}
+                    {@const email = $users[id]}
                     {#if id !== uid}
                         <button class="flex p-2 rounded-lg bg-slate-100 h-min text-left w-full mb-1 items-center justify-between hover:bg-slate-200 active:bg-slate-300"
                             transition:fly
@@ -138,7 +145,14 @@
                                         {#if $messages[id]}
                                             {@const last = $messages[id][$messages[id].length - 1]}
                                             {#if last.type === "Topic"}
-                                                <div class="truncate">{last.topic}</div>
+                                                {@const post = $posts[last.topic]}
+                                                {#if post}
+                                                    <div class="truncate">
+                                                        Talking about {post.title}
+                                                    </div>
+                                                {:else}
+                                                    <div class="truncate">{last.topic}</div>
+                                                {/if}
                                             {:else}
                                                 <div class="truncate">                                            
                                                     {last.message || "..."}

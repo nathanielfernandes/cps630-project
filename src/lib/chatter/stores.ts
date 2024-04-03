@@ -24,6 +24,7 @@ open.subscribe((o) => {
     }
 });
 
+export const chat_order = writable<string[]>([]);
 export const messages = writable<{ [from: string]: ChatMessage[] }>({});
 export const users = writable<{ [id: string]: string }>({});
 
@@ -37,7 +38,7 @@ export function startChat(user_id: string, topic: string = "") {
         send_message("SetTopic", { to: user_id, topic });
     }
 
-    console.log("Starting chat with", user_id);
+    // console.log("Starting chat with", user_id);
 }
 
 export function resetChatState() {
@@ -66,6 +67,14 @@ export function addMessages(participants: string[], bulk_msgs: ChatMessage[], cl
 
         return msgs;
     });
+
+    chat_order.update((order) => {
+        // remove the key from the order
+        order = order.filter((k) => k !== key);
+        // add it to the front
+        order.unshift(key);
+        return order;
+    });
 }
 
 export function addUsers(usrs: ChatUser[]) {
@@ -91,7 +100,7 @@ export function connect_websocket() {
 
     socket_state.set("connecting");
 
-    console.log("Connecting to Websocket", PUBLIC_CHATTER_WS_URL);
+    // console.log("Connecting to Websocket", PUBLIC_CHATTER_WS_URL);
     socket = new WebSocket(PUBLIC_CHATTER_WS_URL);
 
     socket.onopen = (_) => {
