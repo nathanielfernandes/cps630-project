@@ -136,10 +136,10 @@
 			return;
 		}
 		//@ts-ignore
-		const imagePaths = prevImages.map((image) =>
-			decodeURIComponent(image.link.replace(IMAGE_URL_PREFIX, ''))
-		);
-		supabase.storage.from('images').remove(imagePaths);
+		// const imagePaths = prevImages.map((image) =>
+		// 	decodeURIComponent(image.link.replace(IMAGE_URL_PREFIX, ''))
+		// );
+		// supabase.storage.from('images').remove(imagePaths);
 
 		// Upload images
 		let imageUrls: string[] = [];
