@@ -138,11 +138,10 @@
 	});
 </script>
 
-<div
-	class="xs:grid-cols-1 mx-auto mb-10 mt-10 grid w-full max-w-screen-xl gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
->
+<div class="px-7 xs:grid-cols-1 mx-auto mb-10 mt-10 grid w-full max-w-screen-xl gap-10 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 	{#each ads as ad}
 		<Card
+			ad_id={ad.id}
 			title={ad.title}
 			description={ad.description}
 			date={ad.date}
@@ -150,6 +149,7 @@
 			profile_image={ad.profile_image}
 			images={ad.images}
 			user={ad.user}
+			category="sale"
 		/>
 	{/each}
 </div>
