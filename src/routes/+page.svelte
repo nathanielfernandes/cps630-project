@@ -1,74 +1,35 @@
 <script lang="ts">
-	import {
-		successAlert,
-		errorAlert,
-		infoAlert,
-		warningAlert,
-		darkAlert
-	} from '$lib/Alerts/stores.js';
-	import Modal from '$lib/Modal/Modal.svelte';
+	import { ping, startChat } from "$lib/chatter/stores";
 
-	export let data;
+	const known_ppl = [
+		["nathaniel.s.fernandes@gmail.com", "652630e9-a92f-4c3e-ae7a-b74a6fef939d"],
+		["hazafa.tanveer123@gmail.com", "c2446533-f749-445a-a437-b16dc18c2440"],
+	];
 
-	// console.log('data', data);
-	$: if (data.session) {
-		console.log('logged in as:', data.session.user.email);
-		// console.log('session', data.session);
+	let person = known_ppl[0];
+	let topic = "";
+	function handleClick() {
+		startChat(person[1], topic);
 	}
-
-	let show_modal = false;
-	let text = '';
 </script>
 
-<h1>testing</h1>
 
-<hr class="my-8" />
-<button
-	class="bg-green-500 text-white px-4 py-2 rounded-lg"
-	on:click={() => successAlert('Hello', 'This is a success alert')}
->
-	Success
-</button>
+<div class="text-slate-600 m-4 flex flex-col w-80 space-y-4">
+	<h1>Debug Chat Panel</h1>
 
-<button
-	class="bg-red-500 text-white px-4 py-2 rounded-lg"
-	on:click={() => errorAlert('Hello', 'This is an error alert')}
->
-	Error
-</button>
+	{$ping}
 
-<button
-	class="bg-blue-500 text-white px-4 py-2 rounded-lg"
-	on:click={() => infoAlert('Hello', 'This is an info alert')}
->
-	Info
-</button>
+	<p>Selected: </p>
+	<select bind:value={person}>
+		{#each known_ppl as p}
+			<option value={p}>{p[0]}</option>
+		{/each}
+	</select>
 
-<button
-	class="bg-yellow-500 text-white px-4 py-2 rounded-lg"
-	on:click={() => warningAlert('Hello', 'This is a warning alert')}
->
-	Warning
-</button>
+	<p>Set Chat Topic: </p>
+	<input type="text" bind:value={topic} />
 
-<button
-	class="bg-gray-500 text-white px-4 py-2 rounded-lg"
-	on:click={() => darkAlert('Hello', 'This is a dark alert')}
->
-	Dark
-</button>
-
-<button class="bg-gray-500 text-white px-4 py-2 rounded-lg" on:click={() => (show_modal = true)}
-	>Show modal</button
->
-
-<Modal bind:show={show_modal} class="w-96" let:close>
-	<h1 class="text-white text-2xl font-bold">Example Modal</h1>
-
-	<p class="text-white">This is a modal</p>
-
-	<input type="text" bind:value={text} class="w-full rounded-lg p-2" />
-	<p class="text-white">This is some input: {text}</p>
-
-	<button class="bg-red-500 text-white px-4 py-2 rounded-lg" on:click={close}> Finish </button>
-</Modal>
+	<button class="bg-green-500 text-white px-4 py-2 rounded-lg" on:click={handleClick}>
+		Chat with {person[0]}
+	</button>
+</div>

@@ -7,19 +7,59 @@
 	import { onMount } from 'svelte';
 
 	import Alerts from '$lib/Alerts/Alerts.svelte';
+
 	import { successAlert, warningAlert, errorAlert } from '$lib/Alerts/stores.js';
 	import { clickOutside } from '$lib/clickOutside';
 	import LoginSignup from '$lib/components/LoginSignup.svelte';
+	import { disconnect_websocket, uuid, ssecret, connect_websocket, resetChatState, open, ping } from '$lib/chatter/stores';
+	import { isProtectedPage } from '$lib/protectedPages';
+	import Chat from '$lib/chatter/Chat.svelte';
+	import Pfp from '$lib/components/Pfp.svelte';
+
 
 	export let data;
-
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
 
+	$: email = (session ? session.user.email : '') as string;
+
+  
+ 	function wsAuthAttempt() {
+		if ($page.data.session) {
+			// select user id and secret
+			supabase
+				.from('verify')
+				.select('id, secret')
+				.single()
+				.then(({ data, error }) => {
+					if (error) {
+						console.error('Error fetching user secret:', error);
+						return;
+					}
+					if (data) {
+						const { id, secret } = data;
+						uuid.set(id);
+						ssecret.set(secret);
+					}
+				});
+		}
+	}
+  
 	let show_login_modal = false;
-	let prev_pathname = '';
+	let pathBeforeSignOut = '';
+
+    $: {
+        // Redirect and ask user to login, if user tries to visit a protected page and is not logged in
+        if (isProtectedPage($page.url.pathname) && !session) {
+            window.location.replace('/?askLogin=true');
+        }
+    }
+
+
 
 	onMount(() => {
+		connect_websocket();
+
 		if ($page.url.searchParams.get('askLogin') === 'true') {
 			show_login_modal = true;
 			errorAlert('Not authorized to view page');
@@ -30,29 +70,48 @@
 			goto(params.size === 0 ? '/' : `/?${params.toString()}`);
 		}
 
+		wsAuthAttempt();
+
 		const {
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
 				if (event === 'SIGNED_IN') {
-					successAlert('Sign in successful');
+					successAlert('Signed in successful');
 				}
-				invalidate('supabase:auth');
+				invalidate('supabase:auth').then(wsAuthAttempt);
 			}
 			// If the previous page before signing out was a protected page, show login modal
 			if (event === 'SIGNED_OUT') {
+				uuid.set("");
+				ssecret.set("");
+				disconnect_websocket();
+				resetChatState();
 				warningAlert('You have been signed out');
+				// If the previous page before signing out was a protected page, show login modal
+				if (isProtectedPage(pathBeforeSignOut)) {
+					show_login_modal = true;
+				}
+
 			}
 		});
 
-		return () => subscription.unsubscribe();
+		return () => {
+			uuid.set("");
+			ssecret.set("");
+			disconnect_websocket();
+			resetChatState();
+			subscription.unsubscribe();
+		};
 	});
 
 	const DefaultUserImage = '/user.png';
 
 	const handleSignOut = async () => {
 		// Keep track of previous page before signing out which will redirect to homepage
-		prev_pathname = window.location.pathname;
+
+		pathBeforeSignOut = window.location.pathname;
+
 		await supabase.auth.signOut();
 		dropdownVisibility['user-dropdown'] = false;
 	};
@@ -94,7 +153,7 @@
 
 <nav class="border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
 	<div
-		class="mx-auto flex max-w-screen-xl flex-col flex-wrap items-center justify-between gap-y-5 p-4 sm:flex-row"
+		class="mx-auto flex max-w-screen-2xl flex-col flex-wrap items-center justify-between gap-y-5 p-4 sm:flex-row"
 	>
 		<a href="/" class="flex shrink-0 items-center space-x-3 rtl:space-x-reverse">
 			<img src="/TMU-rgb.png" class="h-10" alt="TMU Logo" />
@@ -104,7 +163,7 @@
 		</a>
 		<div class="relative flex shrink-0 gap-5 md:order-2 md:space-x-0 rtl:space-x-reverse">
 			<button
-				on:click={() => goto('/auth')}
+				on:click={() => goto('/dashboard/create')}
 				type="button"
 				class="rounded-lg bg-yellow-300 px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300/70 dark:focus:ring-yellow-800/70"
 				>Place an Ad</button
@@ -113,16 +172,28 @@
 				<button
 					data-collapse-toggle="navbar-solid-bg"
 					type="button"
-					class="inline-flex h-10 w-10 items-center justify-center rounded-lg p-1 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+					class="relative inline-flex h-10 w-10 items-center justify-center rounded-lg p-1 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 					aria-controls="navbar-solid-bg"
 					aria-expanded="false"
+					on:click={() => open.update((v) => !v)}
 				>
 					<span class="sr-only">Open chat</span>
 					<i class="fa-regular fa-message text-2xl"></i>
+
+					{#if $ping}
+						<span
+							class="absolute top-1 right-1 inline-flex items-center justify-center w-2 h-2 text-xs font-bold leading-none text-white  bg-red-500 rounded-full"
+							></span
+						>
+						<span
+							class="absolute top-1 right-1 inline-flex items-center justify-center w-2 h-2 text-xs font-bold leading-none text-white  bg-red-500 rounded-full animate-ping"
+							></span
+						>
+					{/if}
 				</button>
 				<button
 					type="button"
-					class="order-1 flex items-center rounded-full bg-gray-800 text-sm focus:ring-4 focus:ring-gray-300 md:me-0 dark:focus:ring-gray-600"
+					class="order-1 flex items-center rounded-full text-sm focus:ring-4 focus:ring-gray-300 md:me-0 dark:focus:ring-gray-600"
 					id="user-menu-button"
 					data-dropdown-toggle="user-dropdown"
 					data-dropdown-placement="bottom"
@@ -131,13 +202,14 @@
 					aria-expanded={dropdownVisibility['user-dropdown']}
 				>
 					<span class="sr-only">Open user menu</span>
-					<img
+					<Pfp email={email} class="h-10 w-10 rounded-full" />
+					<!-- <img
 						use:replaceBadImageWithDefault={DefaultUserImage}
 						on:error={handleProfileImageError}
 						class="pointer-events-none h-10 w-10 rounded-full"
 						src="/user.png"
 						alt="user"
-					/>
+					/> -->
 				</button>
 				<!-- User dropdown menu -->
 				<div
@@ -202,10 +274,10 @@
 
 <nav class="bg-slate-200 dark:bg-gray-700">
 	<div
-		class="mx-auto flex max-w-screen-xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
+		class="mx-auto flex max-w-screen-2xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
 	>
 		<div class="flex items-center">
-			<ul class="mt-0 flex flex-row space-x-8 text-center text-sm font-medium rtl:space-x-reverse">
+			<ul class="mt-0 flex flex-row space-x-5 sm:space-x-8 text-center text-sm font-medium rtl:space-x-reverse">
 				<li>
 					<a
 						href="/"
@@ -216,24 +288,27 @@
 				</li>
 				<li>
 					<a
-						href="/dashboard/wanted"
-						aria-current={$page.url.pathname === '/dashboard/wanted' ? 'page' : undefined}
+						rel="external"
+						href="/dashboard/items_wanted"
+						aria-current={$page.url.pathname === '/dashboard/items_wanted' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Wanted Listings</a
 					>
 				</li>
 				<li>
 					<a
-						href="/dashboard/sale"
-						aria-current={$page.url.pathname === '/dashboard/sale' ? 'page' : undefined}
+						rel="external"
+						href="/dashboard/items_for_sale"
+						aria-current={$page.url.pathname === '/dashboard/items_for_sale' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Buy & Sell</a
 					>
 				</li>
 				<li>
 					<a
-						href="/dashboard/service"
-						aria-current={$page.url.pathname === '/dashboard/service' ? 'page' : undefined}
+						rel="external"
+						href="/dashboard/academic_services"
+						aria-current={$page.url.pathname === '/dashboard/academic_services' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
 						>Academic Services</a
 					>
@@ -274,4 +349,7 @@
 
 <slot />
 
+<Chat />
+
 <LoginSignup {supabase} bind:show={show_login_modal} />
+
