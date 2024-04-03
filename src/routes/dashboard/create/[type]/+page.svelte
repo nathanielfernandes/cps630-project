@@ -45,7 +45,7 @@
 	};
 
 	const uploadImage = async (imageFile: File) => {
-		const random_value = Math.floor(Math.random() * 1000000000000);
+		const random_value = Math.floor(Math.random() * 1000000000);
         console.log("uploading", `uploads/${user_id}/${random_value}_${imageFile.name}`);
 		const { data, error } = await supabase.storage
 			.from('images')
@@ -76,6 +76,7 @@
 	};
 
 	const handleSubmit = async () => {
+        // Upload images
         let imageUrls: string[] = [];
         if (images.length > 0) {
 			const promises = images.map((image) => {
@@ -92,7 +93,14 @@
             imageUrls = result as string[];
 		}
 
+        // Create post
 		const postData = await insertPost();
+        if (!postData) {
+            errorAlert('Failed to create Ad post.');
+            return;
+        }
+
+        // Insert uploaded images into post
         if (imageUrls.length > 0) {
             await insertImages(postData.id, imageUrls);
         }
@@ -187,7 +195,7 @@
 		</div>
 		<div class="hidden flex-1 items-center justify-center md:flex">
 			<Card
-				id={0}
+				id={-1}
 				title={title || 'Post Title'}
 				description={content || 'Post Content'}
 				date={Date.now().toLocaleString()}
@@ -197,6 +205,7 @@
 					: []}
 				user={user_id}
 				{email}
+                showContactButton={false}
 			/>
 		</div>
 	</div>

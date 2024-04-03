@@ -3,6 +3,7 @@
 	import Card from '$lib/components/Card.svelte';
 	import type { SupabaseClient } from '@supabase/supabase-js';
 	import { posts } from '../../routes/dashboard/listings/stores';
+	import { goto } from '$app/navigation';
 
 	export let supabase: SupabaseClient;
 	export let session;
@@ -13,6 +14,11 @@
 
     const IMAGE_URL_PREFIX =
 		'https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/';
+
+    const handleEdit = async (event: CustomEvent<{id: number, title: string}>) => {
+        goto(`/dashboard/edit/${event.detail.id}`);
+    }
+
 	const handleDelete = async (event: CustomEvent<{id: number, title: string}>) => {
         let response = await supabase.from('images').delete().eq('post_id', event.detail.id).select();
         if (response.error) {
@@ -51,6 +57,7 @@
 			email={ad.email}
 			showContactButton={ad.user_id !== user_id}
 			showActions={ad.user_id === user_id}
+            on:editButtonClick={handleEdit}
 			on:deleteButtonClick={handleDelete}
 		/>
 	{/each}
