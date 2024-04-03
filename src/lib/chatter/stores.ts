@@ -37,7 +37,7 @@ export function startChat(user_id: string, topic: string = "") {
         send_message("SetTopic", { to: user_id, topic });
     }
 
-    console.log("Starting chat with", user_id);
+    // console.log("Starting chat with", user_id);
 }
 
 export function resetChatState() {
@@ -91,7 +91,7 @@ export function connect_websocket() {
 
     socket_state.set("connecting");
 
-    console.log("Connecting to Websocket", PUBLIC_CHATTER_WS_URL);
+    // console.log("Connecting to Websocket", PUBLIC_CHATTER_WS_URL);
     socket = new WebSocket(PUBLIC_CHATTER_WS_URL);
 
     socket.onopen = (_) => {

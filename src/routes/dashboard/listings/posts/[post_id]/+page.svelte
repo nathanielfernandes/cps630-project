@@ -6,7 +6,8 @@
 	import { clickOutside } from '$lib/clickOutside';
 	import Carousel from '$lib/components/Carousel.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
-	import { posts } from '../../stores';
+	import { posts } from '$lib/stores';
+
 
 	export let data;
 	let { supabase, session } = data;

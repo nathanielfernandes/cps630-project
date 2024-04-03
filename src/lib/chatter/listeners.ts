@@ -6,7 +6,7 @@ import { addMessages, addUsers, users, open, ping, authenicated } from "./stores
 
 export function startListeners() {
     on_message("Authenticated", (_) => {;
-        console.log("Websocket Authenticated!");
+        // console.log("Websocket Authenticated!");
         send_message("SyncChatUsers", {});
         authenicated.set(true);
     });
