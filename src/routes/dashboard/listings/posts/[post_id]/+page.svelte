@@ -66,7 +66,7 @@
             <div class="mt-5 relative sm:my-5 px-6 pt-6 pb-10 bg-white border border-gray-200 rounded-lg shadow">
                 <h5 class="mb-2 text-xl font-semibold text-gray-900 lg:text-2xl">Description</h5>
             
-                <p class="{isOpen ? '' : 'line-clamp-2'} break-all font-normal text-gray-700 text-sm lg:text-base lg:min-h-[2.5rem]" bind:this={desc}>
+                <p class="{isOpen ? '' : 'line-clamp-2'} break-word font-normal text-gray-700 text-sm lg:text-base lg:min-h-[2.5rem]" bind:this={desc}>
                     {post.content}
                 </p>
 
