@@ -17,7 +17,7 @@
 	let title = '';
 	let content = '';
 	let price = '';
-    let location = '';
+	let location = '';
 	let user_id = session ? session.user.id : '';
 	let email = (session ? session.user.email : '') as string;
 	let images: ImageFile[] = [];
@@ -30,25 +30,25 @@
 					title,
 					content,
 					price,
-                    location,
+					location,
 					type,
 					user_id
 				}
 			])
 			.select()
 			.single();
-        
-        if (error) {
-            console.error(error);
-            return;
-        }
+
+		if (error) {
+			console.error(error);
+			return;
+		}
 
 		return postData;
 	};
 
 	const uploadImage = async (imageFile: File) => {
 		const random_value = Math.floor(Math.random() * 1000000000);
-        console.log("uploading", `uploads/${user_id}/${random_value}_${imageFile.name}`);
+		console.log('uploading', `uploads/${user_id}/${random_value}_${imageFile.name}`);
 		const { data, error } = await supabase.storage
 			.from('images')
 			.upload(`uploads/${user_id}/${random_value}_${imageFile.name}`, imageFile);
@@ -78,37 +78,37 @@
 	};
 
 	const handleSubmit = async () => {
-        // Upload images
-        let imageUrls: string[] = [];
-        if (images.length > 0) {
+		// Upload images
+		let imageUrls: string[] = [];
+		if (images.length > 0) {
 			const promises = images.map((image) => {
 				if (image.file) {
 					return uploadImage(image.file);
 				}
 			});
-            
+
 			const result = await Promise.all(promises);
-            if (result.findIndex((url) => url === null || url === undefined) != -1) {
-                errorAlert('Image upload failed, please try again later.');
-                return;
-            }
-            imageUrls = result as string[];
+			if (result.findIndex((url) => url === null || url === undefined) != -1) {
+				errorAlert('Image upload failed, please try again later.');
+				return;
+			}
+			imageUrls = result as string[];
 		}
 
-        // Create post
+		// Create post
 		const postData = await insertPost();
-        if (!postData) {
-            errorAlert('Failed to create Ad post.');
-            return;
-        }
+		if (!postData) {
+			errorAlert('Failed to create Ad post.');
+			return;
+		}
 
-        // Insert uploaded images into post
-        if (imageUrls.length > 0) {
-            await insertImages(postData.id, imageUrls);
-        }
+		// Insert uploaded images into post
+		if (imageUrls.length > 0) {
+			await insertImages(postData.id, imageUrls);
+		}
 
-        successAlert('Your Ad has been posted!');
-        goto(`/dashboard/listings/posts/${postData.id}`);
+		successAlert('Your Ad has been posted!');
+		goto(`/dashboard/listings/posts/${postData.id}`);
 	};
 
 	onMount(() => {
@@ -118,7 +118,7 @@
 	});
 </script>
 
-<div class="flex flex-1 justify-center overflow-hidden">
+<div class="flex min-h-[75vh] flex-1 justify-center overflow-hidden">
 	<div class="flex max-w-screen-2xl flex-1">
 		<div
 			class="w-full overflow-y-auto bg-white p-3 text-black shadow-lg md:max-w-[40%] lg:max-w-[30%]"
@@ -142,7 +142,7 @@
 							id="title"
 							class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 							placeholder="Post title"
-                            maxlength="255"
+							maxlength="255"
 							required
 						/>
 					</div>
@@ -157,7 +157,7 @@
 							rows="4"
 							class="block min-h-10 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 							placeholder="Post Content"
-                            maxlength="255"
+							maxlength="255"
 							required
 						></textarea>
 					</div>
@@ -174,21 +174,21 @@
 							required
 						/>
 					</div>
-                    <div>
-                        <label
-                            for="location"
-                            class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Location*</label
-                        >
-                        <input
-                            bind:value={location}
-                            type="text"
-                            id="location"
-                            class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                            placeholder="Postal Code"
-                            maxlength="255"
-                            required
-                        />
-                    </div>
+					<div>
+						<label
+							for="location"
+							class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Location*</label
+						>
+						<input
+							bind:value={location}
+							type="text"
+							id="location"
+							class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+							placeholder="Postal Code"
+							maxlength="255"
+							required
+						/>
+					</div>
 					<div class="mb-5 flex items-start">
 						<div class="flex h-5 items-center">
 							<input
@@ -200,8 +200,9 @@
 							/>
 						</div>
 						<label for="terms" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-							>I agree with the <a href="#" class="text-blue-600 hover:underline dark:text-blue-500"
-								>terms and conditions</a
+							>I agree with the <a
+								href="https://www.torontomu.ca/terms-conditions/"
+								class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a
 							>.</label
 						>
 					</div>
@@ -225,7 +226,7 @@
 					: []}
 				user={user_id}
 				{email}
-                showContactButton={false}
+				showContactButton={false}
 			/>
 		</div>
 	</div>
