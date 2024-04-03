@@ -32,11 +32,11 @@
 </script>
 
 {#if $authenicated}
-<div class="fixed bottom-0 sm:right-2 bg-white p-2 rounded-t-lg w-full sm:w-96 text-slate-600 transition-all duration-100">
+<div class="fixed bottom-0 sm:right-2 bg-white p-2 rounded-t-lg w-full sm:w-96 text-slate-600 transition-all duration-100 z-50">
     {#if $talking_to && $users[$talking_to]}
         <div class="flex items-center justify-between py-0.5 px-1 ">
             <div class="flex items-center space-x-2 font-bold">
-                <Pfp email={$users[$talking_to]} class="h-9 w-9 rounded-full" />
+                <Pfp email={$users[$talking_to]} class="h-9 w-9 rounded-md" />
                 <div>{$users[$talking_to]}</div>
             </div>
             <button class="bg-slate-100 p-2 rounded-full w-9 h-9 hover:bg-slate-200 active:bg-slate-300 flex items-center justify-center"
@@ -48,7 +48,7 @@
     {:else}
         <div class="flex items-center justify-between py-0.5 px-1 ">
             <div class="flex items-center space-x-2 font-bold">
-                <Pfp email={email} class="h-9 w-9 rounded-full" />
+                <Pfp email={email} class="h-9 w-9 rounded-md" />
                 <div>Messaging</div>
             </div>
             <button class="bg-slate-100 p-2 rounded-full w-9 h-9 hover:bg-slate-200 active:bg-slate-300 relative"
@@ -131,7 +131,7 @@
                             on:click={() => talking_to.set(id)}    
                         >
                             <div class="flex items-center space-x-2">
-                                <Pfp email={email} class="h-10 w-10 rounded-full" />
+                                <Pfp email={email} class="h-10 w-10 rounded-md" />
                                 <div class="flex flex-col">
                                     <div class="text-sm font-bold truncate">{email}</div>
                                     <div class="w-60">

@@ -187,6 +187,7 @@
 		</div>
 		<div class="hidden flex-1 items-center justify-center md:flex">
 			<Card
+				id={0}
 				title={title || 'Post Title'}
 				description={content || 'Post Content'}
 				date={Date.now().toLocaleString()}
