@@ -180,7 +180,7 @@
 		<i class="fa-solid fa-spinner animate-spin text-3xl text-slate-900"></i>
 	</div>
 {:then}
-	<div class="flex min-h-[75vh] flex-1 justify-center overflow-hidden">
+	<div class="flex min-h-fit md:min-h-[75vh] flex-1 justify-center md:overflow-hidden">
 		<div class="flex max-w-screen-2xl flex-1">
 			<div
 				class="w-full overflow-y-auto bg-white p-3 text-black shadow-lg md:max-w-[40%] lg:max-w-[30%]"
