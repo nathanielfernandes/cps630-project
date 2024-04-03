@@ -17,6 +17,22 @@ CREATE TABLE posts (
     email VARCHAR(255) NOT NULL DEFAULT 'no-email'
 );
 
+-- add real time updates
+begin;
+
+-- remove the supabase_realtime publication
+drop publication if exists supabase_realtime;
+
+-- re-create the supabase_realtime publication with no tables
+create publication supabase_realtime;
+
+commit;
+
+-- add a table called 'posts' to the publication
+alter publication supabase_realtime
+add
+    table posts;
+
 ALTER TABLE
     posts ENABLE ROW LEVEL SECURITY;
 

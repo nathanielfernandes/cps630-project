@@ -5,6 +5,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { posts } from '$lib/stores.js';
 
 	export let data;
 	let { supabase, session } = data;
@@ -107,8 +108,22 @@
 			await insertImages(postData.id, imageUrls);
 		}
 
-		successAlert('Your Ad has been posted!');
-		goto(`/dashboard/listings/posts/${postData.id}`);
+		// Check if the post is in the list posts
+		if ($posts[postData.id.toString()] !== undefined) {
+			successAlert('Your Ad has been posted!');
+			goto(`/dashboard/listings/posts/${postData.id}`);
+			return;
+		}
+
+		// wait for the post to be in the list posts
+		const unsub = posts.subscribe((posts) => {
+			// if the post is in the list posts goto
+			if (posts[postData.id.toString()] !== undefined) {
+				unsub();
+				successAlert('Your Ad has been posted!');
+				goto(`/dashboard/listings/posts/${postData.id}`);
+			}
+		});
 	};
 
 	onMount(() => {
