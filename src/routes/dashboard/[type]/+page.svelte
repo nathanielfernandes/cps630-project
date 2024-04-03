@@ -3,6 +3,7 @@
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
+    import { startChat } from "$lib/chatter/stores";
 
     export let data;
     let type = $page.params.type;
@@ -41,6 +42,9 @@
 >
 	{#each $posts as ad}
 		<Card
+            on:contactButtonClick={() => {
+                startChat(ad.user_id, `Product Inquiry - ${ad.title}`);
+            }}
 			title={ad.title}
 			description={ad.content}
 			date={ad.created_at}
