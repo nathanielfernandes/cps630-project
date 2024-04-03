@@ -346,8 +346,6 @@
 
 <slot />
 
-<div class="h-56 opacity-0">""</div>
-
 <Chat />
 
 <LoginSignup {supabase} bind:show={show_login_modal} />
