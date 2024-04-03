@@ -106,6 +106,7 @@
         }
 
         successAlert('Your Ad has been posted!');
+        goto(`/dashboard/listings/posts/${postData.id}`);
 	};
 
 	onMount(() => {
