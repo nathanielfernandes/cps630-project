@@ -120,7 +120,7 @@
 				{formattedTitle}
 			</h2>
 
-			<p class="mb-4 line-clamp-2 min-h-10 text-sm font-normal text-gray-700">
+			<p class="mb-4 line-clamp-2 break-words min-h-10 text-sm font-normal text-gray-700">
 				{description}
 			</p>
 
