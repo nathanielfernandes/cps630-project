@@ -1,9 +1,15 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { successAlert, errorAlert } from '$lib/Alerts/stores';
 	import { startChat } from '$lib/chatter/stores';
 	import Carousel from '$lib/components/Carousel.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
 	import { posts } from '../../stores';
+
+	export let data;
+	let { supabase, session } = data;
+	$: ({ supabase } = data);
 
 	const post_id = $page.params.post_id;
 	const post = $posts[post_id];
@@ -37,12 +43,101 @@
 				return 'wanted';
 		}
 	}
+
+    let showActions = session?.user.id === post.user_id;
+	let showActionsDropdown = false;
+	$: showActionsDropdown = showActions ? showActionsDropdown : false;
+
+    const IMAGE_URL_PREFIX =
+		'https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/';
+
+    const handleEdit = async () => {
+        goto(`/dashboard/edit/${post_id}`);
+    }
+	const handleDelete = async () => {
+        let response = await supabase.from('images').delete().eq('post_id', post_id).select();
+        if (response.error) {
+            console.error(response.error);
+            errorAlert("Failed to delete post.");
+            return;
+        }
+        const imagePaths = response.data.map((d) => decodeURIComponent(d.link.replace(IMAGE_URL_PREFIX, "")));
+        supabase.storage.from("images").remove(imagePaths);
+
+		response = await supabase.from('posts').delete().eq('id', post_id).select();
+        if (response.error) {
+            console.error(response.error);
+            errorAlert("Failed to delete post.");
+            return;
+        }
+
+        successAlert("Successfully deleted post: " + post.title);
+        delete $posts[post_id];
+        $posts = $posts;
+
+        goto(`/dashboard/listings/${swapListings(post.type)}`);
+	};
 </script>
 
 <!-- <p class="text-2xl text-black">{post_id}</p> -->
 
 {#if post !== undefined}
-	<div class="mx-auto w-full max-w-screen-xl px-4 py-7 font-normal">
+	<div class="relative mx-auto w-full max-w-screen-xl px-4 py-7 font-normal">
+		{#if showActions}
+			<div class="absolute right-5 top-5">
+				<button
+					id="dropdownMenuIconHorizontalButton"
+					data-dropdown-toggle="dropdownDotsHorizontal"
+					class="inline-flex items-center rounded-lg p-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+					type="button"
+					on:click={(e) => {
+						e.stopPropagation();
+						e.preventDefault();
+						showActionsDropdown = !showActionsDropdown;
+					}}
+				>
+					<svg
+						class="h-5 w-5"
+						aria-hidden="true"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="currentColor"
+						viewBox="0 0 16 3"
+					>
+						<path
+							d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+						/>
+					</svg>
+				</button>
+
+				<!-- Dropdown menu -->
+				<div
+					id="dropdownDotsHorizontal"
+					class="absolute -right-5 z-10 w-44 divide-y divide-gray-100 rounded-lg bg-white shadow-lg dark:divide-gray-600 dark:bg-gray-700"
+					class:hidden={!showActionsDropdown}
+				>
+					<ul
+						class="py-2 text-sm text-gray-700 dark:text-gray-200"
+						aria-labelledby="dropdownMenuIconHorizontalButton"
+					>
+						<li>
+							<button
+                                on:click={handleEdit}
+								class="block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+								>Edit</button
+							>
+						</li>
+						<li>
+							<button
+                                on:click={handleDelete}
+								class="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+								>Delete</button
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+		{/if}
+
 		<a
 			class="mb-4 rounded-lg bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white transition duration-100 ease-in-out hover:bg-blue-700"
 			href="/dashboard/listings/{swapListings(post.type)}"
