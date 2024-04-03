@@ -15,6 +15,8 @@
 					}
 				];
 
+	$: show_btns = images.length > 1;
+
 	let slide = 0;
 	function next() {
 		slide = (slide + 1) % images.length;
@@ -45,6 +47,7 @@
 	<!-- Slider indicators -->
 	<div
 		class="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 transform space-x-3 rtl:space-x-reverse"
+		class:hidden={!show_btns}
 	>
 		{#each images as _, i}
 			<button
@@ -60,6 +63,7 @@
 		type="button"
 		class="group absolute start-0 top-0 z-30 flex h-full cursor-pointer items-center justify-center px-4 focus:outline-none"
 		data-carousel-prev
+		class:hidden={!show_btns}
 		on:click={prev}
 	>
 		<span
@@ -88,6 +92,7 @@
 		type="button"
 		class="group absolute end-0 top-0 z-30 flex h-full cursor-pointer items-center justify-center px-4 focus:outline-none"
 		data-carousel-next
+		class:hidden={!show_btns}
 		on:click={next}
 	>
 		<span
