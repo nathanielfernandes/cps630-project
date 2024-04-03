@@ -1,5 +1,10 @@
 <script lang="ts">
-    export let images: string[];
+    interface Image {
+		link: string;
+		alt_text: string;
+	}
+
+    export let images: Image[];
 
     let slide = 0;
     function next() {
@@ -19,7 +24,7 @@
     <!-- Item 1 -->
     {#each images as image, idx}
         <div class="duration-700 ease-in-out" data-carousel-item class:hidden={idx !== slide}>
-            <img src={image} class="w-full aspect-square rounded-lg sm:w-[500px] sm:h-[500px] lg:w-[600px] lg:h-[600px]" alt="...">
+            <img src={image.link} class="w-full aspect-square object-cover rounded-lg sm:w-[500px] sm:h-[500px] lg:w-[600px] lg:h-[600px]" alt={image.alt_text}>
         </div>
     {/each}
 
