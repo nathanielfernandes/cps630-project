@@ -47,7 +47,7 @@
 		}
 	}
 
-    let showActions = session?.user.id === post.user_id;
+    let showActions = session?.user.id === (post || {}).user_id;
 	let showActionsDropdown = false;
 	$: showActionsDropdown = showActions ? showActionsDropdown : false;
 
