@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Listings from "$lib/Pages/Listings.svelte";
+	import Listings from "../Listings.svelte";
 
 	export let data;
 	let { supabase, session } = data;

@@ -2,9 +2,10 @@
 	import { successAlert, errorAlert } from '$lib/Alerts/stores';
 	import Card from '$lib/components/Card.svelte';
 	import type { SupabaseClient } from '@supabase/supabase-js';
-	import { posts } from '../../routes/dashboard/listings/stores';
+	import { posts } from '../../../lib/stores';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { fade } from 'svelte/transition';
 
 	export let supabase: SupabaseClient;
 	export let session;
@@ -57,6 +58,7 @@
 
 {#if filtered_posts.length > 0}
 	<div
+		in:fade|global
 		class="xs:grid-cols-1 mx-auto mb-10 mt-10 grid w-full max-w-screen-xl gap-10 px-7 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 	>
 		{#each filtered_posts as ad}

@@ -15,12 +15,46 @@
 	import { isProtectedPage } from '$lib/protectedPages';
 	import Chat from '$lib/chatter/Chat.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
+	import { posts } from '$lib/stores';
 
 	export let data;
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
 
 	$: email = (session ? session.user.email : '') as string;
+
+
+	const fetchPosts = async () => {
+		const { data, error } = await supabase.from('posts').select(`
+            id,
+            title,
+            content,
+            price,
+            created_at,
+            type,
+            location,
+            images:images!post_id (link, alt_text),
+            user_id,
+            email
+        `);
+
+        if (error) {
+            console.log(error);
+            throw error;
+        }
+
+		const fetched = data || [];
+		posts.update((p) => {
+			for (const post of fetched) {
+				// @ts-ignore
+				p[post.id.toString()] = post;
+			}
+			return p;
+		});
+	};
+
+	fetchPosts();
+
 
  	function wsAuthAttempt() {
 		if ($page.data.session) {
@@ -62,6 +96,53 @@
     }
 
 	onMount(() => {
+		// subscribe to new posts
+		const postChannel = supabase
+			.channel('posts_listener')
+			.on("postgres_changes", 
+				{
+					event: "*",
+					schema: "public",
+					table: "posts"
+				},
+				async ({ eventType, new: npost, old }) => {
+					switch (eventType) {
+						case "INSERT":
+							// get images for the new post
+							const { data: images } = await supabase
+								.from('images')
+								.select('link, alt_text')
+								.eq('post_id', npost.id);
+
+							posts.update((p) => {
+								// @ts-ignore
+								p[npost.id.toString()] =  {
+									images: images || [],
+									...npost,
+								}
+								return p;
+							});
+							break;
+						case "UPDATE":
+							posts.update((p) => {
+								// @ts-ignore
+								p[npost.id.toString()] = {
+									...p[npost.id.toString()],
+									...npost,
+								}
+								return p;
+							});
+							break;
+						case "DELETE":
+							posts.update((p) => {
+								delete p[old.id.toString()];
+								return p;
+							});
+							break;
+					}
+				})
+			.subscribe();
+
 		connect_websocket();
 
 		if ($page.url.searchParams.get('askLogin') === 'true') {
@@ -106,6 +187,7 @@
 			disconnect_websocket();
 			resetChatState();
 			subscription.unsubscribe();
+			postChannel.unsubscribe();
 		};
 	});
 

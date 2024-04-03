@@ -60,6 +60,10 @@ CREATE POLICY "Read All Posts" ON posts FOR
 SELECT
     USING (true);
 
+CREATE POLICY "Read All Posts Anon" ON posts FOR
+SELECT
+    to anon USING (true);
+
 -- allow users to create posts
 CREATE POLICY "Create Post" ON posts FOR
 INSERT
