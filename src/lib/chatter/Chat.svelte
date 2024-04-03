@@ -33,14 +33,14 @@
 </script>
 
 {#if $authenicated}
-<div class="fixed bottom-0 sm:right-2 bg-white p-2 rounded-t-lg w-full sm:w-96 text-slate-600 transition-all duration-100 z-50">
+<div class="fixed bottom-0 sm:right-2 bg-slate-200 p-2 rounded-t-lg w-full sm:w-96 text-slate-600 transition-all duration-100 z-50">
     {#if $talking_to && $users[$talking_to]}
         <div class="flex items-center justify-between py-0.5 px-1 ">
             <div class="flex items-center space-x-2 font-bold">
                 <Pfp email={$users[$talking_to]} class="h-9 w-9 rounded-md" />
                 <div>{$users[$talking_to]}</div>
             </div>
-            <button class="bg-slate-100 p-2 rounded-full w-9 h-9 hover:bg-slate-200 active:bg-slate-300 flex items-center justify-center"
+            <button class="bg-white p-2 rounded-full w-9 h-9 hover:bg-slate-100 active:bg-slate-200 flex items-center justify-center"
                 on:click={() => talking_to.set("")}
             >
                 <i class="fa-solid fa-chevron-left"></i>
@@ -52,7 +52,7 @@
                 <Pfp email={email} class="h-9 w-9 rounded-md" />
                 <div>Messaging</div>
             </div>
-            <button class="bg-slate-100 p-2 rounded-full w-9 h-9 hover:bg-slate-200 active:bg-slate-300 relative"
+            <button class="bg-white p-2 rounded-full w-9 h-9 hover:bg-slate-100 active:bg-slate-200 relative"
                 on:click={() => open.update((v) => !v)}
             >
                 {#if $open}
@@ -77,11 +77,11 @@
 
     {#if $open} 
         <div class="h-[28rem] pb-1" transition:slide={{duration: 200}}>
-            <hr class="mt-4 mb-1" />
+            <hr class="mt-4 mb-1 border-slate-300" />
 
             {#if $talking_to}
                 {@const msgs = $messages[$talking_to] || []}
-                <div class="w-full h-full bg-slate-100 rounded-md mt-1.5 flex flex-col justify-between">
+                <div class="w-full h-full bg-white rounded-md mt-1.5 flex flex-col justify-between">
                     <div class="h-full overflow-y-scroll no-scrollbar">
                         {#each msgs as msg}
                             {#if msg.type === "User"}
@@ -123,7 +123,7 @@
                 
 
                     <form class="flex space-x-1 m-1" on:submit|preventDefault={send}>
-                        <input type="text" class="w-4/5 rounded-lg p-2" placeholder="Message" bind:value={message} />
+                        <input type="text" class="w-4/5 rounded-lg p-2 bg-slate-200" placeholder="Message" bind:value={message} />
                         <button class="bg-blue-500 text-white px-4 py-2 rounded-lg"
                             on:click={send}
                         >Send</button>
@@ -133,7 +133,7 @@
                 {#each $chat_order as id}
                     {@const email = $users[id]}
                     {#if id !== uid}
-                        <button class="flex p-2 rounded-lg bg-slate-100 h-min text-left w-full mb-1 items-center justify-between hover:bg-slate-200 active:bg-slate-300"
+                        <button class="flex p-2 rounded-lg bg-white h-min text-left w-full mb-1 items-center justify-between hover:bg-slate-100 active:bg-slate-200"
                             transition:fly
                             on:click={() => talking_to.set(id)}    
                         >
@@ -174,18 +174,4 @@
     {/if}
 </div>
 {/if}
-
-
-            <!-- {#if talking_to}
-                <div class="flex items center space-x-2">
-                    <button class="bg-slate-100 p-2 hover:bg-slate-200 active:bg-slate-300 flex items-center rounded-lg space-x-2 w-full"
-                        on:click={() => talking_to = ""}
-                    >
-                        <i class="fa-solid fa-chevron-left"></i>
-                        <Pfp email={$users[talking_to]} class="h-8 w-8 rounded-full" />
-                        <div class="font-bold">{$users[talking_to]}</div>
-                    </button>
-                </div>
-            {:else} -->
-
             
