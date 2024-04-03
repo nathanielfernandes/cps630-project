@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Pfp from "./Pfp.svelte";
+	import { createEventDispatcher } from 'svelte';
+	import Pfp from './Pfp.svelte';
 
 	interface Image {
 		link: string;
@@ -11,12 +12,20 @@
 	export let price: number;
 	export let images: Image[];
 	export let user: string;
-	export let email : string;
+	export let email: string;
 
 	let _ = date;
 	let __ = user;
 
-    $: image_link = images.length > 0 ? images[0].link : 'https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg';
+	$: image_link =
+		images.length > 0
+			? images[0].link
+			: 'https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg';
+
+	const dispatcher = createEventDispatcher();
+	const dispatchContactButtonClick = () => {
+		dispatcher('contactButtonClick', { user, email });
+	};
 </script>
 
 <div class="w-[300px] place-self-center rounded-lg bg-white shadow-lg">
@@ -25,8 +34,8 @@
 		<div
 			class="absolute bottom-3 left-3 flex items-center space-x-2 rounded-lg bg-white bg-opacity-70 p-2"
 		>
-			<Pfp email={email} class="h-6 w-6 rounded-full" />
-			<p class="pr-1 text-xs font-medium text-gray-900 truncate">{email}</p>
+			<Pfp {email} class="h-6 w-6 rounded-full" />
+			<p class="truncate pr-1 text-xs font-medium text-gray-900">{email}</p>
 		</div>
 	</div>
 
@@ -43,6 +52,7 @@
 			<p class="text-sm font-medium text-gray-700">${price.toFixed(2)}</p>
 
 			<button
+				on:click={dispatchContactButtonClick}
 				class="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-normal text-white hover:bg-blue-700"
 			>
 				Contact
