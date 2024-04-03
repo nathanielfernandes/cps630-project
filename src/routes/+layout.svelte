@@ -167,9 +167,9 @@
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
-				if (event === 'SIGNED_IN') {
-					successAlert('Signed in successful');
-				}
+				// if (event === 'SIGNED_IN') {
+					// successAlert('Signed in successful');
+				// }
 				invalidate('supabase:auth').then(wsAuthAttempt);
 			}
 			// If the previous page before signing out was a protected page, show login modal
@@ -381,7 +381,7 @@
 				<li>
 					<a
 						href="/dashboard/listings/wanted"
-						aria-current={$page.url.pathname === '/dashboard/items_wanted' ? 'page' : undefined}
+						aria-current={$page.url.pathname === '/dashboard/listings/wanted' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0"
 						>Wanted Listings</a
 					>
@@ -389,7 +389,7 @@
 				<li>
 					<a
 						href="/dashboard/listings/selling"
-						aria-current={$page.url.pathname === '/dashboard/items_for_sale' ? 'page' : undefined}
+						aria-current={$page.url.pathname === '/dashboard/listings/selling' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0"
 						>Buy & Sell</a
 					>
@@ -397,7 +397,7 @@
 				<li>
 					<a
 						href="/dashboard/listings/services"
-						aria-current={$page.url.pathname === '/dashboard/academic_services' ? 'page' : undefined}
+						aria-current={$page.url.pathname === '/dashboard/listings/services' ? 'page' : undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0"
 						>Academic Services</a
 					>

@@ -162,7 +162,11 @@
 					</ul>
 				{/if}
 				{#if !signup}
-					<button class="text-sm text-blue-600 hover:underline" on:click={() => (resetPW = true)}>
+					<button
+						type="button"
+						class="text-sm text-blue-600 hover:underline"
+						on:click={() => (resetPW = true)}
+					>
 						Forgot your password?
 					</button>
 				{/if}

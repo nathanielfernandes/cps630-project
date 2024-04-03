@@ -11,7 +11,7 @@ CREATE TABLE posts (
     content VARCHAR(255) NOT NULL DEFAULT 'no-content',
     price NUMERIC(10, 2) NOT NULL DEFAULT 0 CHECK (price >= 0),
     type post_type NOT NULL DEFAULT 'items_for_sale',
-    location VARCHAR(255) NOT NULL DEFAULT 'M5B2K3',
+    location VARCHAR(255) NOT NULL DEFAULT 'Toronto Metropolitan University',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id UUID NOT NULL REFERENCES auth.users(id),
     email VARCHAR(255) NOT NULL DEFAULT 'no-email'
@@ -86,9 +86,12 @@ CREATE TABLE images (
     post_id BIGINT NOT NULL REFERENCES posts(id)
 );
 
+CREATE TYPE db_role AS ENUM ('admin', 'user');
+
 CREATE TABLE verify (
     id UUID NOT NULL REFERENCES auth.users(id),
     email VARCHAR(255) NOT NULL,
+    role db_role NOT NULL DEFAULT 'user',
     secret UUID NOT NULL DEFAULT gen_random_uuid()
 );
 
@@ -157,6 +160,14 @@ SELECT
     email
 FROM
     auth.users;
+
+-- give hizzy admin access
+UPDATE
+    public .verify
+SET
+    role = 'admin'
+WHERE
+    id = 'c2446533-f749-445a-a437-b16dc18c2440';
 
 CREATE POLICY "Give users access to own folder READ" ON storage.objects FOR
 SELECT
