@@ -151,13 +151,13 @@
 
 <Alerts />
 
-<nav class="border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
+<nav class="border-gray-200 bg-white">
 	<div
 		class="mx-auto flex max-w-screen-2xl flex-col flex-wrap items-center justify-between gap-y-5 p-4 sm:flex-row"
 	>
 		<a href="/" class="flex shrink-0 items-center space-x-3 rtl:space-x-reverse">
 			<img src="/TMU-rgb.png" class="h-10" alt="TMU Logo" />
-			<span class="self-center whitespace-nowrap text-2xl font-semibold text-black dark:text-white"
+			<span class="self-center whitespace-nowrap text-2xl font-semibold text-black"
 				>Marketplace</span
 			>
 		</a>
@@ -165,20 +165,20 @@
 			<button
 				on:click={() => goto('/dashboard/create')}
 				type="button"
-				class="rounded-lg bg-yellow-300 px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300/70 dark:focus:ring-yellow-800/70"
+				class="rounded-lg bg-yellow-300 px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300/70"
 				>Place an Ad</button
 			>
 			{#if session}
 				<button
 					data-collapse-toggle="navbar-solid-bg"
 					type="button"
-					class="relative inline-flex h-10 w-10 items-center justify-center rounded-lg p-1 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+					class="relative inline-flex h-10 w-10 items-center justify-center rounded-lg p-1 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
 					aria-controls="navbar-solid-bg"
 					aria-expanded="false"
 					on:click={() => open.update((v) => !v)}
 				>
 					<span class="sr-only">Open chat</span>
-					<i class="fa-regular fa-message text-2xl"></i>
+					<i class="fa-regular fa-message text-3xl"></i>
 
 					{#if $ping}
 						<span
@@ -193,7 +193,7 @@
 				</button>
 				<button
 					type="button"
-					class="order-1 flex items-center rounded-full text-sm focus:ring-4 focus:ring-gray-300 md:me-0 dark:focus:ring-gray-600"
+					class="order-1 flex items-center rounded-md text-sm focus:ring-4 focus:ring-gray-300 md:me-0"
 					id="user-menu-button"
 					data-dropdown-toggle="user-dropdown"
 					data-dropdown-placement="bottom"
@@ -202,7 +202,7 @@
 					aria-expanded={dropdownVisibility['user-dropdown']}
 				>
 					<span class="sr-only">Open user menu</span>
-					<Pfp email={email} class="h-10 w-10 rounded-full" />
+					<Pfp email={email} class="h-10 w-10 rounded-md" />
 					<!-- <img
 						use:replaceBadImageWithDefault={DefaultUserImage}
 						on:error={handleProfileImageError}
@@ -214,14 +214,14 @@
 				<!-- User dropdown menu -->
 				<div
 					id="user-dropdown"
-					class="absolute right-0 top-3/4 z-50 my-4 list-none divide-y divide-gray-100 rounded-lg bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700"
+					class="absolute right-0 top-3/4 z-50 my-4 list-none divide-y divide-gray-100 rounded-lg bg-white text-base shadow"
 					class:hidden={!dropdownVisibility['user-dropdown']}
 					use:clickOutside
 					on:click_outside={handleDropdownClickOutside}
 				>
 					<div class="px-4 py-3">
 						<!-- <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span> -->
-						<span class="block truncate text-sm text-gray-500 dark:text-gray-400"
+						<span class="block truncate text-sm text-gray-500"
 							>{session.user.email}</span
 						>
 					</div>
@@ -229,21 +229,21 @@
 						<li>
 							<a
 								href="/"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 								>Profile</a
 							>
 						</li>
 						<li>
 							<a
 								href="/"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 								>Order History</a
 							>
 						</li>
 						<li>
 							<a
 								href="/admin"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 								>Admin Dashboard</a
 							>
 						</li>
@@ -255,7 +255,7 @@
 							tabIndex="0"
 							on:click={handleSignOut}
 							on:keypress={(e) => e.key === 'Enter' && handleSignOut()}
-							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 							>Sign out</a
 						>
 					</div>
@@ -264,7 +264,7 @@
 				<button
 					on:click={() => (show_login_modal = true)}
 					type="button"
-					class="shrink-0 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+					class="shrink-0 rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
 					>Sign in / Register</button
 				>
 			{/if}
@@ -272,7 +272,7 @@
 	</div>
 </nav>
 
-<nav class="bg-slate-200 dark:bg-gray-700">
+<nav class="bg-slate-200">
 	<div
 		class="mx-auto flex max-w-screen-2xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
 	>
@@ -282,34 +282,31 @@
 					<a
 						href="/"
 						aria-current={$page.url.pathname === '/' ? 'page' : undefined}
-						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
+						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0"
 						>Home</a
 					>
 				</li>
 				<li>
 					<a
-						rel="external"
-						href="/dashboard/items_wanted"
+						href="/dashboard/listings/wanted"
 						aria-current={$page.url.pathname === '/dashboard/items_wanted' ? 'page' : undefined}
-						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
+						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0"
 						>Wanted Listings</a
 					>
 				</li>
 				<li>
 					<a
-						rel="external"
-						href="/dashboard/items_for_sale"
+						href="/dashboard/listings/selling"
 						aria-current={$page.url.pathname === '/dashboard/items_for_sale' ? 'page' : undefined}
-						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
+						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0"
 						>Buy & Sell</a
 					>
 				</li>
 				<li>
 					<a
-						rel="external"
-						href="/dashboard/academic_services"
+						href="/dashboard/listings/services"
 						aria-current={$page.url.pathname === '/dashboard/academic_services' ? 'page' : undefined}
-						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0 dark:text-white dark:hover:text-blue-500"
+						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0"
 						>Academic Services</a
 					>
 				</li>
@@ -319,7 +316,7 @@
 			<input
 				type="text"
 				id="search-navbar"
-				class="border-box block w-full rounded-lg border-2 bg-white p-3 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+				class="border-box block w-full rounded-lg border-2 bg-white p-3 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
 				placeholder="Search..."
 			/>
 			<button
@@ -348,6 +345,8 @@
 </nav>
 
 <slot />
+
+<div class="h-56 opacity-0">""</div>
 
 <Chat />
 
