@@ -13,6 +13,7 @@
 	export let images: Image[];
 	export let user: string;
 	export let email: string;
+	export let showContactButton: boolean = true;
 
 	let _ = date;
 	let __ = user;
@@ -50,14 +51,15 @@
 
 		<div class="flex items-center justify-between">
 			<p class="text-sm font-medium text-gray-700">${price.toFixed(2)}</p>
-
-			<button
-				on:click={dispatchContactButtonClick}
-				class="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-normal text-white hover:bg-blue-700"
-			>
-				Contact
-				<i class="fa-solid fa-message ml-2"></i>
-			</button>
+			{#if showContactButton}
+				<button
+					on:click={dispatchContactButtonClick}
+					class="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-normal text-white hover:bg-blue-700"
+				>
+					Contact
+					<i class="fa-solid fa-message ml-2"></i>
+				</button>
+			{/if}
 		</div>
 	</div>
 </div>

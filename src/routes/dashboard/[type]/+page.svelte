@@ -7,9 +7,10 @@
 
     export let data;
     let type = $page.params.type;
-    let { supabase } = data;
+    let { supabase, session } = data;
     $: ({ supabase } = data);
 
+    let user_id = session ? session.user.id : '';
     const posts = writable<any[]>([]);
 
     const fetchPosts = async () => {
@@ -52,6 +53,7 @@
 			images={ad.images}
 			user={ad.user_id}
             email={ad.email}
+            showContactButton={ad.user_id !== user_id}
 		/>
 	{/each}
 </div>
