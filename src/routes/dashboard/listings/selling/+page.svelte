@@ -1,10 +1,9 @@
 <script lang="ts">
 	import Listings from "$lib/Pages/Listings.svelte";
 
-    export let data;
-
-    let { session } = data;
-
+	export let data;
+	let { supabase, session } = data;
+	$: ({ supabase } = data);
 </script>
 
-<Listings {session} post_type="items_for_sale" />
+<Listings {supabase} {session} post_type="items_for_sale" />

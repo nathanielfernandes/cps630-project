@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { posts, type Post } from './stores';
 
-
     export let data;
 
     let { supabase, session } = data;
@@ -42,7 +41,7 @@
     </div>
     
 {:then}
-    <slot/>
+    <slot />
 {:catch error}
     <p>{error.message}</p>
 {/await}

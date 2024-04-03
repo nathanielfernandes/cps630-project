@@ -45,7 +45,7 @@
 	};
 
 	const uploadImage = async (imageFile: File) => {
-		const random_value = Math.floor(Math.random() * 1000000);
+		const random_value = Math.floor(Math.random() * 1000000000000);
         console.log("uploading", `uploads/${user_id}/${random_value}_${imageFile.name}`);
 		const { data, error } = await supabase.storage
 			.from('images')
