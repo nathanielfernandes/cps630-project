@@ -23,7 +23,7 @@
 	bind:this={dialog}
 	on:close={() => (show = false)}
 	on:click|self={persist ? undefined : close}
-	class="relative bg-slate-800 rounded-lg p-4 {clazz} "
+	class="bg-white-800 relative rounded-lg p-4 {clazz} "
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
@@ -33,10 +33,10 @@
 			class:hidden={!cancelable}
 			type="button"
 			on:click={close}
-			class="absolute text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center hover:text-white right-1 top-1"
+			class="absolute right-1 top-1 ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:text-white"
 		>
 			<svg
-				class="w-3 h-3"
+				class="h-3 w-3"
 				aria-hidden="true"
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"

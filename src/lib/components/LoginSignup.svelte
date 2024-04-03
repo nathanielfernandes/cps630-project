@@ -98,7 +98,7 @@
 </script>
 
 <!-- Login/Signup Modal -->
-<Modal bind:show class="w-96 space-y-4 p-8 text-white" let:close>
+<Modal bind:show class="w-96 space-y-4 p-8 text-gray-800" let:close>
 	<form
 		class="space-y-4"
 		on:submit|preventDefault={(e) => {
@@ -107,7 +107,7 @@
 	>
 		{#if !resetPW}
 			<div class="space-y-1">
-				<h1 class="text-xl font-bold text-white">
+				<h1 class="text-xl font-bold text-gray-800">
 					Welcome
 					{#if signup}
 						to the TMU Marketplace
@@ -115,57 +115,54 @@
 						Back
 					{/if}
 				</h1>
-				<p class="text-sm text-slate-200">
+				<p class="text-sm text-gray-600">
 					{si} to access the TMU Marketplace
 				</p>
 			</div>
 			<div class="space-y-1">
-				<p class="text-sm text-slate-200">Email Address</p>
+				<p class="text-sm text-gray-600">Email Address</p>
 				<input
 					id="username"
 					placeholder="hello@yourcompany.com"
 					type="email"
 					bind:value={email}
 					autocomplete="username"
-					class="w-full rounded-lg bg-slate-600 p-2"
+					class="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-900"
 					required
 				/>
 			</div>
 			<div class="space-y-1">
-				<p class="text-sm text-slate-200">Password</p>
+				<p class="text-sm text-gray-600">Password</p>
 				<input
 					placeholder="password..."
 					type="password"
 					bind:value={password}
 					autocomplete="current-password"
-					class="w-full rounded-lg bg-slate-600 p-2"
+					class="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-900"
 					required
 				/>
 				{#if signup}
-					<p class="text-xs text-slate-200">Password must have:</p>
-					<ul class="list-inside list-disc text-xs">
-						<li class:text-green-500={hasMinLength} class:text-red-500={!hasMinLength}>
+					<p class="text-xs text-gray-600">Password must have:</p>
+					<ul class="list-inside list-disc text-xs text-gray-600">
+						<li class:text-green-600={hasMinLength} class:text-red-600={!hasMinLength}>
 							Minimum 7 characters
 						</li>
-						<li class:text-green-500={hasLowercase} class:text-red-500={!hasLowercase}>
+						<li class:text-green-600={hasLowercase} class:text-red-600={!hasLowercase}>
 							At least one lowercase letter
 						</li>
-						<li class:text-green-500={hasUppercase} class:text-red-500={!hasUppercase}>
+						<li class:text-green-600={hasUppercase} class:text-red-600={!hasUppercase}>
 							At least one uppercase letter
 						</li>
-						<li class:text-green-500={hasNumber} class:text-red-500={!hasNumber}>
+						<li class:text-green-600={hasNumber} class:text-red-600={!hasNumber}>
 							At least one number
 						</li>
-						<li class:text-green-500={hasSymbol} class:text-red-500={!hasSymbol}>
+						<li class:text-green-600={hasSymbol} class:text-red-600={!hasSymbol}>
 							At least one symbol
 						</li>
 					</ul>
 				{/if}
 				{#if !signup}
-					<button
-						class=" text-sm text-blue-700 text-slate-200 hover:underline dark:text-blue-500"
-						on:click={() => (resetPW = true)}
-					>
+					<button class="text-sm text-blue-600 hover:underline" on:click={() => (resetPW = true)}>
 						Forgot your password?
 					</button>
 				{/if}
@@ -173,18 +170,18 @@
 			<div class="space-y-2">
 				<button
 					type="submit"
-					class="w-full rounded bg-blue-700 px-4 py-2 font-bold text-white hover:bg-blue-800"
+					class="w-full rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
 				>
 					{si}
 				</button>
-				<p class="select-none text-sm text-slate-300">
+				<p class="select-none text-sm text-gray-500">
 					{#if signup}
 						Already have an account?
 					{:else}
 						Don't have an account?
 					{/if}
 					<button
-						class="text-blue-500 hover:underline"
+						class="text-blue-600 hover:underline"
 						on:click|preventDefault={() => {
 							signup = !signup;
 							clearInputs();
@@ -196,27 +193,24 @@
 			</div>
 		{:else}
 			<div class="space-y-1">
-				<h1 class="text-xl font-bold text-white">Reset Password</h1>
-				<p class="text-sm text-slate-200">Enter your email address to reset your password</p>
+				<h1 class="text-xl font-bold text-gray-800">Reset Password</h1>
+				<p class="text-sm text-gray-600">Enter your email address to reset your password</p>
 			</div>
-			<p class="text-sm text-slate-200">Email Address</p>
+			<p class="text-sm text-gray-600">Email Address</p>
 			<input
 				placeholder="hello@yourcompany.com"
 				type="email"
 				bind:value={email}
-				class="w-full rounded-lg bg-slate-600 p-2"
+				class="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-900"
 				required
 			/>
 			<button
 				type="submit"
-				class="w-full rounded bg-blue-700 px-4 py-2 font-bold text-white hover:bg-blue-800"
+				class="w-full rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-600"
 			>
 				Reset Password
 			</button>
-			<button
-				class=" text-sm text-blue-700 text-slate-200 hover:underline dark:text-blue-500"
-				on:click={() => (resetPW = false)}
-			>
+			<button class="text-sm text-blue-600 hover:underline" on:click={() => (resetPW = false)}>
 				Return to Login
 			</button>
 		{/if}
