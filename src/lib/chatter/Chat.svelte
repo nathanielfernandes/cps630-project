@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { authenicated, messages, open, ping, talking_to, users } from "./stores";
+    import { authenicated, chat_order, messages, open, ping, talking_to, users } from "./stores";
 	import { send_message } from "./msg";
 	import Pfp from "$lib/components/Pfp.svelte";
 	import { page } from '$app/stores';
@@ -130,7 +130,8 @@
                     </form>
                 </div>
             {:else}
-                {#each Object.entries($users) as [id, email]}
+                {#each $chat_order as id}
+                    {@const email = $users[id]}
                     {#if id !== uid}
                         <button class="flex p-2 rounded-lg bg-slate-100 h-min text-left w-full mb-1 items-center justify-between hover:bg-slate-200 active:bg-slate-300"
                             transition:fly
@@ -144,7 +145,14 @@
                                         {#if $messages[id]}
                                             {@const last = $messages[id][$messages[id].length - 1]}
                                             {#if last.type === "Topic"}
-                                                <div class="truncate">{last.topic}</div>
+                                                {@const post = $posts[last.topic]}
+                                                {#if post}
+                                                    <div class="truncate">
+                                                        Talking about {post.title}
+                                                    </div>
+                                                {:else}
+                                                    <div class="truncate">{last.topic}</div>
+                                                {/if}
                                             {:else}
                                                 <div class="truncate">                                            
                                                     {last.message || "..."}

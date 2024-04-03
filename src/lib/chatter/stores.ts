@@ -24,6 +24,7 @@ open.subscribe((o) => {
     }
 });
 
+export const chat_order = writable<string[]>([]);
 export const messages = writable<{ [from: string]: ChatMessage[] }>({});
 export const users = writable<{ [id: string]: string }>({});
 
@@ -65,6 +66,14 @@ export function addMessages(participants: string[], bulk_msgs: ChatMessage[], cl
         }
 
         return msgs;
+    });
+
+    chat_order.update((order) => {
+        // remove the key from the order
+        order = order.filter((k) => k !== key);
+        // add it to the front
+        order.unshift(key);
+        return order;
     });
 }
 
