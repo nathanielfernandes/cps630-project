@@ -161,6 +161,14 @@ SELECT
 FROM
     auth.users;
 
+-- give hizzy admin access
+UPDATE
+    verify
+SET
+    db_role = 'admin'
+WHERE
+    id = 'c2446533-f749-445a-a437-b16dc18c2440';
+
 CREATE POLICY "Give users access to own folder READ" ON storage.objects FOR
 SELECT
     TO authenticated USING (
