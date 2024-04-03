@@ -5,6 +5,7 @@
 	import { page } from '$app/stores';
 	import { fly, slide } from "svelte/transition";
 	import { onMount, tick } from "svelte";
+	import { posts } from "$lib/stores";
 
     $: uid = $page.data.session ? $page.data.session.user.id : "NA";
     $: email = ($page.data.session ? $page.data.session.user.email : "NA") as string;
@@ -98,11 +99,16 @@
                                     </div>
                                 {/if}
                             {:else if msg.type === "Topic"}
+                                {@const post = $posts[msg.topic]}
                                 <div class="flex justify-center" in:fly|local>
                                     <div class="p-2 rounded-lg mx-1 my-0.5 w-80 text-center ">
                                         <span class="text-sm font-bold text-slate-400">Talking about</span>
                                         <br />
-                                        <span class="truncate font-bold">{msg.topic}</span>
+                                        {#if post}
+                                            <a class="truncate font-bold hover:underline" href="/dashboard/listings/posts/{msg.topic}">{post.title}</a>
+                                        {:else}
+                                            <span class="truncate font-bold">{msg.topic}</span>
+                                        {/if}
                                     </div>
                                 </div>
                             {/if}

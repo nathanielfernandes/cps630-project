@@ -14,7 +14,8 @@
 	$: ({ supabase } = data);
 
 	const post_id = $page.params.post_id;
-	const post = $posts[post_id];
+	let post = $posts[post_id];
+	$: post = $posts[post_id];
 
 	let isOpen = false;
 	const toggle = () => (isOpen = !isOpen);
@@ -236,7 +237,7 @@
 					<button
 						class="my-2.5 w-full rounded-lg bg-blue-600 p-3 text-sm font-semibold text-white transition duration-100 ease-in-out hover:bg-blue-700"
 						on:click={() => {
-							startChat(post.user_id, `Product Inquiry - ${post.title}`);
+							startChat(post.user_id, post.id.toString());
 						}}
 					>
 						Contact

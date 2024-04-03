@@ -132,7 +132,7 @@
 				<button
 					disabled={!showContactButton}
 					on:click={() => {
-						startChat(user, `Product Inquiry - ${title}`);
+						startChat(user, id.toString());
 					}}
 					class="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-normal text-white hover:enabled:bg-blue-700 disabled:opacity-50"
 				>
