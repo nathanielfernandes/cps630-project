@@ -17,9 +17,9 @@
 
 		const query = $page.url.searchParams.get('q');
 		if (query) {
-			filtered_posts = filtered_posts.filter((post) =>
-				JSON.stringify(post).includes(query.trim().toLowerCase())
-			);
+			filtered_posts = filtered_posts.filter((post) => {
+				return JSON.stringify(post).toLowerCase().includes(query.trim().toLowerCase())
+            });
 		}
 	}
 
