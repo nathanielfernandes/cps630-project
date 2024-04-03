@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import { successAlert, errorAlert } from '$lib/Alerts/stores';
 	import { startChat } from '$lib/chatter/stores';
+	import { clickOutside } from '$lib/clickOutside';
 	import Carousel from '$lib/components/Carousel.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
 	import { posts } from '../../stores';
@@ -114,6 +115,8 @@
 					id="dropdownDotsHorizontal"
 					class="absolute -right-5 z-10 w-44 divide-y divide-gray-100 rounded-lg bg-white shadow-lg dark:divide-gray-600 dark:bg-gray-700"
 					class:hidden={!showActionsDropdown}
+                    use:clickOutside
+                    on:click_outside={() => showActionsDropdown = false}
 				>
 					<ul
 						class="py-2 text-sm text-gray-700 dark:text-gray-200"

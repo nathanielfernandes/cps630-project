@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { clickOutside } from '$lib/clickOutside';
 	import { createEventDispatcher } from 'svelte';
 	import Pfp from './Pfp.svelte';
 	import { startChat } from '$lib/chatter/stores';
@@ -47,6 +48,8 @@
 </script>
 
 <div
+    use:clickOutside
+    on:click_outside={() => showActionsDropdown = false}
 	class="w-[300px] place-self-center rounded-lg bg-white shadow-lg transition duration-200 ease-in-out lg:hover:scale-105"
 >
 	<a href="/dashboard/listings/posts/{id}">
