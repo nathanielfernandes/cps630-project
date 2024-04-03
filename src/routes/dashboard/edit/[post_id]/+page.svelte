@@ -3,6 +3,7 @@
 	import Card from '$lib/components/Card.svelte';
 	import ImageUpload from '$lib/components/ImageUpload.svelte';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	export let data;
 	let { supabase, session } = data;
@@ -15,6 +16,7 @@
 	let title = '';
 	let content = '';
 	let price = '';
+    let location = '';
 	let user_id = session ? session.user.id : '';
 	let email = (session ? session.user.email : '') as string;
     let prevImages: any[] = [];
@@ -31,7 +33,7 @@
 			throw postError;
 		}
         //@ts-ignore
-		({ title, content, price, user_id, email } = postData);
+		({ title, content, price, location, user_id, email } = postData);
 
 		let { data: imageData, error: imageError } = await supabase
 			.from('images')
@@ -78,7 +80,8 @@
 				{
 					title,
 					content,
-					price
+					price,
+                    location
 				}
 			])
 			.eq('id', post_id)
@@ -166,6 +169,7 @@
 		}
 
 		successAlert('Your post has been updated!');
+        goto(`/dashboard/listings/posts/${postData.id}`);
 	};
 </script>
 
@@ -199,6 +203,7 @@
 								id="title"
 								class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 								placeholder="Post title"
+                                maxlength="255"
 								required
 							/>
 						</div>
@@ -213,6 +218,7 @@
 								rows="4"
 								class="block min-h-10 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 								placeholder="Post Content"
+                                maxlength="255"
 								required
 							></textarea>
 						</div>
@@ -227,6 +233,21 @@
 								bind:value={price}
 								class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 								placeholder="Sale Price"
+								required
+							/>
+						</div>
+                        <div>
+							<label
+								for="location"
+								class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Location*</label
+							>
+							<input
+								bind:value={location}
+								type="text"
+								id="location"
+								class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+								placeholder="Postal Code"
+                                maxlength="255"
 								required
 							/>
 						</div>
