@@ -16,14 +16,12 @@
 	import Chat from '$lib/chatter/Chat.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
 
-
 	export let data;
 	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
 
 	$: email = (session ? session.user.email : '') as string;
 
-  
  	function wsAuthAttempt() {
 		if ($page.data.session) {
 			// select user id and secret
@@ -44,6 +42,14 @@
 				});
 		}
 	}
+
+    let searchValue = "";
+    const handleSearch = (e: Event) => {
+        e.preventDefault();
+        const url = new URL($page.url);
+        url.searchParams.set("q", searchValue);
+        goto(url);
+    }
   
 	let show_login_modal = false;
 	let pathBeforeSignOut = '';
@@ -54,8 +60,6 @@
             window.location.replace('/?askLogin=true');
         }
     }
-
-
 
 	onMount(() => {
 		connect_websocket();
@@ -314,13 +318,15 @@
 		</div>
 		<form class="relative flex flex-1 items-center">
 			<input
-				type="text"
+				type="search"
 				id="search-navbar"
 				class="border-box block w-full rounded-lg border-2 bg-white p-3 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
 				placeholder="Search..."
+                bind:value={searchValue}
 			/>
 			<button
 				type="submit"
+                on:click={handleSearch}
 				class="absolute right-0 box-border flex h-full items-center justify-center rounded-r-lg border-2 border-white/0 bg-blue-600 p-3 text-white hover:bg-blue-700 focus:border-blue-800 focus:ring focus:ring-blue-800"
 			>
 				<svg
