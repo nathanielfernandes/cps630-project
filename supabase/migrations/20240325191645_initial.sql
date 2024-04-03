@@ -91,7 +91,7 @@ CREATE TYPE db_role AS ENUM ('admin', 'user');
 CREATE TABLE verify (
     id UUID NOT NULL REFERENCES auth.users(id),
     email VARCHAR(255) NOT NULL,
-    type db_role NOT NULL DEFAULT 'user',
+    role db_role NOT NULL DEFAULT 'user',
     secret UUID NOT NULL DEFAULT gen_random_uuid()
 );
 
@@ -163,9 +163,9 @@ FROM
 
 -- give hizzy admin access
 UPDATE
-    verify
+    public .verify
 SET
-    db_role = 'admin'
+    role = 'admin'
 WHERE
     id = 'c2446533-f749-445a-a437-b16dc18c2440';
 
