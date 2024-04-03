@@ -124,10 +124,16 @@
 							});
 							break;
 						case "UPDATE":
+							// get images for the new post
+							const { data: images2 } = await supabase
+								.from('images')
+								.select('link, alt_text')
+								.eq('post_id', npost.id);
+
 							posts.update((p) => {
 								// @ts-ignore
 								p[npost.id.toString()] = {
-									...p[npost.id.toString()],
+									images: images2 || [],
 									...npost,
 								}
 								return p;
