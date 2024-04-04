@@ -169,10 +169,9 @@
 					on:click={() => {
 						startChat(user, id.toString());
 					}}
-					class="bg-transparent hover:enabled:text-blue-700 disabled:opacity-50"
+					class="bg-transparent text-gray-500  disabled:opacity-40 hover:enabled:text-blue-700"
 				>
-				
-					<i class="fa-regular fa-message ml-2 text-2xl text-gray-500 hover:text-blue-700"></i>
+					<i class="fa-regular fa-message ml-2 text-2xl "></i>
 				</button>
 			</div>
 		</div>
