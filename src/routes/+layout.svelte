@@ -45,6 +45,7 @@
 
 		const fetched = data || [];
 		posts.update((p) => {
+			p = {};
 			for (const post of fetched) {
 				// @ts-ignore
 				p[post.id.toString()] = post;
