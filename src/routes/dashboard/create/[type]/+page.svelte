@@ -234,7 +234,6 @@
 				id={-1}
 				title={title || 'Post Title'}
 				description={content || 'Post Content'}
-				date={Date.now().toLocaleString()}
 				price={parseFloat(price) || 5}
 				images={images.length > 0 && images[0].url
 					? [{ link: images[0].url, alt_text: title }]
