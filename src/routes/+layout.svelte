@@ -71,6 +71,23 @@
 
 	fetchUsers();
 
+	let is_admin = false;
+	if (session) {
+		const user_id = session.user.id;
+		const user = $user_info.find((u) => u.id === user_id);
+		if (user) {
+			is_admin = user.role === 'admin';
+		}
+	}
+	user_info.subscribe((users) => {
+		if (session) {
+			const user_id = session.user.id;
+			const user = users.find((u) => u.id === user_id);
+			if (user) {
+				is_admin = user.role === 'admin';
+			}
+		}
+	});
 
  	function wsAuthAttempt() {
 		if ($page.data.session) {
@@ -379,12 +396,20 @@
 								>Order History</a
 							>
 						</li> -->
-						<li>
-							<a
-								href="/admin"
-								class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-								>Admin Dashboard</a
-							>
+						<li>	
+							{#if is_admin}
+								<a
+									href="/admin"
+									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+									>Admin Dashboard</a
+								>
+							{:else}
+								<a
+									href="/dashboard/create"
+									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+									>Dashboard</a
+								>
+							{/if}
 						</li>
 					</ul>
 					<div class="py-1">
