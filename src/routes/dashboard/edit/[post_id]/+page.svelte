@@ -16,10 +16,10 @@
 	let title = '';
 	let content = '';
 	let price = '';
-    let location = '';
+	let location = '';
 	let user_id = session ? session.user.id : '';
 	let email = (session ? session.user.email : '') as string;
-    let prevImages: any[] = [];
+	let prevImages: any[] = [];
 	let images: ImageFile[] = [];
 
 	const fetchPost = async () => {
@@ -32,7 +32,7 @@
 			console.error(postError);
 			throw postError;
 		}
-        //@ts-ignore
+		//@ts-ignore
 		({ title, content, price, location, user_id, email } = postData);
 
 		let { data: imageData, error: imageError } = await supabase
@@ -45,7 +45,7 @@
 		}
 
 		if (imageData) {
-            prevImages = imageData;
+			prevImages = imageData;
 			const promises = imageData.map(async (d) => {
 				const imageUrl = d.link;
 				const image: ImageFile = { file: null, url: imageUrl, isLoaded: false };
@@ -55,7 +55,7 @@
 				// Load image from web page
 				const response = await fetch(imageUrl);
 				const data = await response.blob();
-				const fileName = decodeURIComponent(d.link).split("/").pop()?.split("_").pop();
+				const fileName = decodeURIComponent(d.link).split('/').pop()?.split('_').pop();
 
 				image.file = new File([data], fileName || 'product.jpeg', {
 					type: data.type || 'image/jpeg'
@@ -64,12 +64,12 @@
 				images = images;
 			});
 
-            const results = await Promise.all(promises.map(p => p.catch(e => e)));
-            const errorIndex = results.findIndex((result) => result instanceof Error);
-            if (errorIndex != -1) {
-                console.error(results[errorIndex]);
-                throw results[errorIndex];
-            }
+			const results = await Promise.all(promises.map((p) => p.catch((e) => e)));
+			const errorIndex = results.findIndex((result) => result instanceof Error);
+			if (errorIndex != -1) {
+				console.error(results[errorIndex]);
+				throw results[errorIndex];
+			}
 		}
 	};
 
@@ -81,7 +81,7 @@
 					title,
 					content,
 					price,
-                    location
+					location
 				}
 			])
 			.eq('id', post_id)
@@ -128,18 +128,20 @@
 	};
 
 	const handleSubmit = async () => {
-        // Remove previous images
-        let response = await supabase.from('images').delete().eq('post_id', post_id).select();
-        if (response.error) {
-            console.error(response.error);
-            errorAlert("Failed to update post.");
-            return;
-        }
-        //@ts-ignore
-        const imagePaths = prevImages.map((image) => decodeURIComponent(image.link.replace(IMAGE_URL_PREFIX, "")));
-        supabase.storage.from("images").remove(imagePaths);
+		// Remove previous images
+		let response = await supabase.from('images').delete().eq('post_id', post_id).select();
+		if (response.error) {
+			console.error(response.error);
+			errorAlert('Failed to update post.');
+			return;
+		}
+		//@ts-ignore
+		// const imagePaths = prevImages.map((image) =>
+		// 	decodeURIComponent(image.link.replace(IMAGE_URL_PREFIX, ''))
+		// );
+		// supabase.storage.from('images').remove(imagePaths);
 
-        // Upload images
+		// Upload images
 		let imageUrls: string[] = [];
 		if (images.length > 0) {
 			const promises = images.map((image) => {
@@ -156,20 +158,20 @@
 			imageUrls = result as string[];
 		}
 
-        // Update post
-        const postData = await updatePost();
-        if (!postData) {
-            errorAlert('Failed to update post.');
+		// Update post
+		const postData = await updatePost();
+		if (!postData) {
+			errorAlert('Failed to update post.');
 			return;
-        }
-        
-        // Insert uploaded images into post
-        if (imageUrls.length > 0) {
+		}
+
+		// Insert uploaded images into post
+		if (imageUrls.length > 0) {
 			await insertImages(postData.id, imageUrls);
 		}
 
 		successAlert('Your post has been updated!');
-        goto(`/dashboard/listings/posts/${postData.id}`);
+		goto(`/dashboard/listings/posts/${postData.id}`);
 	};
 </script>
 
@@ -178,7 +180,7 @@
 		<i class="fa-solid fa-spinner animate-spin text-3xl text-slate-900"></i>
 	</div>
 {:then}
-	<div class="flex flex-1 justify-center overflow-hidden">
+	<div class="flex min-h-fit md:min-h-[75vh] flex-1 justify-center md:overflow-hidden">
 		<div class="flex max-w-screen-2xl flex-1">
 			<div
 				class="w-full overflow-y-auto bg-white p-3 text-black shadow-lg md:max-w-[40%] lg:max-w-[30%]"
@@ -203,7 +205,7 @@
 								id="title"
 								class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 								placeholder="Post title"
-                                maxlength="255"
+								maxlength="255"
 								required
 							/>
 						</div>
@@ -218,7 +220,7 @@
 								rows="4"
 								class="block min-h-10 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 								placeholder="Post Content"
-                                maxlength="255"
+								maxlength="255"
 								required
 							></textarea>
 						</div>
@@ -236,10 +238,11 @@
 								required
 							/>
 						</div>
-                        <div>
+						<div>
 							<label
 								for="location"
-								class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Location*</label
+								class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+								>Location*</label
 							>
 							<input
 								bind:value={location}
@@ -247,7 +250,7 @@
 								id="location"
 								class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 								placeholder="Postal Code"
-                                maxlength="255"
+								maxlength="255"
 								required
 							/>
 						</div>
@@ -263,7 +266,7 @@
 							</div>
 							<label for="terms" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
 								>I agree with the <a
-									href="#"
+									href="https://www.torontomu.ca/terms-conditions/"
 									class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a
 								>.</label
 							>

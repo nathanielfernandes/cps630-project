@@ -38,10 +38,10 @@
 			errorAlert('Failed to delete post.');
 			return;
 		}
-		const imagePaths = response.data.map((d) =>
-			decodeURIComponent(d.link.replace(IMAGE_URL_PREFIX, ''))
-		);
-		supabase.storage.from('images').remove(imagePaths);
+		// const imagePaths = response.data.map((d) =>
+		// 	decodeURIComponent(d.link.replace(IMAGE_URL_PREFIX, ''))
+		// );
+		// supabase.storage.from('images').remove(imagePaths);
 
 		response = await supabase.from('posts').delete().eq('id', event.detail.id).select();
 		if (response.error) {
