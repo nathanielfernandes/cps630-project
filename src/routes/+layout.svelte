@@ -237,9 +237,11 @@
 	};
 </script>
 
-<!-- <svelte:head>
-	<script src="https://kit.fontawesome.com/3403ec00eb.js" crossorigin="anonymous"></script>
-</svelte:head> -->
+<svelte:head>
+	<title>TMU Marketplace</title>
+	<meta name="description" content="TMU Marketplace for students to buy and sell items" />
+	<meta name="keywords" content="TMU, Marketplace, Student, Buy, Sell, Items" />
+</svelte:head>
 
 <Alerts />
 
