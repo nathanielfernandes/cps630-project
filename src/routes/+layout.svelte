@@ -8,14 +8,14 @@
 
 	import Alerts from '$lib/Alerts/Alerts.svelte';
 
-	import { successAlert, warningAlert, errorAlert } from '$lib/Alerts/stores.js';
+	import { warningAlert, errorAlert } from '$lib/Alerts/stores.js';
 	import { clickOutside } from '$lib/clickOutside';
 	import LoginSignup from '$lib/components/LoginSignup.svelte';
 	import { disconnect_websocket, uuid, ssecret, connect_websocket, resetChatState, open, ping } from '$lib/chatter/stores';
 	import { isProtectedPage } from '$lib/protectedPages';
 	import Chat from '$lib/chatter/Chat.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
-	import { posts } from '$lib/stores';
+	import { posts, user_info } from '$lib/stores';
 
 	export let data;
 	let { supabase, session } = data;
@@ -45,6 +45,7 @@
 
 		const fetched = data || [];
 		posts.update((p) => {
+			p = {};
 			for (const post of fetched) {
 				// @ts-ignore
 				p[post.id.toString()] = post;
@@ -54,6 +55,21 @@
 	};
 
 	fetchPosts();
+
+
+	const fetchUsers = async () => {
+		const { data, error } = await supabase.from('user_info').select('id, email, role');
+
+		if (error) {
+			console.log(error);
+			throw error;
+		}
+
+		const fetched = data || [];
+		user_info.set(fetched);
+	};
+
+	fetchUsers();
 
 
  	function wsAuthAttempt() {
@@ -149,6 +165,34 @@
 				})
 			.subscribe();
 
+		const usersChannel = supabase
+			.channel('users_listener')
+			.on("postgres_changes", 
+				{
+					event: "*",
+					schema: "public",
+					table: "user_info"
+				},
+				async ({ eventType, new: nuser, old }) => {
+					switch (eventType) {
+						case "INSERT":
+							user_info.update((u) => {
+								//@ts-ignore
+								u.push(nuser);
+								return u;
+							});
+							break;
+						case "DELETE":
+							user_info.update((u) => {
+								const index = u.findIndex((user) => user.id === old.id);
+								u.splice(index, 1);
+								return u;
+							});
+							break;
+					}
+				})
+			.subscribe();
+
 		connect_websocket();
 
 		if ($page.url.searchParams.get('askLogin') === 'true') {
@@ -194,6 +238,7 @@
 			resetChatState();
 			subscription.unsubscribe();
 			postChannel.unsubscribe();
+			usersChannel.unsubscribe();
 		};
 	});
 
@@ -237,15 +282,17 @@
 	};
 </script>
 
-<!-- <svelte:head>
-	<script src="https://kit.fontawesome.com/3403ec00eb.js" crossorigin="anonymous"></script>
-</svelte:head> -->
+<svelte:head>
+	<title>TMU Marketplace</title>
+	<meta name="description" content="TMU Marketplace for students to buy and sell items" />
+	<meta name="keywords" content="TMU, Marketplace, Student, Buy, Sell, Items" />
+</svelte:head>
 
 <Alerts />
 
 <nav class="border-gray-200 bg-white">
 	<div
-		class="mx-auto flex max-w-screen-2xl flex-col flex-wrap items-center justify-between gap-y-5 p-4 sm:flex-row"
+		class="mx-auto flex max-w-screen-xl flex-col flex-wrap items-center justify-between gap-y-5 p-4 sm:flex-row"
 	>
 		<a href="/" class="flex shrink-0 items-center space-x-3 rtl:space-x-reverse">
 			<img src="/TMU-rgb.png" class="h-10" alt="TMU Logo" />
@@ -366,7 +413,7 @@
 
 <nav class="bg-slate-200">
 	<div
-		class="mx-auto flex max-w-screen-2xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
+		class="mx-auto flex max-w-screen-xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
 	>
 		<div class="flex items-center">
 			<ul class="mt-0 flex flex-row space-x-5 sm:space-x-8 text-center text-sm font-medium rtl:space-x-reverse">
@@ -417,7 +464,7 @@
                 on:click={handleSearch}
 				class="absolute right-0 box-border flex h-full items-center justify-center rounded-r-lg border-2 border-white/0 bg-blue-600 p-3 text-white hover:bg-blue-700 focus:border-blue-800 focus:ring focus:ring-blue-800"
 			>
-				<svg
+				<!-- <svg
 					class="h-4 w-4 text-white"
 					aria-hidden="true"
 					xmlns="http://www.w3.org/2000/svg"
@@ -431,12 +478,15 @@
 						stroke-width="2"
 						d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
 					/>
-				</svg>
+				</svg> -->
+				<i class="fa-solid fa-magnifying-glass text-white"></i>
 				<span class="sr-only">Search icon</span>
 			</button>
 		</form>
 	</div>
 </nav>
+
+
 
 <slot />
 
@@ -444,3 +494,34 @@
 
 <LoginSignup {supabase} bind:show={show_login_modal} />
 
+
+<footer class="bg-white mt-10">
+    <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
+        <div class="md:flex md:justify-between">
+          <div class="mb-6 md:mb-0">
+              <a href="/" class="flex items-center">
+				  <!-- <img src="/TMU-rgb.png" class="h-10" alt="TMU Logo" /> -->
+                  <span class="self-center text-2xl font-semibold whitespace-nowrap text-gray-900 ml-2">Toronto Metropolitan University</span>
+              </a>
+          </div>
+          <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-1">
+              <div>
+                  <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase ">Legal</h2>
+                  <ul class="text-gray-500  font-medium">
+                      <li class="mb-4">
+                          <a href="https://www.torontomu.ca/privacy/" class="hover:underline">Privacy Policy</a>
+                      </li>
+                      <li>
+                          <a href="https://www.torontomu.ca/terms-conditions/" class="hover:underline">Terms &amp; Conditions</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      <hr class="my-6 border-gray-200 sm:mx-auto lg:my-8" />
+      <div class="sm:flex sm:items-center sm:justify-between">
+          <span class="text-sm text-gray-500 sm:text-center ">© 2024 <a href="/" class="hover:underline">Toronto Metropolitan University</a>
+          </span>
+      </div>
+    </div>
+</footer>

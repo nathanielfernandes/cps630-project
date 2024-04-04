@@ -63,10 +63,8 @@
 			errorAlert('Failed to delete post.');
 			return;
 		}
-		const imagePaths = response.data.map((d) =>
-			decodeURIComponent(d.link.replace(IMAGE_URL_PREFIX, ''))
-		);
-		supabase.storage.from('images').remove(imagePaths);
+		// const imagePaths = response.data.map((d) => decodeURIComponent(d.link.replace(IMAGE_URL_PREFIX, "")));
+		// supabase.storage.from("images").remove(imagePaths);
 
 		response = await supabase.from('posts').delete().eq('id', post_id).select();
 		if (response.error) {
@@ -90,7 +88,7 @@
 				<button
 					id="dropdownMenuIconHorizontalButton"
 					data-dropdown-toggle="dropdownDotsHorizontal"
-					class="inline-flex items-center rounded-lg p-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+					class="inline-flex items-center rounded-lg p-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-200"
 					type="button"
 					on:click={(e) => {
 						e.stopPropagation();
@@ -114,26 +112,22 @@
 				<!-- Dropdown menu -->
 				<div
 					id="dropdownDotsHorizontal"
-					class="absolute -right-5 z-10 w-44 divide-y divide-gray-100 rounded-lg bg-white shadow-lg dark:divide-gray-600 dark:bg-gray-700"
+					class="absolute -right-5 z-10 w-44 divide-y divide-gray-100 rounded-lg bg-white shadow-lg"
 					class:hidden={!showActionsDropdown}
 					use:clickOutside
 					on:click_outside={() => (showActionsDropdown = false)}
 				>
-					<ul
-						class="py-2 text-sm text-gray-700 dark:text-gray-200"
-						aria-labelledby="dropdownMenuIconHorizontalButton"
-					>
+					<ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownMenuIconHorizontalButton">
 						<li>
 							<button
 								on:click={handleEdit}
-								class="block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-								>Edit</button
+								class="block w-full px-4 py-2 text-left hover:bg-gray-100">Edit</button
 							>
 						</li>
 						<li>
 							<button
 								on:click={handleDelete}
-								class="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+								class="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-100"
 								>Delete</button
 							>
 						</li>
@@ -175,7 +169,7 @@
 					<p
 						class="{isOpen
 							? ''
-							: 'line-clamp-2'} break-word text-sm font-normal text-gray-700 lg:min-h-[2.5rem] lg:text-base"
+							: 'line-clamp-1'} break-word text-sm font-normal text-gray-700 lg:min-h-[1.75rem] lg:text-base"
 						bind:this={desc}
 					>
 						{post.content}
@@ -198,7 +192,7 @@
 			</div>
 
 			<div class="w-full py-1 sm:w-[525px] sm:p-4 sm:py-4 lg:ml-10 lg:w-full lg:p-0">
-				<p class="mb-7 text-xl font-semibold text-blue-600 md:mt-1 lg:my-3 lg:text-3xl">
+				<p class=" mb-7 text-2xl font-semibold text-blue-600 md:mt-3 lg:my-3 lg:text-3xl">
 					CA ${post.price.toFixed(2)}
 				</p>
 
@@ -225,9 +219,9 @@
 					<h2 class="text-lg font-semibold text-gray-900 lg:text-2xl">Poster Information</h2>
 
 					<!-- User Avatar and Name -->
-					<div class="mb-3 mt-4 flex">
+					<div class="mb-3 mt-4 flex items-center">
 						<Pfp email={post.email} class="h-10 w-10 rounded-lg lg:h-14 lg:w-14" />
-						<p class="content-center px-4 text-base font-semibold text-gray-900 lg:text-lg">
+						<p class="px-4 text-base font-semibold text-gray-900 lg:text-lg">
 							{post.email}
 						</p>
 					</div>
@@ -245,9 +239,7 @@
 				</div>
 
 				<!-- Policies Box -->
-				<div
-					class="my-3 rounded-lg border border-gray-200 bg-white p-6 shadow lg:min-h-[3rem] lg:pb-8"
-				>
+				<div class="my-3 rounded-lg border border-gray-200 bg-white p-6 shadow lg:pb-5">
 					<h2 class="mb-2 text-lg font-semibold text-gray-900 lg:text-2xl">Marketplace Policies</h2>
 					<li class="text-sm font-normal text-gray-700 lg:text-base">All sales are final</li>
 					<li class="text-sm font-normal text-gray-700 lg:text-base">No refunds or exchanges</li>

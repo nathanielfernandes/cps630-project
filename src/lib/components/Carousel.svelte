@@ -4,13 +4,15 @@
 		alt_text: string;
 	}
 
+	const DEFAULT_IMAGE = "https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg";
+
 	export let images: Image[];
 	$: images =
 		images.length > 0
 			? images
 			: [
 					{
-						link: 'https://www.fivebranches.edu/wp-content/uploads/2021/08/default-image.jpg',
+						link: DEFAULT_IMAGE,
 						alt_text: 'Placeholder'
 					}
 				];
@@ -40,6 +42,10 @@
 				src={image.link}
 				class="aspect-square w-full rounded-lg object-cover sm:h-[500px] sm:w-[500px] lg:h-[600px] lg:w-[600px]"
 				alt={image.alt_text}
+				on:error={(e) => {
+					//@ts-ignore
+					e.target.src = DEFAULT_IMAGE;
+				}}
 			/>
 		</div>
 	{/each}
