@@ -1,74 +1,71 @@
 <script lang="ts">
+	import { posts, user_info } from '$lib/stores';
 	import Metric from '$lib/components/Metric.svelte';
 	import Table from '$lib/components/Table.svelte';
-	export let data: any;
 
-	let table = 'posts';
-	let type = '';
+	let viewing: 'all' | 'users' | 'sale' | 'wanted' | 'academic' = 'all';
 
-	function updateTableAndType(newTable: string, newType: string) {
-		table = newTable;
-		type = newType;
-		console.log(table, type);
-	}
+	$: all_listings = Object.values($posts);
+	$: post_cols = all_listings.length > 0 ? Object.keys(all_listings[0]) : [];
+
+	$: users = Object.values($user_info);
+	$: user_cols = users.length > 0 ? Object.keys(users[0]) : [];
+
+	$: sale_listings = all_listings.filter((listing) => listing.type === 'items_for_sale');
+	$: wanted_listings = all_listings.filter((listing) => listing.type === 'items_wanted');
+	$: academic_services = all_listings.filter((listing) => listing.type === 'academic_services');
 </script>
 
 <main>
-	<div class="container mx-auto px-4">
-		<h1 class="text-left text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-		<div class="grid grid-cols-5 gap-4">
-			<button on:click={() => updateTableAndType('posts', '')} class="cursor-pointer">
+	<div class="max-w-screen-xl mx-auto px-4">
+		<h1 class="text-left text-3xl font-bold text-gray-800 my-5">Admin Dashboard</h1>
+		<div class="flex space-x-2 items-center w-full h-full mb-2">
+			<button class="w-full h-full" on:click={() => viewing = 'all'}>
 				<Metric
-					{data}
-					type={'total_listings'}
 					title={'All Listings'}
-					label={'Total Amount Of Listings'}
-					icon={'https://hazafa.b-cdn.net/earth-americas-solid.svg'}
+					value={all_listings.length}
 				/>
 			</button>
-			<button on:click={() => updateTableAndType('user_info', '')} class="cursor-pointer">
+			<button class="w-full h-full" on:click={() => viewing = 'users'}>
 				<Metric
-					{data}
-					type={'user_info'}
 					title={'Users'}
-					label={'Total Amount Of Users'}
-					icon={'https://hazafa.b-cdn.net/users-solid.svg'}
+					value={users.length}
 				/>
 			</button>
-			<button on:click={() => updateTableAndType('posts', 'items_for_sale')} class="cursor-pointer">
+			<button class="w-full h-full" on:click={() => viewing = 'sale'}>
 				<Metric
-					{data}
-					type={'items_for_sale'}
 					title={'Active Listings'}
-					label={'Total Amount of Active Listings'}
-					icon={'https://hazafa.b-cdn.net/fire-solid.svg'}
+					value={sale_listings.length}
 				/>
 			</button>
-			<button on:click={() => updateTableAndType('posts', 'items_wanted')} class="cursor-pointer">
+			<button class="w-full h-full" on:click={() => viewing = 'wanted'}>
 				<Metric
-					{data}
-					type={'items_wanted'}
 					title={'Wanted Listings'}
-					label={'Total Amount Of Wanted Listings'}
-					icon={'https://hazafa.b-cdn.net/hand-regular.svg'}
+					value={wanted_listings.length}
 				/>
 			</button>
-			<button
-				on:click={() => updateTableAndType('posts', 'academic_services')}
-				class="cursor-pointer"
-			>
+			<button class="w-full h-full" on:click={() => viewing = 'academic'}>
 				<Metric
-					{data}
-					type={'academic_services'}
 					title={'Academic Services'}
-					label={'Number of Academic Services'}
-					icon={'https://hazafa.b-cdn.net/book-solid.svg'}
+					value={academic_services.length}
 				/>
 			</button>
-			<div class="col-span-full">
-				<Table bind:table bind:type />
-			</div>
 		</div>
+
+		<div class="">
+			{#if viewing === 'all'}
+				<Table caption="All Listings" cols={post_cols} data={all_listings} />
+			{:else if viewing === 'users'}
+				<Table caption="Users" data_type="users" cols={user_cols} data={users} />
+			{:else if viewing === 'sale'}
+				<Table caption="Active Listings" cols={post_cols} data={sale_listings} />
+			{:else if viewing === 'wanted'}
+				<Table caption="Wanted Listings" cols={post_cols} data={wanted_listings} />
+			{:else if viewing === 'academic'}
+				<Table caption="Academic Services" cols={post_cols} data={academic_services} />
+			{/if}
+		</div>
+
 	</div>
 </main>
 
