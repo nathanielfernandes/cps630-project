@@ -4,8 +4,11 @@
 
 </script>
 
-
-
+<svelte:head>
+	<title>TMU Marketplace</title>
+	<meta name="description" content="TMU Marketplace for students to buy and sell items" />
+	<meta name="keywords" content="TMU, Marketplace, Student, Buy, Sell, Items" />
+</svelte:head>
 
 
 <div class="flex justify-center items-center mx-auto my-20 h-[600px] w-full max-w-screen bg-white border border-gray-200" in:fade>
