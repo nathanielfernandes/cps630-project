@@ -119,9 +119,9 @@
 		const unsub = posts.subscribe((posts) => {
 			// if the post is in the list posts goto
 			if (posts[postData.id.toString()] !== undefined) {
-				unsub();
 				successAlert('Your Ad has been posted!');
 				goto(`/dashboard/listings/posts/${postData.id}`);
+				unsub();
 			}
 		});
 	};
