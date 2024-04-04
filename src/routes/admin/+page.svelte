@@ -15,8 +15,17 @@
 
 <main>
 	<div class="container mx-auto px-4">
-		<h1 class="text-left text-3xl font-bold text-gray-800">Dashboard</h1>
-		<div class="grid grid-cols-4 gap-4">
+		<h1 class="text-left text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+		<div class="grid grid-cols-5 gap-4">
+			<button on:click={() => updateTableAndType('posts', '')} class="cursor-pointer">
+				<Metric
+					{data}
+					type={'total_listings'}
+					title={'All Listings'}
+					label={'Total Amount Of Listings'}
+					icon={'https://hazafa.b-cdn.net/earth-americas-solid.svg'}
+				/>
+			</button>
 			<button on:click={() => updateTableAndType('user_info', '')} class="cursor-pointer">
 				<Metric
 					{data}
@@ -52,12 +61,12 @@
 					{data}
 					type={'academic_services'}
 					title={'Academic Services'}
-					label={'Total Amount Of Academic Services'}
-					icon={'https://hazafa.b-cdn.net/users-solid.svg'}
+					label={'Number of Academic Services'}
+					icon={'https://hazafa.b-cdn.net/book-solid.svg'}
 				/>
 			</button>
 			<div class="col-span-full">
-				<Table {data} bind:table bind:type />
+				<Table bind:table bind:type />
 			</div>
 		</div>
 	</div>
