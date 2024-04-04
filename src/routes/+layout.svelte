@@ -15,7 +15,7 @@
 	import { isProtectedPage } from '$lib/protectedPages';
 	import Chat from '$lib/chatter/Chat.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
-	import { posts } from '$lib/stores';
+	import { posts, user_info } from '$lib/stores';
 
 	export let data;
 	let { supabase, session } = data;
@@ -55,6 +55,21 @@
 	};
 
 	fetchPosts();
+
+
+	const fetchUsers = async () => {
+		const { data, error } = await supabase.from('user_info').select('id, email, role');
+
+		if (error) {
+			console.log(error);
+			throw error;
+		}
+
+		const fetched = data || [];
+		user_info.set(fetched);
+	};
+
+	fetchUsers();
 
 
  	function wsAuthAttempt() {
@@ -150,6 +165,34 @@
 				})
 			.subscribe();
 
+		const usersChannel = supabase
+			.channel('users_listener')
+			.on("postgres_changes", 
+				{
+					event: "*",
+					schema: "public",
+					table: "user_info"
+				},
+				async ({ eventType, new: nuser, old }) => {
+					switch (eventType) {
+						case "INSERT":
+							user_info.update((u) => {
+								//@ts-ignore
+								u.push(nuser);
+								return u;
+							});
+							break;
+						case "DELETE":
+							user_info.update((u) => {
+								const index = u.findIndex((user) => user.id === old.id);
+								u.splice(index, 1);
+								return u;
+							});
+							break;
+					}
+				})
+			.subscribe();
+
 		connect_websocket();
 
 		if ($page.url.searchParams.get('askLogin') === 'true') {
@@ -195,6 +238,7 @@
 			resetChatState();
 			subscription.unsubscribe();
 			postChannel.unsubscribe();
+			usersChannel.unsubscribe();
 		};
 	});
 
@@ -441,6 +485,8 @@
 		</form>
 	</div>
 </nav>
+
+
 
 <slot />
 

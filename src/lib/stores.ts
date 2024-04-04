@@ -19,6 +19,13 @@ export type Post = {
   images: Image[];
 }
 
+export type UserInfo = {
+  id: string;
+  email: string;
+  role: 'admin' | 'user';
+}
+
+export const user_info = localstate<UserInfo[]>([], "user_info");
 export const posts = localstate<{[post_id:string]:Post}>({}, "posts");
 export const waiting = writable(true);
 posts.subscribe((p) => {
