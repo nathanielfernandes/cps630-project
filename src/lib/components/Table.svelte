@@ -15,9 +15,10 @@
 				cols = allUsers.length > 0 ? Object.keys(allUsers[0]) : [];
 			}
 		});
+		console.log(allUsers);
+
 		onDestroy(unsubscribeUsers);
 	}
-	console.log(allUsers);
 
 	$: {
 		const unsubscribe = posts.subscribe(($posts) => {
@@ -48,6 +49,7 @@
 					: type === 'items_wanted'
 						? 'Items Wanted'
 						: 'Academic Services'}
+
 			<p class="mt-1 text-sm font-normal text-gray-500">
 				{allPosts.length}
 				{type === '' ? 'listings' : type}
@@ -58,20 +60,33 @@
 				{#each cols as col}
 					<th scope="col" class="px-6 py-3">{col}</th>
 				{/each}
-				<th scope="col" class="px-6 py-3">Edit</th>
+				<th scope="col" class="px-6 py-4">Edit</th>
 			</tr>
 		</thead>
 		<tbody>
-			{#each allPosts as post}
-				<tr class="border-b bg-white">
-					{#each cols as col}
-						<td class="px-6 py-4">{truncate(post[col].toString(), 50)}</td>
-					{/each}
-					<td class="px-6 py-4 text-right">
-						<a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
-					</td>
-				</tr>
-			{/each}
+			{#if table === 'user_info'}
+				{#each allUsers as user}
+					<tr class="border-b bg-white">
+						{#each cols as col}
+							<td class="px-6 py-4">{user[col].toString()}</td>
+						{/each}
+						<td class="px-6 py-4 text-left">
+							<a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
+						</td>
+					</tr>
+				{/each}
+			{:else}
+				{#each allPosts as post}
+					<tr class="border-b bg-white">
+						{#each cols as col}
+							<td class="px-6 py-4">{truncate(post[col].toString(), 50)}</td>
+						{/each}
+						<td class="px-6 py-4 text-center">
+							<a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
+						</td>
+					</tr>
+				{/each}
+			{/if}
 		</tbody>
 	</table>
 </div>

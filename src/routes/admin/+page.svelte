@@ -23,7 +23,7 @@
 					type={'total_listings'}
 					title={'All Listings'}
 					label={'Total Amount Of Listings'}
-					icon={'https://hazafa.b-cdn.net/users-solid.svg'}
+					icon={'https://hazafa.b-cdn.net/earth-americas-solid.svg'}
 				/>
 			</button>
 			<button on:click={() => updateTableAndType('user_info', '')} class="cursor-pointer">
@@ -62,7 +62,7 @@
 					type={'academic_services'}
 					title={'Academic Services'}
 					label={'Number of Academic Services'}
-					icon={'https://hazafa.b-cdn.net/users-solid.svg'}
+					icon={'https://hazafa.b-cdn.net/book-solid.svg'}
 				/>
 			</button>
 			<div class="col-span-full">
