@@ -8,7 +8,6 @@
 	import Pfp from '$lib/components/Pfp.svelte';
 	import { posts } from '$lib/stores';
 
-
 	export let data;
 	let { supabase, session } = data;
 	$: ({ supabase } = data);
@@ -47,42 +46,42 @@
 		}
 	}
 
-    let showActions = session?.user.id === (post || {}).user_id;
+	let showActions = session?.user.id === (post || {}).user_id;
 	let showActionsDropdown = false;
 	$: showActionsDropdown = showActions ? showActionsDropdown : false;
 
-    const IMAGE_URL_PREFIX =
+	const IMAGE_URL_PREFIX =
 		'https://wduwhfiooshcbzbgenyy.supabase.co/storage/v1/object/public/images/';
 
-    const handleEdit = async () => {
-        goto(`/dashboard/edit/${post_id}`);
-    }
+	const handleEdit = async () => {
+		goto(`/dashboard/edit/${post_id}`);
+	};
 	const handleDelete = async () => {
-        let response = await supabase.from('images').delete().eq('post_id', post_id).select();
-        if (response.error) {
-            console.error(response.error);
-            errorAlert("Failed to delete post.");
-            return;
-        }
-        const imagePaths = response.data.map((d) => decodeURIComponent(d.link.replace(IMAGE_URL_PREFIX, "")));
-        supabase.storage.from("images").remove(imagePaths);
+		let response = await supabase.from('images').delete().eq('post_id', post_id).select();
+		if (response.error) {
+			console.error(response.error);
+			errorAlert('Failed to delete post.');
+			return;
+		}
+		const imagePaths = response.data.map((d) =>
+			decodeURIComponent(d.link.replace(IMAGE_URL_PREFIX, ''))
+		);
+		supabase.storage.from('images').remove(imagePaths);
 
 		response = await supabase.from('posts').delete().eq('id', post_id).select();
-        if (response.error) {
-            console.error(response.error);
-            errorAlert("Failed to delete post.");
-            return;
-        }
+		if (response.error) {
+			console.error(response.error);
+			errorAlert('Failed to delete post.');
+			return;
+		}
 
-        successAlert("Successfully deleted post: " + post.title);
-        delete $posts[post_id];
-        $posts = $posts;
+		successAlert('Successfully deleted post: ' + post.title);
+		delete $posts[post_id];
+		$posts = $posts;
 
-        goto(`/dashboard/listings/${swapListings(post.type)}`);
+		goto(`/dashboard/listings/${swapListings(post.type)}`);
 	};
 </script>
-
-<!-- <p class="text-2xl text-black">{post_id}</p> -->
 
 {#if post !== undefined}
 	<div class="relative mx-auto w-full max-w-screen-xl px-4 py-7 font-normal">
@@ -117,8 +116,8 @@
 					id="dropdownDotsHorizontal"
 					class="absolute -right-5 z-10 w-44 divide-y divide-gray-100 rounded-lg bg-white shadow-lg dark:divide-gray-600 dark:bg-gray-700"
 					class:hidden={!showActionsDropdown}
-                    use:clickOutside
-                    on:click_outside={() => showActionsDropdown = false}
+					use:clickOutside
+					on:click_outside={() => (showActionsDropdown = false)}
 				>
 					<ul
 						class="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -126,14 +125,14 @@
 					>
 						<li>
 							<button
-                                on:click={handleEdit}
+								on:click={handleEdit}
 								class="block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 								>Edit</button
 							>
 						</li>
 						<li>
 							<button
-                                on:click={handleDelete}
+								on:click={handleDelete}
 								class="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 								>Delete</button
 							>
