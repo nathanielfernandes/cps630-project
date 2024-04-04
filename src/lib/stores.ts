@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import { localstate } from "./state";
 
 export interface Image {
     link: string;
@@ -18,7 +19,7 @@ export type Post = {
   images: Image[];
 }
 
-export const posts = writable<{[post_id:string]:Post}>({});
+export const posts = localstate<{[post_id:string]:Post}>({}, "posts");
 export const waiting = writable(true);
 posts.subscribe((p) => {
   if (Object.keys(p).length > 0) {
