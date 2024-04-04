@@ -86,6 +86,7 @@ CREATE TABLE images (
     post_id BIGINT NOT NULL REFERENCES posts(id)
 );
 
+
 CREATE TYPE db_role AS ENUM ('admin', 'user');
 
 CREATE TABLE verify (

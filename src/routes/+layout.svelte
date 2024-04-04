@@ -445,7 +445,6 @@
 <LoginSignup {supabase} bind:show={show_login_modal} />
 
 
-
 <footer class="bg-white ">
     <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div class="md:flex md:justify-between">
