@@ -1,11 +1,23 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { posts, type Post } from '../stores';
+	import { posts, type Post, user_info, type UserInfo } from '$lib/stores';
 
 	export let table: string;
 	export let type: string;
 	let allPosts: Post[] = [];
+	let allUsers: UserInfo[] = [];
 	let cols: string[] = [];
+
+	$: {
+		const unsubscribeUsers = user_info.subscribe(($user_info) => {
+			if (table === 'user_info') {
+				allUsers = Object.values($user_info);
+				cols = allUsers.length > 0 ? Object.keys(allUsers[0]) : [];
+			}
+		});
+		onDestroy(unsubscribeUsers);
+	}
+	console.log(allUsers);
 
 	$: {
 		const unsubscribe = posts.subscribe(($posts) => {
