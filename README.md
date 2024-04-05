@@ -59,57 +59,48 @@ cps630-project
 ├── ** >> all other files (don't touch unless you know what you're doing)
 ```
 
-### Code Guidelines
+# User Manual
 
-- Prettier is used to format code
-- Use semicolons
-- Use double quotes when possible
-- Use `const` and `let` instead of `var`
-- Avoid using custom css classes (use tailwind classes instead)
-- Use `kebab-case` for file names
-- Use `camelCase` for function names
-- Use `PascalCase` for component names
-- Use `UPPER_CASE` for constants
-- Use `snake_case` for everything else
-- You are responsible for your own code, so make sure it is readable and well documented
-- Use descriptive variable and function names
-- Keep your functions small and focused (don't make a function that does everything)
-- Please don't yapp in comments, keep them succinct and to the point
-- Correctly type your variables and functions (typescript)
-- Do not write 'clever' code, write code that is easy to understand and maintain
-- Do not write code that you do not understand
-- Do not paste chatgpt yapp
-- Use the correct html tags for the job (don't spam divs)
-- Build reusable components whenever possible (don't repeat yourself)
-- Keep components small and focused (don't make a component that does everything)
-- Use the `src/lib` folder for shared code (sub folder when necessary)
-- Keep components only relevant to a page in that page's folder
-- Avoid absolute positioning
-- Structure your pages and components while keeping in mind that they will need to be responsive
-- Avoid external dependencies (if you need to use one, make sure it is well maintained)
-- Use stores to share data between components, not props
-- Do not share state by passing props down multiple levels (use stores instead again >:))
-- Make sure all accessibility requirements are met (aria labels, etc.)
-- CSS transition durations should be 100ms (max 200ms)
-- Stick to the stack
-- Stick to the Code Style Guidelines
-- Have fun :)
+The following is a user manual of how to use the website.
 
-### Design Guidelines
+## Creating an account / Logging in
 
-- TODO
+In order to view and post listings, you must have an account. Click on the blue button on the top right corner "Sign in / Register". Create your account or log in with your existing account.
 
-### Database Guidelines
+## Browsing listings
 
-- TODO
+Click on either the "Wanted Listings", "Buy & Sell" or "Academic Services" tabs at the top of the page to browse the respective categories. You are now able to view the postings with their title, description, price, images, and seller email address.
 
-### Contribution Guidelines
+## Searching
 
-- Make sure you are working on the latest version of `master`
-- Create an issue for each feature you are working on
-- Create a new branch for each feature you are working on
-- Branch format should be `t<issue#>_firstname` or `<feature>_firstname`
-- Commit often and with descriptive commit messages
-- Create a pull request when you are ready to merge your branch into `master`
-- Assign atleast 2 reviewers to your pull request
-- Once your pull request has been approved, you may merge it into `master`
+While on a listings page, search through the listings using the search bar on the top right corner of the page. You can search keywords related to the title, description, price, or email. 
+
+You can save your particular query by bookmarking the tab.
+
+## Listing information
+
+While on a listings page, click on a listing to view it's full details, including all attached images, location data, and user contact information. 
+
+## Messaging Users
+
+Message users on a platform using the "messaging" tab on the botton right of the website. Here you can view all your existing conversations, and enter any one of them.
+
+To begin a conversation with a seller, click on a listing, and then click "Contact". A new chat will begin related to the specific listing.
+
+
+## Creating a Listing
+
+To create a listing, click the yellow "Place an Ad" Button on the top left corner of the page.
+
+From here, choose which type of listing you wish to create.
+
+Create your listing by filling in the fields on the left side of the page. View your listing live-update on the right side of the page.
+
+Attach multiple images from your computer, or by dragging and dropping from an online source. 
+
+Fill in all the fields, and click "Submit". Your listing is now viewable by all users on the platform.
+
+## Admin Panel
+If you are an admin on the platform, you will have access to the admin dashboard. You can find it by clicking your user icon image and pressing "Admin Dashboard".
+
+View site metrics such as listings count, and user count. View a table of listings related to these metrics.
