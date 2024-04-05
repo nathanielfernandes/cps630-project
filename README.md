@@ -1,4 +1,4 @@
-# CPS 630 Project
+# CPS 630 Project - TMU Marketplace
 
 ### Stack
 
@@ -6,7 +6,32 @@
 - TailwindCSS >> https://tailwindcss.com/docs/customizing-colors
 - Supabase >> https://supabase.com/docs
 
-### Setup
+### Configuration
+
+a `.env` a file is required in the root directory with the following variables:
+
+```
+DATABASE_URL=<supabase postgres url>
+SUPABASE_DB_PASSWORD=<supabase db password>
+```
+
+additionally, a `.env.local` file is required in the root directory with the following variables:
+
+```
+PUBLIC_SUPABASE_URL=<supabase url>
+PUBLIC_SUPABASE_ANON_KEY=<supabase anon key>
+PUBLIC_CHATTER_WS_URL=<websocket server url>
+```
+
+Before running the project, make sure you `supabase login` and run:
+
+```
+npm run migrate
+```
+
+to create the required tables, triggers, policies, and functions in the database.
+
+### Local Setup
 
 1. Clone the repo
 
@@ -33,30 +58,61 @@ npm run dev
 npm run chatter
 ```
 
-### Project Structure (High Level Overview)
+### Production Deployment
+
+#### Docker
+
+1. Build the docker image for the client
 
 ```
-cps630-project
-├── README.md
-├── ...
-├── src
-│   ├── lib >> (shared code that can be imported anywhere via `$lib/...`)
-│   │   ├── databasedefs.ts >> Database definitions (auto-generated)
-│   ├── routes (pages)
-│   │   ├── admin >> admin dashboard
-│   │   ├── auth >> authentication pages
-│   │   │   ├── callback >> authentication callback endpoint
-│   │   ├── dashboard >> user dashboard
-│   │   ├── login >> login page (subject to change)
-│   │   ├── +page.svelte >> index page
-│   │   ├── +layout* >> don't touch these (unless you know what you're doing)
-│   ├── app.css >> global css (no reason you will ever need to touch this)
-│   ├── app.html >> (no reason you will ever need to touch this)
-│   ├── app.d.ts >> (don't touch unless you know what you're doing)
-│   ├── hooks.server.ts >> (no reason you will ever need to touch this)
-├── static >> static assets (images, fonts, etc.)
-├── .env.local >> local environment variables (you will need to create this)
-├── ** >> all other files (don't touch unless you know what you're doing)
+docker build -t tmu-marketplace-client -f Dockerfile .
+```
+
+2. Run the docker image for the client
+
+```
+docker run -p 3000:3000 tmu-marketplace-client
+```
+
+3. Build the docker image for the websocket server
+
+```
+docker build -t tmu-marketplace-chatter -f ./services/Dockerfile ./services/chatter
+```
+
+4. Run the docker image for the websocket server
+
+```
+docker run -p 3001:3001 tmu-marketplace-chatter
+```
+
+#### Manual
+
+1. Build the client
+
+```
+cd cps630-project
+npm install
+npm run build
+```
+
+2. Run the client
+
+```
+node ./build/index.js
+```
+
+3. Build the websocket server
+
+```
+cd cps630-project/services/chatter
+cargo build --release
+```
+
+4. Run the websocket server
+
+```
+./target/release/chatter
 ```
 
 ### Code Guidelines
@@ -93,15 +149,6 @@ cps630-project
 - CSS transition durations should be 100ms (max 200ms)
 - Stick to the stack
 - Stick to the Code Style Guidelines
-- Have fun :)
-
-### Design Guidelines
-
-- TODO
-
-### Database Guidelines
-
-- TODO
 
 ### Contribution Guidelines
 
