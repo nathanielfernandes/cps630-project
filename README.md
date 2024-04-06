@@ -10,7 +10,7 @@
 
 ### Configuration
 
-a `.env` a file is required in the root directory with the following variables:
+a `.env` file is required in the root directory with the following variables:
 
 ```
 DATABASE_URL=<supabase postgres url>
@@ -104,14 +104,14 @@ npm run build
 node ./build/index.js
 ```
 
-3. Build the websocket server
+3. Build the WebSocket server
 
 ```
 cd cps630-project/services/chatter
 cargo build --release
 ```
 
-4. Run the websocket server
+4. Run the WebSocket server
 
 ```
 ./target/release/chatter
@@ -119,11 +119,11 @@ cargo build --release
 
 # User Manual
 
-The following is a user manual of how to use the website.
+The following is a user manual on how to use the website.
 
 ## Creating an account / Logging in
 
-In order to view and post listings, you must have an account. Click on the blue button on the top right corner "Sign in / Register". Create your account or log in with your existing account.
+To view and post listings, you must have an account. Click on the blue button on the top right corner "Sign in / Register". Create your account or log in with your existing account.
 
 ## Browsing listings
 
@@ -137,11 +137,11 @@ You can save your particular query by bookmarking the tab.
 
 ## Listing information
 
-While on a listings page, click on a listing to view it's full details, including all attached images, location data, and user contact information. 
+While on a listings page, click on a listing to view its full details, including all attached images, location data, and user contact information. 
 
 ## Messaging Users
 
-Message users on a platform using the "messaging" tab on the botton right of the website. Here you can view all your existing conversations, and enter any one of them.
+Message users on a platform using the "messaging" tab on the bottom right of the website. Here you can view all your existing conversations, and enter any one of them.
 
 To begin a conversation with a seller, click on a listing, and then click "Contact". A new chat will begin related to the specific listing.
 
@@ -152,7 +152,7 @@ To create a listing, click the yellow "Place an Ad" Button on the top left corne
 
 From here, choose which type of listing you wish to create.
 
-Create your listing by filling in the fields on the left side of the page. View your listing live-update on the right side of the page.
+Create your listing by filling in the fields on the left side of the page. View your listing live update on the right side of the page.
 
 Attach multiple images from your computer, or by dragging and dropping from an online source. 
 
