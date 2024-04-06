@@ -1,6 +1,6 @@
 # CPS 630 Project - TMU Marketplace
 
-![image](https://github.com/nathanielfernandes/cps630-project/assets/16618046/a7c19d77-1509-4d05-8321-754ede20b308)
+![image](https://github.com/nathanielfernandes/cps630-project/assets/16618046/3cb877f6-b534-487a-b769-282f819bbffb)
 
 ### Stack
 
