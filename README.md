@@ -1,5 +1,7 @@
 # CPS 630 Project - TMU Marketplace
 
+![image](https://github.com/nathanielfernandes/cps630-project/assets/16618046/a7c19d77-1509-4d05-8321-754ede20b308)
+
 ### Stack
 
 - SvelteKit >> https://kit.svelte.dev/docs/introduction (typescript)
