@@ -7,6 +7,8 @@
 	import Carousel from '$lib/components/Carousel.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
 	import { posts } from '$lib/stores';
+	import {PUBLIC_GOOGLE_API_KEY} from '$env/static/public'
+	
 
 	export let data;
 	let { supabase, session } = data;
@@ -199,7 +201,7 @@
 				<!-- Google Maps Embed -->
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<iframe
-					src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBb63wnxcNQtMa_H3ZNmUShN-aD62Gp5yQ&q=${post.location}`}
+					src={`https://www.google.com/maps/embed/v1/place?key=${PUBLIC_GOOGLE_API_KEY}&q=${post.location}`}
 					width="600"
 					height="450"
 					style="border:0;"
