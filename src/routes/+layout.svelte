@@ -11,7 +11,15 @@
 	import { warningAlert, errorAlert } from '$lib/Alerts/stores.js';
 	import { clickOutside } from '$lib/clickOutside';
 	import LoginSignup from '$lib/components/LoginSignup.svelte';
-	import { disconnect_websocket, uuid, ssecret, connect_websocket, resetChatState, open, ping } from '$lib/chatter/stores';
+	import {
+		disconnect_websocket,
+		uuid,
+		ssecret,
+		connect_websocket,
+		resetChatState,
+		open,
+		ping
+	} from '$lib/chatter/stores';
 	import { isProtectedPage } from '$lib/protectedPages';
 	import Chat from '$lib/chatter/Chat.svelte';
 	import Pfp from '$lib/components/Pfp.svelte';
@@ -22,7 +30,6 @@
 	$: ({ supabase, session } = data);
 
 	$: email = (session ? session.user.email : '') as string;
-
 
 	const fetchPosts = async () => {
 		const { data, error } = await supabase.from('posts').select(`
@@ -38,10 +45,10 @@
             email
         `);
 
-        if (error) {
-            console.log(error);
-            throw error;
-        }
+		if (error) {
+			console.log(error);
+			throw error;
+		}
 
 		const fetched = data || [];
 		posts.update((p) => {
@@ -55,7 +62,6 @@
 	};
 
 	fetchPosts();
-
 
 	const fetchUsers = async () => {
 		const { data, error } = await supabase.from('user_info').select('id, email, role');
@@ -89,7 +95,7 @@
 		}
 	});
 
- 	function wsAuthAttempt() {
+	function wsAuthAttempt() {
 		if ($page.data.session) {
 			// select user id and secret
 			supabase
@@ -110,37 +116,38 @@
 		}
 	}
 
-    let searchValue = "";
-    const handleSearch = (e: Event) => {
-        e.preventDefault();
-        const url = new URL($page.url);
-        url.searchParams.set("q", searchValue);
-        goto(url);
-    }
-  
+	let searchValue = '';
+	const handleSearch = (e: Event) => {
+		e.preventDefault();
+		const url = new URL($page.url);
+		url.searchParams.set('q', searchValue);
+		goto(url);
+	};
+
 	let show_login_modal = false;
 	let pathBeforeSignOut = '';
 
-    $: {
-        // Redirect and ask user to login, if user tries to visit a protected page and is not logged in
-        if (isProtectedPage($page.url.pathname) && !session) {
-            window.location.replace('/?askLogin=true');
-        }
-    }
+	$: {
+		// Redirect and ask user to login, if user tries to visit a protected page and is not logged in
+		if (isProtectedPage($page.url.pathname) && !session) {
+			window.location.replace('/?askLogin=true');
+		}
+	}
 
 	onMount(() => {
 		// subscribe to new posts
 		const postChannel = supabase
 			.channel('posts_listener')
-			.on("postgres_changes", 
+			.on(
+				'postgres_changes',
 				{
-					event: "*",
-					schema: "public",
-					table: "posts"
+					event: '*',
+					schema: 'public',
+					table: 'posts'
 				},
 				async ({ eventType, new: npost, old }) => {
 					switch (eventType) {
-						case "INSERT":
+						case 'INSERT':
 							// get images for the new post
 							const { data: images } = await supabase
 								.from('images')
@@ -149,14 +156,14 @@
 
 							posts.update((p) => {
 								// @ts-ignore
-								p[npost.id.toString()] =  {
+								p[npost.id.toString()] = {
 									images: images || [],
-									...npost,
-								}
+									...npost
+								};
 								return p;
 							});
 							break;
-						case "UPDATE":
+						case 'UPDATE':
 							// get images for the new post
 							const { data: images2 } = await supabase
 								.from('images')
@@ -167,39 +174,41 @@
 								// @ts-ignore
 								p[npost.id.toString()] = {
 									images: images2 || [],
-									...npost,
-								}
+									...npost
+								};
 								return p;
 							});
 							break;
-						case "DELETE":
+						case 'DELETE':
 							posts.update((p) => {
 								delete p[old.id.toString()];
 								return p;
 							});
 							break;
 					}
-				})
+				}
+			)
 			.subscribe();
 
 		const usersChannel = supabase
 			.channel('users_listener')
-			.on("postgres_changes", 
+			.on(
+				'postgres_changes',
 				{
-					event: "*",
-					schema: "public",
-					table: "user_info"
+					event: '*',
+					schema: 'public',
+					table: 'user_info'
 				},
 				async ({ eventType, new: nuser, old }) => {
 					switch (eventType) {
-						case "INSERT":
+						case 'INSERT':
 							user_info.update((u) => {
 								//@ts-ignore
 								u.push(nuser);
 								return u;
 							});
 							break;
-						case "DELETE":
+						case 'DELETE':
 							user_info.update((u) => {
 								const index = u.findIndex((user) => user.id === old.id);
 								u.splice(index, 1);
@@ -207,7 +216,8 @@
 							});
 							break;
 					}
-				})
+				}
+			)
 			.subscribe();
 
 		connect_websocket();
@@ -229,14 +239,14 @@
 		} = supabase.auth.onAuthStateChange((event, _session) => {
 			if (_session?.expires_at !== session?.expires_at) {
 				// if (event === 'SIGNED_IN') {
-					// successAlert('Signed in successful');
+				// successAlert('Signed in successful');
 				// }
 				invalidate('supabase:auth').then(wsAuthAttempt);
 			}
 			// If the previous page before signing out was a protected page, show login modal
 			if (event === 'SIGNED_OUT') {
-				uuid.set("");
-				ssecret.set("");
+				uuid.set('');
+				ssecret.set('');
 				disconnect_websocket();
 				resetChatState();
 				warningAlert('You have been signed out');
@@ -244,13 +254,12 @@
 				if (isProtectedPage(pathBeforeSignOut)) {
 					show_login_modal = true;
 				}
-
 			}
 		});
 
 		return () => {
-			uuid.set("");
-			ssecret.set("");
+			uuid.set('');
+			ssecret.set('');
 			disconnect_websocket();
 			resetChatState();
 			subscription.unsubscribe();
@@ -338,13 +347,11 @@
 
 					{#if $ping}
 						<span
-							class="absolute top-1 right-1 inline-flex items-center justify-center w-2 h-2 text-xs font-bold leading-none text-white  bg-red-500 rounded-full"
-							></span
-						>
+							class="absolute right-1 top-1 inline-flex h-2 w-2 items-center justify-center rounded-full bg-red-500 text-xs font-bold leading-none text-white"
+						></span>
 						<span
-							class="absolute top-1 right-1 inline-flex items-center justify-center w-2 h-2 text-xs font-bold leading-none text-white  bg-red-500 rounded-full animate-ping"
-							></span
-						>
+							class="absolute right-1 top-1 inline-flex h-2 w-2 animate-ping items-center justify-center rounded-full bg-red-500 text-xs font-bold leading-none text-white"
+						></span>
 					{/if}
 				</button>
 				<button
@@ -358,7 +365,7 @@
 					aria-expanded={dropdownVisibility['user-dropdown']}
 				>
 					<span class="sr-only">Open user menu</span>
-					<Pfp email={email} class="h-10 w-10 rounded-md" />
+					<Pfp {email} class="h-10 w-10 rounded-md" />
 					<!-- <img
 						use:replaceBadImageWithDefault={DefaultUserImage}
 						on:error={handleProfileImageError}
@@ -377,9 +384,7 @@
 				>
 					<div class="px-4 py-3">
 						<!-- <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span> -->
-						<span class="block truncate text-sm text-gray-500"
-							>{session.user.email}</span
-						>
+						<span class="block truncate text-sm text-gray-500">{session.user.email}</span>
 					</div>
 					<ul class="py-2" aria-labelledby="user-menu-button">
 						<!-- <li>
@@ -396,18 +401,15 @@
 								>Order History</a
 							>
 						</li> -->
-						<li>	
+						<li>
 							{#if is_admin}
-								<a
-									href="/admin"
-									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+								<a href="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 									>Admin Dashboard</a
 								>
 							{:else}
 								<a
 									href="/dashboard/create"
-									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-									>Dashboard</a
+									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a
 								>
 							{/if}
 						</li>
@@ -419,8 +421,7 @@
 							tabIndex="0"
 							on:click={handleSignOut}
 							on:keypress={(e) => e.key === 'Enter' && handleSignOut()}
-							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-							>Sign out</a
+							class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a
 						>
 					</div>
 				</div>
@@ -441,7 +442,9 @@
 		class="mx-auto flex max-w-screen-xl flex-col-reverse items-stretch gap-x-10 gap-y-5 px-4 py-3 md:flex-row md:items-center md:justify-between md:gap-x-24 lg:gap-x-44"
 	>
 		<div class="flex items-center">
-			<ul class="mt-0 flex flex-row space-x-5 sm:space-x-8 text-center text-sm font-medium rtl:space-x-reverse">
+			<ul
+				class="mt-0 flex flex-row space-x-5 text-center text-sm font-medium sm:space-x-8 rtl:space-x-reverse"
+			>
 				<li>
 					<a
 						href="/"
@@ -469,7 +472,9 @@
 				<li>
 					<a
 						href="/dashboard/listings/services"
-						aria-current={$page.url.pathname === '/dashboard/listings/services' ? 'page' : undefined}
+						aria-current={$page.url.pathname === '/dashboard/listings/services'
+							? 'page'
+							: undefined}
 						class="block px-3 py-2 text-gray-900 hover:text-blue-500 aria-[current=page]:text-blue-500 md:p-0"
 						>Academic Services</a
 					>
@@ -482,11 +487,11 @@
 				id="search-navbar"
 				class="border-box block w-full rounded-lg border-2 bg-white p-3 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
 				placeholder="Search..."
-                bind:value={searchValue}
+				bind:value={searchValue}
 			/>
 			<button
 				type="submit"
-                on:click={handleSearch}
+				on:click={handleSearch}
 				class="absolute right-0 box-border flex h-full items-center justify-center rounded-r-lg border-2 border-white/0 bg-blue-600 p-3 text-white hover:bg-blue-700 focus:border-blue-800 focus:ring focus:ring-blue-800"
 			>
 				<!-- <svg
@@ -511,42 +516,44 @@
 	</div>
 </nav>
 
-
-
 <slot />
 
 <Chat />
 
 <LoginSignup {supabase} bind:show={show_login_modal} />
 
-
-<footer class="bg-white mt-10">
-    <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
-        <div class="md:flex md:justify-between">
-          <div class="mb-6 md:mb-0">
-              <a href="/" class="flex items-center">
-				  <!-- <img src="/TMU-rgb.png" class="h-10" alt="TMU Logo" /> -->
-                  <span class="self-center text-2xl font-semibold whitespace-nowrap text-gray-900 ml-2">Toronto Metropolitan University</span>
-              </a>
-          </div>
-          <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-1">
-              <div>
-                  <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase ">Legal</h2>
-                  <ul class="text-gray-500  font-medium">
-                      <li class="mb-4">
-                          <a href="https://www.torontomu.ca/privacy/" class="hover:underline">Privacy Policy</a>
-                      </li>
-                      <li>
-                          <a href="https://www.torontomu.ca/terms-conditions/" class="hover:underline">Terms &amp; Conditions</a>
-                      </li>
-                  </ul>
-              </div>
-          </div>
-      </div>
-      <hr class="my-6 border-gray-200 sm:mx-auto lg:my-8" />
-      <div class="sm:flex sm:items-center sm:justify-between">
-          <span class="text-sm text-gray-500 sm:text-center ">© 2024 <a href="/" class="hover:underline">Toronto Metropolitan University</a>
-          </span>
-      </div>
-    </div>
+<footer class="mt-10 bg-white">
+	<div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
+		<div class="md:flex md:justify-between">
+			<div class="mb-6 md:mb-0">
+				<a href="/" class="flex items-center">
+					<!-- <img src="/TMU-rgb.png" class="h-10" alt="TMU Logo" /> -->
+					<span class="self-center whitespace-nowrap text-2xl font-semibold text-gray-900"
+						>Toronto Metropolitan University</span
+					>
+				</a>
+			</div>
+			<div class="grid grid-cols-2 gap-8 sm:grid-cols-1 sm:gap-6">
+				<div>
+					<h2 class="mb-6 text-sm font-semibold uppercase text-gray-900">Legal</h2>
+					<ul class="font-medium text-gray-500">
+						<li class="mb-4">
+							<a href="https://www.torontomu.ca/privacy/" class="hover:underline">Privacy Policy</a>
+						</li>
+						<li>
+							<a href="https://www.torontomu.ca/terms-conditions/" class="hover:underline"
+								>Terms &amp; Conditions</a
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<hr class="my-6 border-gray-200 sm:mx-auto lg:my-8" />
+		<div class="sm:flex sm:items-center sm:justify-between">
+			<span class="text-sm text-gray-500 sm:text-center"
+				>© 2024 <a href="/" class="hover:underline">Toronto Metropolitan University</a>
+			</span>
+		</div>
+	</div>
 </footer>
